@@ -1,7 +1,7 @@
-import StarBurst from "./components/ui/starsUI";
+import { Login } from "./app/AuthLogin/pages/Login";
 
 function App() {
-  return <StarBurst />;
+  return <Login />;
 }
 
 export default App;
