@@ -28,12 +28,35 @@ export interface StarBurstProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default 140 quando fora da tela, 360 quando centralizado.
    */
   spread?: number;
+  /**
+   * Limite de distância que as estrelas viajam antes de sumir (0.1 a 1.5).
+   * Ex: 0.3 = somem logo após entrar na tela.
+   *     0.5 = somem por volta do meio da tela.
+   *     1.0 = atravessam a tela inteira.
+   * @default 0.55
+   */
+  travelDistance?: number;
   starSize?: number;
   opacity?: number;
   flowerIntensity?: number;
   twinkleSpeed?: number;
   backgroundColor?: string;
   transparent?: boolean;
+  /**
+   * Ativar ou desativar as estrelas estáticas (StarPoint e StarNormal) no fundo.
+   * @default true
+   */
+  showStaticStars?: boolean;
+  /**
+   * Quantidade de pontos de estrelas estáticos (StarPoint) espalhados pelo fundo.
+   * @default 80
+   */
+  staticPointCount?: number;
+  /**
+   * Quantidade de estrelas normais de 4 pontas estáticas (StarNormal) espalhadas pelo fundo.
+   * @default 25
+   */
+  staticNormalCount?: number;
 }
 
 function parseColor(input: string): [number, number, number] {
@@ -58,20 +81,47 @@ function parseColor(input: string): [number, number, number] {
   return [255, 255, 255];
 }
 
+// Caminho vetorial exato do StarNormal.svg (estrela de 4 pontas ~12x8px)
+const STAR_NORMAL_PATH =
+  "M7.67767 3.44932L11.1669 6.43286L6.64758 5.57233L3.76243 7.50565L3.48915 4.05627L-3.61092e-05 1.0727L4.51924 1.93326L7.40417 -1.04238e-05L7.67767 3.44932Z";
+
+interface StaticStarPoint {
+  relX: number;
+  relY: number;
+  radius: number;
+  baseOpacity: number;
+  twinkleSpeed: number;
+  phase: number;
+}
+
+interface StaticStarNormal {
+  relX: number;
+  relY: number;
+  scale: number;
+  rotation: number;
+  baseOpacity: number;
+  twinkleSpeed: number;
+  phase: number;
+}
+
 export function StarBurst({
   speed = 2.5,
   starCount = 10,
   color = "#FFFFFF",
   centerX = 115,
   centerY = 0,
-  angle,
-  spread,
-  starSize = 30,
-  opacity = 60,
+  angle = 160,
+  spread = 100,
+  travelDistance = 0.55,
+  starSize = 25,
+  opacity = 40,
   flowerIntensity = 0,
   twinkleSpeed = 5,
   backgroundColor = "#000000",
   transparent = false,
+  showStaticStars = true,
+  staticPointCount = 100,
+  staticNormalCount = 25,
   className,
   children,
   style,
@@ -92,7 +142,6 @@ export function StarBurst({
     const cStar = parseColor(color);
 
     const safeSpeed = Math.max(0, (speed ?? 10) / 10);
-    // Permite coordenadas fora da tela (ex: < 0 ou > 1)
     const normCenterX = (centerX ?? 50) / 100;
     const normCenterY = (centerY ?? 50) / 100;
     const safeStarSize = Math.max(0.01, (starSize ?? 6) / 20);
@@ -112,6 +161,45 @@ export function StarBurst({
     };
     const rng = makeRng(0xbadf00d);
 
+    // ==========================================
+    // 1. Estrelas Estáticas de Fundo (StarPoint & StarNormal)
+    // ==========================================
+    const staticRng = makeRng(0xcafe123);
+    const staticPoints: StaticStarPoint[] = [];
+    if (showStaticStars) {
+      for (let i = 0; i < staticPointCount; i++) {
+        staticPoints.push({
+          relX: 0.01 + staticRng() * 0.98,
+          relY: 0.01 + staticRng() * 0.98,
+          radius: 0.5 + staticRng() * 1.4, // Tamanhos variados (0.5px a ~1.9px)
+          baseOpacity: 0.15 + staticRng() * 0.65, // Opacidades variadas (fracas e nítidas)
+          twinkleSpeed: 0.8 + staticRng() * 2.0,
+          phase: staticRng() * Math.PI * 2,
+        });
+      }
+    }
+
+    const staticNormals: StaticStarNormal[] = [];
+    if (showStaticStars) {
+      for (let i = 0; i < staticNormalCount; i++) {
+        staticNormals.push({
+          relX: 0.02 + staticRng() * 0.96,
+          relY: 0.02 + staticRng() * 0.96,
+          scale: 0.5 + staticRng() * 1.2, // Tamanhos variados maiores e menores
+          rotation: (staticRng() - 0.5) * 0.6,
+          baseOpacity: 0.2 + staticRng() * 0.7, // Opacidades variadas
+          twinkleSpeed: 0.8 + staticRng() * 2.2,
+          phase: staticRng() * Math.PI * 2,
+        });
+      }
+    }
+
+    const starNormalPath =
+      typeof Path2D !== "undefined" ? new Path2D(STAR_NORMAL_PATH) : null;
+
+    // ==========================================
+    // 2. Feixe de Estrelas em Movimento (StarBurst)
+    // ==========================================
     const sCount = Math.max(1, Math.floor(starCount));
     const pulsesPerSpoke = 14;
     const MAX_TOTAL = 5000;
@@ -163,7 +251,6 @@ export function StarBurst({
         normCenterY < 0 ||
         normCenterY > 1;
 
-      // Direção base (se omitida, mira suavemente em direção ao centro da tela)
       let baseDirRad: number;
       if (angle !== undefined) {
         baseDirRad = (angle * Math.PI) / 180;
@@ -173,14 +260,13 @@ export function StarBurst({
         baseDirRad = 0;
       }
 
-      // Dispersão do feixe
       let arcSpreadRad: number;
       if (spread !== undefined) {
         arcSpreadRad = (Math.min(360, Math.max(1, spread)) * Math.PI) / 180;
       } else if (isOffscreen) {
-        arcSpreadRad = (140 * Math.PI) / 180; // Cone elegante e natural para partículas vindas de fora
+        arcSpreadRad = (140 * Math.PI) / 180;
       } else {
-        arcSpreadRad = Math.PI * 2; // Explosão 360° se estiver dentro
+        arcSpreadRad = Math.PI * 2;
       }
 
       const isFullCircle = arcSpreadRad >= Math.PI * 2 - 0.01;
@@ -238,7 +324,6 @@ export function StarBurst({
       const cx = normCenterX * w;
       const cy = normCenterY * h;
 
-      // Distância máxima até o canto mais distante da tela
       const maxDistance =
         Math.max(
           Math.hypot(cx, cy),
@@ -247,6 +332,7 @@ export function StarBurst({
           Math.hypot(w - cx, h - cy),
         ) * 1.1;
 
+      // Fundo
       if (transparent) {
         ctx.clearRect(0, 0, w, h);
       } else {
@@ -255,6 +341,54 @@ export function StarBurst({
         ctx.fillRect(0, 0, w, h);
       }
 
+      // ==========================================
+      // Desenho das Estrelas Estáticas de Fundo
+      // ==========================================
+      if (showStaticStars) {
+        ctx.globalCompositeOperation = "source-over";
+
+        // 1. StarPoint (pontos de estrelas espalhados)
+        for (let i = 0; i < staticPoints.length; i++) {
+          const pt = staticPoints[i];
+          const px = pt.relX * w;
+          const py = pt.relY * h;
+          const twinkle =
+            0.75 + 0.25 * Math.sin(timeSec * pt.twinkleSpeed + pt.phase);
+          const a = Math.min(1, pt.baseOpacity * twinkle * safeOpacity);
+          if (a <= 0.01) continue;
+
+          ctx.beginPath();
+          ctx.arc(px, py, pt.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${cStar[0]},${cStar[1]},${cStar[2]},${a})`;
+          ctx.fill();
+        }
+
+        // 2. StarNormal (estrelas de 4 pontas espalhadas)
+        if (starNormalPath) {
+          for (let i = 0; i < staticNormals.length; i++) {
+            const sn = staticNormals[i];
+            const px = sn.relX * w;
+            const py = sn.relY * h;
+            const twinkle =
+              0.7 + 0.3 * Math.sin(timeSec * sn.twinkleSpeed + sn.phase);
+            const a = Math.min(1, sn.baseOpacity * twinkle * safeOpacity);
+            if (a <= 0.01) continue;
+
+            ctx.save();
+            ctx.translate(px, py);
+            ctx.rotate(sn.rotation);
+            ctx.scale(sn.scale, sn.scale);
+            ctx.translate(-5.58, -3.75); // Centraliza a forma 12x8 do StarNormal.svg
+            ctx.fillStyle = `rgba(${cStar[0]},${cStar[1]},${cStar[2]},${a})`;
+            ctx.fill(starNormalPath);
+            ctx.restore();
+          }
+        }
+      }
+
+      // ==========================================
+      // Desenho das Estrelas em Movimento (StarBurst)
+      // ==========================================
       ctx.globalCompositeOperation = "lighter";
 
       const bloomAlpha = safeFlowerIntensity * safeOpacity;
@@ -283,35 +417,39 @@ export function StarBurst({
         ctx.fillRect(cx - bloomR, cy - bloomR, bloomR * 2, bloomR * 2);
       }
 
+      const effectiveMaxDistance = maxDistance * Math.max(0.1, travelDistance);
+
       for (let i = 0; i < particleCount; i++) {
         pT[i] += pSpeed[i] * safeSpeed * dt;
-        if (pT[i] > 1.1) {
+        if (pT[i] > 1.05) {
           pT[i] = -0.05 - rng() * 0.05;
           pSize[i] = 0.6 + rng() * 0.8;
           pPhase[i] = rng() * Math.PI * 2;
         }
 
         const t = pT[i];
-        if (t < 0) continue;
-        if (t >= 1.0) continue;
+        if (t < 0 || t >= 1.0) continue;
 
         const twinkle =
           0.7 + 0.3 * Math.sin(timeSec * safeTwinkleSpeed * 6 + pPhase[i]);
 
-        // Entrada e saída suaves
+        // Entrada suave nos primeiros 10% e saída suave nos últimos 25% do percurso
         let fade: number;
-        if (t < 0.08) {
-          fade = t / 0.08;
-        } else if (t < 0.8) {
+        if (t < 0.1) {
+          fade = t / 0.1;
+        } else if (t < 0.75) {
           fade = 1;
         } else {
-          fade = 1 - (t - 0.8) / 0.2;
+          fade = Math.max(0, 1 - (t - 0.75) / 0.25);
         }
 
-        const a = Math.min(1, twinkle * fade * (1 + 0.4 * t) * safeOpacity);
+        const a = Math.min(
+          1,
+          Math.max(0, twinkle * fade * (1 + 0.4 * t) * safeOpacity),
+        );
         if (a < 0.005) continue;
 
-        const dist = t * maxDistance;
+        const dist = t * effectiveMaxDistance;
         const sIdx = pSpokeIdx[i];
         const cosA = spokeCos[sIdx];
         const sinA = spokeSin[sIdx];
@@ -359,12 +497,16 @@ export function StarBurst({
     centerY,
     angle,
     spread,
+    travelDistance,
     starSize,
     opacity,
     flowerIntensity,
     twinkleSpeed,
     backgroundColor,
     transparent,
+    showStaticStars,
+    staticPointCount,
+    staticNormalCount,
   ]);
 
   return (
