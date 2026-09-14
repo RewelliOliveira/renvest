@@ -6,8 +6,28 @@ export interface StarBurstProps extends React.HTMLAttributes<HTMLDivElement> {
   speed?: number;
   starCount?: number;
   color?: string;
+  /**
+   * Posição X da origem em porcentagem.
+   * Valores acima de 100 (ex: 115) posicionam a origem fora da tela à direita.
+   * Valores abaixo de 0 (ex: -15) posicionam fora à esquerda.
+   * @default 115
+   */
   centerX?: number;
+  /**
+   * Posição Y da origem em porcentagem.
+   * @default 25
+   */
   centerY?: number;
+  /**
+   * Direção principal dos raios em graus (0° = direita, 90° = baixo, 180° = esquerda, 270° = cima).
+   * Se omitido e a origem estiver fora da tela, aponta automaticamente em direção ao centro da tela.
+   */
+  angle?: number;
+  /**
+   * Ângulo de dispersão do cone de estrelas em graus (ex: 120° a 160° para um feixe natural, ou 360° para explosão circular).
+   * @default 140 quando fora da tela, 360 quando centralizado.
+   */
+  spread?: number;
   starSize?: number;
   opacity?: number;
   flowerIntensity?: number;
@@ -39,15 +59,17 @@ function parseColor(input: string): [number, number, number] {
 }
 
 export function StarBurst({
-  speed = 3,
-  starCount = 94,
+  speed = 2.5,
+  starCount = 10,
   color = "#FFFFFF",
-  centerX = 100,
-  centerY = 19,
-  starSize = 35,
-  opacity = 50,
+  centerX = 115,
+  centerY = 0,
+  angle,
+  spread,
+  starSize = 30,
+  opacity = 60,
   flowerIntensity = 0,
-  twinkleSpeed = 6,
+  twinkleSpeed = 5,
   backgroundColor = "#000000",
   transparent = false,
   className,
@@ -70,8 +92,9 @@ export function StarBurst({
     const cStar = parseColor(color);
 
     const safeSpeed = Math.max(0, (speed ?? 10) / 10);
-    const safeCenterX = Math.max(0, Math.min(1, (centerX ?? 50) / 100));
-    const safeCenterY = Math.max(0, Math.min(1, (centerY ?? 100) / 100));
+    // Permite coordenadas fora da tela (ex: < 0 ou > 1)
+    const normCenterX = (centerX ?? 50) / 100;
+    const normCenterY = (centerY ?? 50) / 100;
     const safeStarSize = Math.max(0.01, (starSize ?? 6) / 20);
     const safeOpacity = Math.max(0, Math.min(1, (opacity ?? 100) / 100));
     const safeFlowerIntensity = Math.max(0, (flowerIntensity ?? 10) / 20);
@@ -89,8 +112,8 @@ export function StarBurst({
     };
     const rng = makeRng(0xbadf00d);
 
-    const sCount = Math.max(0, Math.floor(starCount));
-    const pulsesPerSpoke = 15;
+    const sCount = Math.max(1, Math.floor(starCount));
+    const pulsesPerSpoke = 14;
     const MAX_TOTAL = 5000;
     const nSpokes = sCount;
     let perSpoke = pulsesPerSpoke;
@@ -102,13 +125,6 @@ export function StarBurst({
     const spokeAngle = new Float32Array(nSpokes);
     const spokeCos = new Float32Array(nSpokes);
     const spokeSin = new Float32Array(nSpokes);
-    for (let i = 0; i < nSpokes; i++) {
-      const baseAngle = (i / Math.max(1, nSpokes)) * Math.PI * 2;
-      const jitter = (rng() - 0.5) * 0.02;
-      spokeAngle[i] = baseAngle + jitter;
-      spokeCos[i] = Math.cos(spokeAngle[i]);
-      spokeSin[i] = Math.sin(spokeAngle[i]);
-    }
 
     const pSpokeIdx = new Uint16Array(particleCount);
     const pT = new Float32Array(particleCount);
@@ -119,8 +135,8 @@ export function StarBurst({
     for (let i = 0; i < particleCount; i++) {
       pSpokeIdx[i] = i % nSpokes;
       pT[i] = -0.05 + rng() * 1.1;
-      pSpeed[i] = (0.5 + rng() * 1.0) * 0.25;
-      pSize[i] = 0.7 + rng() * 0.8;
+      pSpeed[i] = (0.4 + rng() * 1.0) * 0.25;
+      pSize[i] = 0.6 + rng() * 0.8;
       pPhase[i] = rng() * Math.PI * 2;
     }
 
@@ -137,6 +153,52 @@ export function StarBurst({
       sctx.fillStyle = g;
       sctx.fillRect(0, 0, SPRITE_LEN, 2);
     }
+
+    const updateSpokes = (w: number, h: number) => {
+      const cx = normCenterX * w;
+      const cy = normCenterY * h;
+      const isOffscreen =
+        normCenterX < 0 ||
+        normCenterX > 1 ||
+        normCenterY < 0 ||
+        normCenterY > 1;
+
+      // Direção base (se omitida, mira suavemente em direção ao centro da tela)
+      let baseDirRad: number;
+      if (angle !== undefined) {
+        baseDirRad = (angle * Math.PI) / 180;
+      } else if (isOffscreen) {
+        baseDirRad = Math.atan2(0.5 * h - cy, 0.5 * w - cx);
+      } else {
+        baseDirRad = 0;
+      }
+
+      // Dispersão do feixe
+      let arcSpreadRad: number;
+      if (spread !== undefined) {
+        arcSpreadRad = (Math.min(360, Math.max(1, spread)) * Math.PI) / 180;
+      } else if (isOffscreen) {
+        arcSpreadRad = (140 * Math.PI) / 180; // Cone elegante e natural para partículas vindas de fora
+      } else {
+        arcSpreadRad = Math.PI * 2; // Explosão 360° se estiver dentro
+      }
+
+      const isFullCircle = arcSpreadRad >= Math.PI * 2 - 0.01;
+
+      for (let i = 0; i < nSpokes; i++) {
+        let baseA: number;
+        if (isFullCircle) {
+          baseA = (i / Math.max(1, nSpokes)) * Math.PI * 2;
+        } else {
+          const progress = nSpokes > 1 ? i / (nSpokes - 1) : 0.5;
+          baseA = baseDirRad - arcSpreadRad / 2 + progress * arcSpreadRad;
+        }
+        const jitter = (rng() - 0.5) * 0.04;
+        spokeAngle[i] = baseA + jitter;
+        spokeCos[i] = Math.cos(spokeAngle[i]);
+        spokeSin[i] = Math.sin(spokeAngle[i]);
+      }
+    };
 
     const resize = (entry?: ResizeObserverEntry) => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -157,6 +219,7 @@ export function StarBurst({
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      updateSpokes(w, h);
     };
 
     resize();
@@ -172,9 +235,17 @@ export function StarBurst({
 
       if (w < 2 || h < 2) return;
 
-      const cx = safeCenterX * w;
-      const cy = safeCenterY * h;
-      const R = Math.sqrt(w * w + h * h);
+      const cx = normCenterX * w;
+      const cy = normCenterY * h;
+
+      // Distância máxima até o canto mais distante da tela
+      const maxDistance =
+        Math.max(
+          Math.hypot(cx, cy),
+          Math.hypot(w - cx, cy),
+          Math.hypot(cx, h - cy),
+          Math.hypot(w - cx, h - cy),
+        ) * 1.1;
 
       if (transparent) {
         ctx.clearRect(0, 0, w, h);
@@ -216,7 +287,7 @@ export function StarBurst({
         pT[i] += pSpeed[i] * safeSpeed * dt;
         if (pT[i] > 1.1) {
           pT[i] = -0.05 - rng() * 0.05;
-          pSize[i] = 0.7 + rng() * 0.8;
+          pSize[i] = 0.6 + rng() * 0.8;
           pPhase[i] = rng() * Math.PI * 2;
         }
 
@@ -227,19 +298,20 @@ export function StarBurst({
         const twinkle =
           0.7 + 0.3 * Math.sin(timeSec * safeTwinkleSpeed * 6 + pPhase[i]);
 
+        // Entrada e saída suaves
         let fade: number;
-        if (t < 0.06) {
-          fade = t / 0.06;
-        } else if (t < 0.85) {
+        if (t < 0.08) {
+          fade = t / 0.08;
+        } else if (t < 0.8) {
           fade = 1;
         } else {
-          fade = 1 - (t - 0.85) / 0.15;
+          fade = 1 - (t - 0.8) / 0.2;
         }
 
-        const a = Math.min(1, twinkle * fade * (1 + 0.5 * t) * safeOpacity);
+        const a = Math.min(1, twinkle * fade * (1 + 0.4 * t) * safeOpacity);
         if (a < 0.005) continue;
 
-        const dist = t * R;
+        const dist = t * maxDistance;
         const sIdx = pSpokeIdx[i];
         const cosA = spokeCos[sIdx];
         const sinA = spokeSin[sIdx];
@@ -248,7 +320,7 @@ export function StarBurst({
         const py = cy + sinA * dist;
         const speedFactor = pSpeed[i] / 0.25;
         const lineLen =
-          (8 + 12 * speedFactor) * (0.7 + 0.6 * pSize[i] * safeStarSize);
+          (6 + 14 * speedFactor) * (0.6 + 0.6 * pSize[i] * safeStarSize);
 
         ctx.setTransform(
           dpr * cosA,
@@ -285,6 +357,8 @@ export function StarBurst({
     color,
     centerX,
     centerY,
+    angle,
+    spread,
     starSize,
     opacity,
     flowerIntensity,
