@@ -1,5 +1,7 @@
+import StarBurst from "./components/ui/starsUI";
+
 function App() {
-  return <div className="bg-black text-white">Hello world!!</div>;
+  return <StarBurst />;
 }
 
 export default App;
