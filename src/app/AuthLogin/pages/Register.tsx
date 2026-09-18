@@ -1,4 +1,3 @@
-import { Lock } from "lucide-react";
 import { UserIcon, EmailIcon, LogomarcaIcon } from "@/assets/icons";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 
@@ -53,7 +52,6 @@ export function Register({ onNavigateToLogin }: RegisterProps) {
             label="Digite sua senha"
             placeholder="••••••••"
             autoComplete="new-password"
-            icon={<Lock className="w-4.5 h-4.5" />}
           />
 
           <AuthInput
@@ -62,7 +60,6 @@ export function Register({ onNavigateToLogin }: RegisterProps) {
             label="Confirme sua senha"
             placeholder="••••••••"
             autoComplete="new-password"
-            icon={<Lock className="w-4.5 h-4.5" />}
           />
         </div>
 

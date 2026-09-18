@@ -54,9 +54,10 @@ export function AuthLayout({
                   <button
                     type="button"
                     onClick={onNavigate}
-                    className="text-xs font-semibold text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                    className="group relative px-1 py-0.5 text-xs sm:text-sm font-semibold text-neutral-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {mode === "login" ? "Cadastre-se" : "Entrar"}
+                    <span className="absolute -bottom-0.5 left-0 w-full h-0.5 rounded-full bg-linear-to-r from-transparent via-red-light/80 to-transparent shadow-[0_1px_8px_rgba(254,120,113,0.65)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
                 </div>
 
