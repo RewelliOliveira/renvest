@@ -1,12 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { StarBurst } from "@/components/ui/starsUI";
-import {
-  EmailIcon,
-  GoogleIcon,
-  MascotIcon,
-  LogomarcaIcon,
-} from "@/assets/icons";
+import { EmailIcon, MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { AuthInput, AuthButton, AuthDivider } from "../components";
 
 interface LoginProps {
   onNavigateToRegister?: () => void;
@@ -38,42 +32,23 @@ export function Login({ onNavigateToRegister }: LoginProps) {
         </section>
 
         <section className="flex flex-col w-full gap-3.5 pb-2">
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="email"
-              className="text-sm font-normal text-neutral-300"
-            >
-              Digite seu e-mail
-            </Label>
-            <div className="relative flex items-center bg-white/5 border border-white/10 rounded-lg transition-all focus-within:border-white/30 focus-within:bg-white/8">
-              <EmailIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none text-neutral-400" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@dominio.com"
-                autoComplete="email"
-                className="w-full h-12 pl-10 pr-4 bg-transparent border-none text-white placeholder:text-neutral-500 text-sm focus-visible:ring-0 focus-visible:border-transparent rounded-lg"
-              />
-            </div>
-          </div>
+          <AuthInput
+            id="email"
+            type="email"
+            label="Digite seu e-mail"
+            placeholder="email@dominio.com"
+            autoComplete="email"
+            icon={<EmailIcon className="w-4.5 h-4.5" />}
+          />
 
-          <div className="flex flex-col gap-1.5">
-            <Label
-              htmlFor="password"
-              className="text-sm font-normal text-neutral-300"
-            >
-              Digite sua senha
-            </Label>
-            <div className="relative flex items-center bg-white/5 border border-white/10 rounded-lg transition-all focus-within:border-white/30 focus-within:bg-white/8">
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                className="w-full h-12 px-4 bg-transparent border-none text-white placeholder:text-neutral-400 text-sm focus-visible:ring-0 focus-visible:border-transparent rounded-lg"
-              />
-            </div>
-
+          <div className="flex flex-col gap-1">
+            <AuthInput
+              id="password"
+              type="password"
+              label="Digite sua senha"
+              placeholder="••••••••"
+              autoComplete="current-password"
+            />
             <div className="flex justify-end mt-0.5">
               <button
                 type="button"
@@ -84,27 +59,11 @@ export function Login({ onNavigateToRegister }: LoginProps) {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-red border-b-2 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60 cursor-pointer"
-          >
-            Entrar
-          </button>
+          <AuthButton type="submit">Entrar</AuthButton>
 
-          <div className="relative flex items-center justify-center my-0.5">
-            <div className="w-full border-t border-white/10" />
-            <span className="absolute bg-transparent px-3 text-xs text-neutral-500 font-medium">
-              ou
-            </span>
-          </div>
+          <AuthDivider />
 
-          <button
-            type="button"
-            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-blue border-b-2 border-blue-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue/60 flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <GoogleIcon className="w-5 h-5" />
-            <span>Continuar com Google</span>
-          </button>
+          <AuthButton variant="google">Continuar com Google</AuthButton>
         </section>
       </div>
     </StarBurst>
