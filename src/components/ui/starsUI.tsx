@@ -328,12 +328,15 @@ export function StarBurst({
 
       const topLimitY = maxHeightRatio * h;
 
-      // Fundo escuro total
+      // Fundo em gradiente linear (0% #000815 até 100% #000000)
       if (transparent) {
         ctx.clearRect(0, 0, w, h);
       } else {
         ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = backgroundColor;
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+        bgGrad.addColorStop(0, "#000815");
+        bgGrad.addColorStop(1, "#000000");
+        ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, w, h);
       }
 
@@ -526,7 +529,7 @@ export function StarBurst({
       ref={containerRef}
       className={cn(
         "relative w-full h-full overflow-hidden",
-        !transparent && "bg-black",
+        !transparent && "bg-gradient-to-b from-[#000815] to-[#000000]",
         className,
       )}
       style={{

@@ -30,28 +30,30 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
-export function Login() {
+interface LoginProps {
+  onNavigateToRegister?: () => void;
+}
+
+export function Login({ onNavigateToRegister }: LoginProps) {
   return (
     <StarBurst className="min-h-screen" maxHeightPercent={48}>
       <div className="relative flex flex-col min-h-screen text-white">
-        {/* ── Cabeçalho: botão "Cadastre-se" ── */}
         <header className="flex justify-end px-5 pt-5">
           <button
             type="button"
-            className="relative px-1 py-0.5 text-sm font-bold text-white/90 transition-all hover:text-white"
+            onClick={onNavigateToRegister}
+            className="relative px-1 py-0.5 text-sm font-bold text-white/90 transition-all hover:text-white cursor-pointer"
           >
             Cadastre-se
-            {/* Linha com brilho/esboço avermelhado */}
-            <span className="absolute -bottom-0.5 left-0 w-full h-0.5 rounded-full bg-linear-to-r from-transparent via-red-500/80 to-transparent shadow-[0_1px_8px_rgba(239,68,68,0.65)]" />
+            <span className="absolute -bottom-0.5 left-0 w-full h-0.5 rounded-full bg-linear-to-r from-transparent via-red-light/80 to-transparent shadow-[0_1px_8px_rgba(254,120,113,0.65)]" />
           </button>
         </header>
 
-        {/* ── Área do mascote e branding ── */}
         <section className="flex flex-col items-center pt-4 pb-2 px-6">
           <img
             src="/Mascot.svg"
             alt="Mascote Renvest"
-            className="w-44 h-auto drop-shadow-[0_8px_32px_rgba(254,78,79,0.2)]"
+            className="w-44 h-auto drop-shadow-[0_8px_32px_rgba(240,86,86,0.2)]"
             draggable={false}
           />
           <div className="flex items-center justify-center gap-2 mt-3">
@@ -67,9 +69,7 @@ export function Login() {
           </div>
         </section>
 
-        {/* ── Formulário de login ── */}
         <section className="flex flex-col w-full max-w-sm mx-auto px-6 mt-6 gap-5">
-          {/* Campo: E-mail */}
           <div className="flex flex-col gap-1.5">
             <Label
               htmlFor="email"
@@ -92,7 +92,6 @@ export function Login() {
             </div>
           </div>
 
-          {/* Campo: Senha */}
           <div className="flex flex-col gap-1.5">
             <Label
               htmlFor="password"
@@ -114,26 +113,23 @@ export function Login() {
               />
             </div>
 
-            {/* Link: Esqueceu a senha */}
             <div className="flex justify-end mt-0.5">
               <button
                 type="button"
-                className="text-xs font-semibold text-neutral-300 hover:text-white transition-colors"
+                className="text-xs font-semibold text-neutral-300 hover:text-white transition-colors cursor-pointer"
               >
                 Esqueceu sua senha?
               </button>
             </div>
           </div>
 
-          {/* ── Botão Sign In ── */}
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-[#F04438] border-b-4 border-[#9B1C1C] active:border-b-0 active:translate-y-0.75 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60"
+            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-red border-b-2 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60 cursor-pointer"
           >
             Entrar
           </button>
 
-          {/* ── Divisor "ou" ── */}
           <div className="relative flex items-center justify-center">
             <div className="w-full border-t border-white/10" />
             <span className="absolute bg-transparent px-3 text-xs text-neutral-500 font-medium">
@@ -141,17 +137,15 @@ export function Login() {
             </span>
           </div>
 
-          {/* ── Botão Google ── */}
           <button
             type="button"
-            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-[#1A73E8] border-b-4 border-[#0D47A1] active:border-b-0 active:translate-y-0.75 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 flex items-center justify-center gap-2.5"
+            className="w-full py-3.5 rounded-xl font-bold text-white text-base bg-blue border-b-2 border-blue-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue/60 flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <GoogleIcon className="w-5 h-5" />
             <span>Continuar com Google</span>
           </button>
         </section>
 
-        {/* Espaço inferior para dispositivos com SafeArea */}
         <div className="pb-10" />
       </div>
     </StarBurst>
