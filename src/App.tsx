@@ -1,15 +1,12 @@
-import { useState } from "react";
-import { Login } from "./app/AuthLogin/pages/Login";
-import { Register } from "./app/AuthLogin/pages/Register";
+import { AuthProvider } from "./app/AuthLogin/context/AuthContext";
+import { AppRoutes } from "./routes/AppRoutes";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<"login" | "register">("login");
-
-  if (currentPage === "register") {
-    return <Register onNavigateToLogin={() => setCurrentPage("login")} />;
-  }
-
-  return <Login onNavigateToRegister={() => setCurrentPage("register")} />;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }
 
 export default App;
