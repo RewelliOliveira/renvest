@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { cn } from "cn";
 
 export interface ProgressBarProps {
@@ -20,9 +21,11 @@ export function ProgressBar({ currentStep, totalSteps, className }: ProgressBarP
         className
       )}
     >
-      <div
-        className="h-full rounded-full bg-progress-dark transition-all duration-300 ease-out"
-        style={{ width: `${percentage}%` }}
+      <motion.div
+        className="h-full rounded-full bg-progress-dark"
+        initial={false}
+        animate={{ width: `${percentage}%` }}
+        transition={{ type: "spring", stiffness: 260, damping: 28 }}
       />
     </div>
   );
