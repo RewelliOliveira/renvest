@@ -1,11 +1,14 @@
 import { UserIcon, EmailIcon, LogomarcaIcon } from "@/assets/icons";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
 
 interface RegisterProps {
   onNavigateToLogin?: () => void;
 }
 
 export function Register({ onNavigateToLogin }: RegisterProps) {
+  const { login: handleGoogleLogin } = useGoogleAuth();
+
   return (
     <AuthLayout
       mode="register"
@@ -67,7 +70,12 @@ export function Register({ onNavigateToLogin }: RegisterProps) {
 
         <AuthDivider />
 
-        <AuthButton variant="google">Continuar com Google</AuthButton>
+        <AuthButton
+          variant="google"
+          onClick={() => handleGoogleLogin()}
+        >
+          Continuar com Google
+        </AuthButton>
       </form>
     </AuthLayout>
   );
