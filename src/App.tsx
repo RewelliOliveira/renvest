@@ -1,5 +1,12 @@
+import { AuthProvider } from "./app/AuthLogin/context/AuthContext";
+import { AppRoutes } from "./routes/AppRoutes";
+
 function App() {
-  return <div className="bg-black text-white">Hello world!!</div>;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }
 
 export default App;
