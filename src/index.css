@@ -55,6 +55,11 @@
   --color-white: #ffffff;
   --color-blue: #0052d7;
   --color-blue-dark: #002c73;
+  --color-option-dark: #001027;
+  --color-option-dark-border: #010F24;
+  --color-option-selected: #DFF4FF;
+  --color-option-selected-border: #A4D6FF;
+  --color-option-selected-text: #4C90DD;
 }
 
 :root {

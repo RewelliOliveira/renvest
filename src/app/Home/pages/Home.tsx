@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
-import { ProgressBar } from "@/components/ui/ProgressBar";
+import { Progress } from "@/components/ui/progress";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 
 const STEPS = [
@@ -22,11 +23,14 @@ const STEPS = [
 ];
 
 export function Home() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleNext = () => {
     if (currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
+    } else {
+      navigate("/chat");
     }
   };
 
@@ -55,9 +59,8 @@ export function Home() {
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <ProgressBar
-            currentStep={currentStep}
-            totalSteps={STEPS.length}
+          <Progress
+            value={(currentStep / STEPS.length) * 100}
             className="flex-1"
           />
         </header>

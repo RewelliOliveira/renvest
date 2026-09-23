@@ -3,6 +3,7 @@ import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
 import { Home } from "@/app/Home/pages/Home";
+import { ChatMission } from "@/app/Chat/ChatMission";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,7 @@ export function AppRoutes() {
 
         <Route element={<RouteGuard isPrivate />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/chat" element={<ChatMission />} />
           <Route path="/dashboard" element={<Navigate to="/home" replace />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Route>
