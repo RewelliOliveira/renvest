@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
-import { Dashboard } from "@/app/Dashboard/pages/Dashboard";
+import { Home } from "@/app/Home/pages/Home";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { isAuthenticated } = useAuth();
@@ -12,7 +12,7 @@ function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   }
 
   if (!isPrivate && isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return <Outlet />;
@@ -28,8 +28,9 @@ export function AppRoutes() {
         </Route>
 
         <Route element={<RouteGuard isPrivate />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/dashboard" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

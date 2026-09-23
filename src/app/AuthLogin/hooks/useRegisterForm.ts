@@ -16,7 +16,7 @@ export function useRegisterForm() {
 
   const { login: executeGoogleLogin } = useGoogleAuth((profile) => {
     loginWithGoogle(profile);
-    navigate("/dashboard", { replace: true });
+    navigate("/home", { replace: true });
   });
 
   const handleGoogleLogin = () => {
@@ -42,7 +42,7 @@ export function useRegisterForm() {
     try {
       const result = await register(username, email, password);
       if (result.success) {
-        navigate("/dashboard", { replace: true });
+        navigate("/home", { replace: true });
       } else {
         setError(result.error || "Erro ao cadastrar conta.");
       }

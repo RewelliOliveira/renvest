@@ -14,7 +14,7 @@ export function useLoginForm() {
 
   const { login: executeGoogleLogin } = useGoogleAuth((profile) => {
     loginWithGoogle(profile);
-    navigate("/dashboard", { replace: true });
+    navigate("/home", { replace: true });
   });
 
   const handleGoogleLogin = () => {
@@ -29,7 +29,7 @@ export function useLoginForm() {
     try {
       const result = await login(email, password);
       if (result.success) {
-        navigate("/dashboard", { replace: true });
+        navigate("/home", { replace: true });
       } else {
         setError(result.error || "Erro ao efetuar login.");
       }
