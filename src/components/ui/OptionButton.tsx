@@ -28,16 +28,16 @@ export function OptionButton({
       type="button"
       disabled={disabled || hasAnswered}
       className={cn(
-        "w-full py-3.5 px-4 rounded-xl sm:rounded-2xl text-left text-sm sm:text-base font-semibold border-2 transition-all flex items-center justify-between cursor-pointer",
-        "border-b-4 active:border-b-0 active:translate-y-0.5 shadow-md",
+        "w-full py-3 sm:py-3.5 px-4 rounded-xl font-bold text-sm sm:text-base transition-all flex items-center justify-between text-left shadow-lg cursor-pointer",
+        "border-b-4 active:border-b-0 active:translate-y-0.5 focus-visible:outline-none",
         showSuccess
-          ? "bg-emerald-500/20 border-emerald-500 border-b-emerald-700 text-white shadow-emerald-500/10"
+          ? "bg-emerald-500/20 border border-emerald-500/30 border-b-4 border-b-emerald-600 text-white shadow-emerald-500/10"
           : showError
-          ? "bg-red/20 border-red border-b-red-dark text-white shadow-red/10"
+          ? "bg-red/20 border border-red/30 border-b-4 border-b-red-dark text-white shadow-red/10"
           : isSelected
-          ? "bg-option-selected border-option-selected-border border-b-option-selected-border text-option-selected-text font-bold"
-          : "bg-option-dark border-white/10 border-b-option-dark-border text-white hover:border-white/20",
-        hasAnswered && !isSelected && !showSuccess && "opacity-50 cursor-default",
+          ? "bg-option-selected border border-transparent border-b-4 border-b-option-selected-border text-option-selected-text shadow-[0_4px_18px_rgba(76,144,221,0.25)]"
+          : "bg-option-dark border border-white/10 border-b-4 border-b-option-dark-border text-white hover:border-white/20 hover:brightness-105",
+        hasAnswered && !isSelected && !showSuccess && "opacity-40 cursor-default",
         className
       )}
       {...props}

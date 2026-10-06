@@ -215,6 +215,8 @@ export function ChatMission() {
         setHasAnswered(false);
       } else {
         setMode("learning");
+        setSelectedId(null);
+        setHasAnswered(false);
       }
     } else {
       if (phase === "free-chat") {
@@ -253,6 +255,10 @@ export function ChatMission() {
   const handleSelectQuizOption = (optionId: string) => {
     if (hasAnswered) return;
     setSelectedId(optionId);
+  };
+
+  const handleConfirmQuiz = () => {
+    if (!selectedId || hasAnswered) return;
     setHasAnswered(true);
   };
 
@@ -405,18 +411,22 @@ export function ChatMission() {
 
           {mode === "quiz" && (
             <motion.button
-              whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: !selectedId ? 1 : 0.98 }}
               type="button"
-              onClick={handleContinueQuiz}
-              disabled={!hasAnswered}
+              onClick={hasAnswered ? handleContinueQuiz : handleConfirmQuiz}
+              disabled={!selectedId}
               className={cn(
-                "w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base transition-all shadow-lg focus-visible:outline-none cursor-pointer",
-                hasAnswered
-                  ? "bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105"
+                "w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base transition-all shadow-lg focus-visible:outline-none",
+                selectedId
+                  ? "bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
                   : "bg-neutral-800 border-b-4 border-neutral-900 opacity-40 cursor-not-allowed"
               )}
             >
-              {isLastQuestion && hasAnswered ? "Concluir Missão 🎉" : "Continuar"}
+              {hasAnswered
+                ? isLastQuestion
+                  ? "Concluir Missão 🎉"
+                  : "Continuar"
+                : "Confirmar"}
             </motion.button>
           )}
         </footer>
