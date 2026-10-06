@@ -1,18 +1,27 @@
-import { Compass, BookOpen, Trophy, User } from "lucide-react";
+import { Compass, MessageSquare, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "cn";
 
+export type NavTab = "trail" | "chat" | "profile";
+
 interface BottomNavProps {
-  currentTab?: "trail" | "library" | "ranking" | "profile";
-  onTabChange?: (tab: "trail" | "library" | "ranking" | "profile") => void;
+  currentTab?: NavTab;
+  onTabChange?: (tab: NavTab) => void;
 }
 
 export function BottomNav({ currentTab = "trail", onTabChange }: BottomNavProps) {
+  const navigate = useNavigate();
+
   const tabs = [
-    { id: "trail" as const, label: "Trilha", icon: Compass },
-    { id: "library" as const, label: "Conteúdos", icon: BookOpen },
-    { id: "ranking" as const, label: "Ranking", icon: Trophy },
-    { id: "profile" as const, label: "Perfil", icon: User },
+    { id: "trail" as const, label: "Trilha", icon: Compass, path: "/trail" },
+    { id: "chat" as const, label: "Chat", icon: MessageSquare, path: "/chat" },
+    { id: "profile" as const, label: "Perfil", icon: User, path: "/profile" },
   ];
+
+  const handleTabClick = (tabId: NavTab, path: string) => {
+    if (onTabChange) onTabChange(tabId);
+    navigate(path);
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#000815]/90 backdrop-blur-md border-t border-white/10 px-4 py-2">
@@ -25,9 +34,9 @@ export function BottomNav({ currentTab = "trail", onTabChange }: BottomNavProps)
             <button
               key={tab.id}
               type="button"
-              onClick={() => onTabChange && onTabChange(tab.id)}
+              onClick={() => handleTabClick(tab.id, tab.path)}
               className={cn(
-                "flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all cursor-pointer",
+                "flex flex-col items-center justify-center py-1 px-4 rounded-xl transition-all cursor-pointer",
                 isActive
                   ? "text-red font-bold scale-105"
                   : "text-white/40 hover:text-white/80 font-medium"

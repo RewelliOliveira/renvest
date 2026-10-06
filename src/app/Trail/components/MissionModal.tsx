@@ -26,7 +26,7 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
     if (node.route) {
       navigate(node.route);
     } else {
-      navigate("/chat");
+      navigate("/mission");
     }
   };
 

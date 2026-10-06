@@ -29,7 +29,7 @@ export const TRAIL_MODULES: TrailModule[] = [
         xpReward: 30,
         coinReward: 10,
         positionX: 0,
-        route: "/chat",
+        route: "/mission",
       },
       {
         id: "m1-n2",

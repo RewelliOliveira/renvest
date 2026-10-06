@@ -4,6 +4,8 @@ import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
 import { Home } from "@/app/Home/pages/Home";
 import { ChatMission } from "@/app/Chat/pages/ChatMission";
+import { Chat } from "@/app/Chat/pages/Chat";
+import { Profile } from "@/app/Profile/pages/Profile";
 import { TrailProgress } from "@/app/Trail/pages/TrailProgress";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
@@ -31,11 +33,14 @@ export function AppRoutes() {
 
         <Route element={<RouteGuard isPrivate />}>
           <Route path="/trail" element={<TrailProgress />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/perfil" element={<Navigate to="/profile" replace />} />
+          <Route path="/mission" element={<ChatMission />} />
           <Route path="/progress" element={<Navigate to="/trail" replace />} />
           <Route path="/caminho" element={<Navigate to="/trail" replace />} />
           <Route path="/dashboard" element={<Navigate to="/trail" replace />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/chat" element={<ChatMission />} />
           <Route path="/" element={<Navigate to="/trail" replace />} />
         </Route>
 
