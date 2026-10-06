@@ -227,7 +227,7 @@ export function ChatMission() {
         setSlideIndex(prevIndex);
         setBubbleText(MODULE_1.learningSteps[prevIndex].bubbleText);
       } else {
-        navigate("/home");
+        navigate("/trail");
       }
     }
   };
@@ -265,7 +265,7 @@ export function ChatMission() {
   const handleContinueQuiz = () => {
     if (!hasAnswered) return;
     if (isLastQuestion) {
-      navigate("/home");
+      navigate("/trail");
     } else {
       setQuizIndex((prev) => prev + 1);
       setSelectedId(null);

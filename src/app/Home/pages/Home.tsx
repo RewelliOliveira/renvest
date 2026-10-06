@@ -30,7 +30,7 @@ export function Home() {
     if (currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      navigate("/chat");
+      navigate("/trail");
     }
   };
 
