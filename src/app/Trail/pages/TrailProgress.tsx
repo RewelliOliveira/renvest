@@ -45,7 +45,8 @@ export function TrailProgress() {
   return (
     <StarBurst
       className="min-h-dvh w-full overflow-x-hidden text-white flex flex-col"
-      maxHeightPercent={35}
+      maxHeightPercent={100}
+      fixed
     >
       <TrailHeader stats={stats} />
 
