@@ -18,7 +18,6 @@ export function SectionBanner({
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
       <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-[#071329] via-[#0b1b38] to-[#040c1c] border border-white/10 p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
-        {/* Glow de fundo */}
         <div className="absolute top-0 right-0 w-36 h-36 bg-blue/15 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-start justify-between gap-3 relative z-10">
@@ -50,7 +49,6 @@ export function SectionBanner({
           </button>
         </div>
 
-        {/* Barra de progresso da seção */}
         <div className="mt-3.5 pt-1 relative z-10">
           <Progress value={percent} className="h-2.5 bg-neutral-900/90" />
           <div className="flex justify-between items-center text-[10px] text-white/50 mt-1 font-semibold">

@@ -39,10 +39,8 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-xs">
-        {/* Backdrop click */}
         <div className="absolute inset-0" onClick={onClose} />
 
-        {/* Modal Card */}
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -50,10 +48,8 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
           transition={{ type: "spring", stiffness: 350, damping: 28 }}
           className="relative z-10 w-full max-w-sm sm:max-w-md bg-[#040a14] border border-white/10 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 shadow-2xl overflow-hidden"
         >
-          {/* Luz de destaque superior */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-24 bg-red/15 rounded-full blur-2xl pointer-events-none" />
 
-          {/* Botão Fechar */}
           <button
             type="button"
             onClick={onClose}
@@ -62,7 +58,6 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
             <X className="w-5 h-5" />
           </button>
 
-          {/* Cabeçalho do Card */}
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 flex items-center justify-center drop-shadow-[0_8px_16px_rgba(240,86,86,0.3)]">
               {isChest ? (
@@ -101,12 +96,10 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
             </div>
           </div>
 
-          {/* Descrição */}
           <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-neutral-300 leading-relaxed mb-4">
             {node.description || "Participe desta lição prática com o Rev para acumular pontos e dominar os conceitos financeiros!"}
           </div>
 
-          {/* Recompensas */}
           <div className="mb-5">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-white/50 block mb-2">
               Recompensas desta etapa
@@ -129,7 +122,6 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
             </div>
           </div>
 
-          {/* Botão de Ação 3D */}
           {isChest ? (
             <button
               type="button"

@@ -32,7 +32,6 @@ export function TrailProgress() {
         ),
       }))
     );
-    // Adiciona recompensa de baú
     if (selectedNode) {
       setStats((prev) => ({
         ...prev,
@@ -48,21 +47,16 @@ export function TrailProgress() {
       className="min-h-dvh w-full overflow-x-hidden text-white flex flex-col"
       maxHeightPercent={35}
     >
-      {/* Barra de Status e Gamificação Fixa */}
       <TrailHeader stats={stats} />
 
-      {/* Conteúdo Principal da Trilha */}
       <main className="flex-1 w-full max-w-lg mx-auto flex flex-col items-center px-4 pt-2 pb-28">
-        {/* Banner da Seção Atual */}
         <SectionBanner
           module={currentModule}
           completedCount={completedNodesCount}
           totalCount={currentModule.nodes.length}
         />
 
-        {/* Trilha de Nós / Caminho do Conhecimento */}
         <div className="relative w-full flex flex-col items-center mt-3">
-          {/* Linha de Conexão Sinuosa de Fundo (SVG) */}
           <svg
             className="absolute top-10 left-0 w-full h-[85%] pointer-events-none z-0 overflow-visible opacity-30"
             viewBox="0 0 320 620"
@@ -77,7 +71,6 @@ export function TrailProgress() {
             />
           </svg>
 
-          {/* Renderização dos Nós */}
           <div className="relative z-10 w-full flex flex-col items-center gap-2">
             {currentModule.nodes.map((node) => (
               <TrailNode
@@ -89,7 +82,6 @@ export function TrailProgress() {
             ))}
           </div>
 
-          {/* Próxima Seção Bloqueada (Preview) */}
           <div className="w-full mt-10 pt-4 border-t border-white/10 flex flex-col items-center text-center opacity-60">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-sky-400">
               Próxima Seção
@@ -104,14 +96,12 @@ export function TrailProgress() {
         </div>
       </main>
 
-      {/* Modal / Card de Missão ao clicar em um Nó */}
       <MissionModal
         node={selectedNode}
         onClose={() => setSelectedNode(null)}
         onOpenChest={handleOpenChest}
       />
 
-      {/* Barra de Navegação Inferior */}
       <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
     </StarBurst>
   );

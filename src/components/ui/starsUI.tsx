@@ -6,54 +6,15 @@ export interface StarBurstProps extends React.HTMLAttributes<HTMLDivElement> {
   color?: string;
   backgroundColor?: string;
   transparent?: boolean;
-  /**
-   * Limite de altura (em %) onde as estrelas aparecem de cima para baixo.
-   * 42 = cobre os primeiros 42% do topo da tela (um pouco menos da metade).
-   * @default 42
-   */
   maxHeightPercent?: number;
-  /**
-   * Ativar ou desativar as estrelas cadentes ocasionais (CadentStars.svg).
-   * @default true
-   */
   enableShootingStars?: boolean;
-  /**
-   * Tempo mínimo (em segundos) entre uma estrela cadente e outra.
-   * @default 1.2
-   */
   minInterval?: number;
-  /**
-   * Tempo máximo (em segundos) entre uma estrela cadente e outra.
-   * @default 3.0
-   */
   maxInterval?: number;
-  /**
-   * Escala de tamanho das estrelas cadentes.
-   * @default 1.0
-   */
   shootingStarScale?: number;
-  /**
-   * Multiplicador de velocidade das estrelas cadentes.
-   * @default 1.0
-   */
   shootingStarSpeed?: number;
-  /**
-   * Ativar ou desativar as estrelas estáticas (StarPoint e StarNormal) no fundo.
-   * @default true
-   */
   showStaticStars?: boolean;
-  /**
-   * Quantidade de pontos de estrelas estáticos (StarPoint) espalhados no topo.
-   * @default 65
-   */
   staticPointCount?: number;
-  /**
-   * Quantidade de estrelas normais de 4 pontas estáticas (StarNormal) espalhadas no topo.
-   * @default 16
-   */
   staticNormalCount?: number;
-
-  // Propriedades mantidas para retrocompatibilidade
   speed?: number;
   starCount?: number;
   centerX?: number;
@@ -89,11 +50,9 @@ function parseColor(input: string): [number, number, number] {
   return [255, 255, 255];
 }
 
-// Caminho vetorial exato do StarNormal.svg (estrela de 4 pontas ~12x8px)
 const STAR_NORMAL_PATH =
   "M7.67767 3.44932L11.1669 6.43286L6.64758 5.57233L3.76243 7.50565L3.48915 4.05627L-3.61092e-05 1.0727L4.51924 1.93326L7.40417 -1.04238e-05L7.67767 3.44932Z";
 
-// SVG exato do CadentStars.svg ampliado 5x (75x25) para máxima nitidez
 const CADENT_STAR_SVG = `<svg width="75" height="25" viewBox="0 0 15 5" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M0.382542 3.55923C0.1386 3.62619 -0.0184647 3.79414 0.00175764 4.04026C0.0247325 4.32008 0.307377 4.63586 0.687262 4.80788C1.12573 5.00641 1.55355 4.98122 1.77331 4.79658L1.77461 4.79771L14.6919 0.373131C14.807 0.333705 14.8147 0.214123 14.7088 0.112576C14.6181 0.0256809 14.4733 -0.0190057 14.3685 0.00760037L0.382542 3.55923Z" fill="url(#cadentGrad)" />
   <defs>
@@ -105,7 +64,6 @@ const CADENT_STAR_SVG = `<svg width="75" height="25" viewBox="0 0 15 5" fill="no
   </defs>
 </svg>`;
 
-// Ângulo natural do vetor cauda->cabeça no SVG original (~163.5 graus)
 const CADENT_NATURAL_ANGLE_RAD = 2.8532;
 
 interface StaticStarPoint {
@@ -170,7 +128,6 @@ export function StarBurst({
 
     const cStar = parseColor(color);
 
-    // Fração da altura máxima (ex: 42% = 0.42)
     const maxHeightRatio = Math.max(
       0.15,
       Math.min(1.0, (maxHeightPercent ?? 42) / 100),
@@ -187,18 +144,14 @@ export function StarBurst({
       };
     };
 
-    // ==========================================
-    // 1. Estrelas Estáticas de Fundo (Apenas no topo até maxHeightRatio)
-    // ==========================================
     const staticRng = makeRng(0xcafe123);
     const staticPoints: StaticStarPoint[] = [];
     if (showStaticStars) {
       for (let i = 0; i < staticPointCount; i++) {
         staticPoints.push({
           relX: 0.02 + staticRng() * 0.96,
-          // Restrito à faixa do topo até maxHeightRatio
           relY: 0.01 + staticRng() * (maxHeightRatio - 0.03),
-          radius: 0.4 + staticRng() * 1.0, // Tamanho delicado para mobile
+          radius: 0.4 + staticRng() * 1.0,
           baseOpacity: 0.15 + staticRng() * 0.65,
           twinkleSpeed: 0.7 + staticRng() * 2.0,
           phase: staticRng() * Math.PI * 2,
@@ -211,9 +164,8 @@ export function StarBurst({
       for (let i = 0; i < staticNormalCount; i++) {
         staticNormals.push({
           relX: 0.03 + staticRng() * 0.94,
-          // Restrito à faixa do topo até maxHeightRatio
           relY: 0.02 + staticRng() * (maxHeightRatio - 0.04),
-          scale: 0.35 + staticRng() * 0.65, // Proporção mais compacta e nítida
+          scale: 0.35 + staticRng() * 0.65,
           rotation: (staticRng() - 0.5) * 0.6,
           baseOpacity: 0.2 + staticRng() * 0.65,
           twinkleSpeed: 0.8 + staticRng() * 2.2,
@@ -225,32 +177,23 @@ export function StarBurst({
     const starNormalPath =
       typeof Path2D !== "undefined" ? new Path2D(STAR_NORMAL_PATH) : null;
 
-    // ==========================================
-    // 2. Imagem do CadentStars.svg
-    // ==========================================
     const cadentImg = new Image();
     cadentImg.src = `data:image/svg+xml;utf8,${encodeURIComponent(CADENT_STAR_SVG)}`;
 
-    // ==========================================
-    // 3. Sistema de Estrelas Cadentes (Alta Frequência & First Mobile)
-    // ==========================================
     const shootingStars: ActiveShootingStar[] = [];
-    let timeUntilNextSpawn = 0.6; // Primeira estrela cadente surge logo no início (0.6s)
+    let timeUntilNextSpawn = 0.6;
     let timeSinceLastSpawn = 0;
 
     const spawnShootingStar = (w: number, h: number) => {
       const isMobile = w < 640;
       const topLimitY = maxHeightRatio * h;
 
-      // Ponto de início: nasce na parte superior (entre 2% e metade da zona permitida)
       const startX = w * (0.15 + Math.random() * 0.8);
       const startY = h * (0.02 + Math.random() * (maxHeightRatio * 0.45));
 
-      // Ângulo de queda: ~150° a ~175° (descendo suavemente para a esquerda)
       const angleDeg = 152 + (Math.random() - 0.5) * 24;
       const angle = (angleDeg * Math.PI) / 180;
 
-      // Proporção de distância adaptada para telas mobile
       const baseDistance = isMobile
         ? Math.min(w * 0.36, 140)
         : Math.min(w * 0.28, 260);
@@ -259,7 +202,6 @@ export function StarBurst({
         (baseDistance * 0.8 + Math.random() * (baseDistance * 0.4)) *
         (shootingStarScale ?? 1);
 
-      // Limita a distância para que a estrela nunca ultrapasse a linha do maxHeightPercent
       const remainingY = topLimitY * 0.96 - startY;
       const maxAllowedDist = Math.max(
         60,
@@ -267,11 +209,9 @@ export function StarBurst({
       );
       const distance = Math.min(wantedDistance, maxAllowedDist);
 
-      // Duração rápida e fluida (0.55s a 0.85s no mobile)
       const baseDuration = (isMobile ? 0.55 : 0.65) + Math.random() * 0.3;
       const duration = baseDuration / Math.max(0.1, shootingStarSpeed ?? 1);
 
-      // Escala visual ajustada para mobile first
       const mobileScaleFactor = isMobile ? 0.65 : 0.95;
       const scale =
         (0.75 + Math.random() * 0.45) *
@@ -328,7 +268,6 @@ export function StarBurst({
 
       const topLimitY = maxHeightRatio * h;
 
-      // Fundo em gradiente linear (0% #000815 até 100% #000000)
       if (transparent) {
         ctx.clearRect(0, 0, w, h);
       } else {
@@ -340,19 +279,14 @@ export function StarBurst({
         ctx.fillRect(0, 0, w, h);
       }
 
-      // ==========================================
-      // A. Desenho das Estrelas Estáticas no Topo
-      // ==========================================
       if (showStaticStars) {
         ctx.globalCompositeOperation = "source-over";
 
-        // 1. StarPoint (pontos sutis com fade-out gradual na borda inferior)
         for (let i = 0; i < staticPoints.length; i++) {
           const pt = staticPoints[i];
           const px = pt.relX * w;
           const py = pt.relY * h;
 
-          // Fade suave conforme se aproxima do limite inferior (maxHeightRatio)
           const yProgress = py / topLimitY;
           const edgeFade =
             yProgress > 0.8 ? Math.max(0, (1 - yProgress) / 0.2) : 1.0;
@@ -371,7 +305,6 @@ export function StarBurst({
           ctx.fill();
         }
 
-        // 2. StarNormal (estrelas de 4 pontas com fade na borda inferior)
         if (starNormalPath) {
           for (let i = 0; i < staticNormals.length; i++) {
             const sn = staticNormals[i];
@@ -402,9 +335,6 @@ export function StarBurst({
         }
       }
 
-      // ==========================================
-      // B. Animação das Estrelas Cadentes (CadentStars.svg)
-      // ==========================================
       if (enableShootingStars) {
         timeSinceLastSpawn += dt;
 
@@ -412,10 +342,8 @@ export function StarBurst({
           timeSinceLastSpawn = 0;
           const safeMin = Math.max(0.4, minInterval);
           const safeMax = Math.max(safeMin, maxInterval);
-          // Frequência dinâmica aumentada
           timeUntilNextSpawn = safeMin + Math.random() * (safeMax - safeMin);
 
-          // Permite até 2 estrelas cadentes simultâneas
           if (shootingStars.length < 2) {
             spawnShootingStar(w, h);
           }
@@ -434,7 +362,6 @@ export function StarBurst({
             continue;
           }
 
-          // Entrada rápida (15%) e saída suave (40%)
           let fade: number;
           if (progress < 0.15) {
             fade = progress / 0.15;
@@ -451,13 +378,11 @@ export function StarBurst({
           const px = star.startX + Math.cos(star.angle) * currentDist;
           const py = star.startY + Math.sin(star.angle) * currentDist;
 
-          // Se passar do limite superior por segurança, encerra
           if (py > topLimitY) {
             shootingStars.splice(i, 1);
             continue;
           }
 
-          // Desenho do rastro vetorizado com SVG
           if (cadentImg.complete) {
             ctx.save();
             ctx.translate(px, py);
@@ -469,7 +394,6 @@ export function StarBurst({
             ctx.restore();
           }
 
-          // Ponto de luz na ponta da estrela cadente
           const flareRadius = 3.5 * star.scale;
           const flare = ctx.createRadialGradient(
             px,
@@ -529,7 +453,7 @@ export function StarBurst({
       ref={containerRef}
       className={cn(
         "relative w-full h-full overflow-hidden",
-        !transparent && "bg-gradient-to-b from-[#000815] to-[#000000]",
+        !transparent && "bg-linear-to-b from-[#000815] to-[#000000]",
         className,
       )}
       style={{

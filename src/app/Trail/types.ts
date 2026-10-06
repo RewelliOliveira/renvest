@@ -8,10 +8,10 @@ export interface TrailNodeItem {
   subtitle: string;
   type: NodeType;
   status: NodeStatus;
-  stars?: number; // 0 a 3 estrelas para nós concluídos
+  stars?: number;
   xpReward: number;
   coinReward: number;
-  positionX: number; // -1 (esquerda), 0 (centro), 1 (direita) para a curva
+  positionX: number;
   route?: string;
   description?: string;
   chestOpened?: boolean;
