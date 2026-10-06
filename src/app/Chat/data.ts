@@ -1,40 +1,7 @@
-import type { ComponentType, SVGProps } from "react";
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
+import type { MissionModule } from "./types";
 
-export interface LearningStep {
-  id: number;
-  mascot: ComponentType<SVGProps<SVGSVGElement>>;
-  title: string;
-  bubbleText: string;
-}
-
-export interface QuizOption {
-  id: string;
-  text: string;
-  isCorrect?: boolean;
-}
-
-export interface SourceCitation {
-  document: string;
-  section: string;
-}
-
-export interface QuizStep {
-  id: number;
-  mascot: ComponentType<SVGProps<SVGSVGElement>>;
-  question: string;
-  explanation: string;
-  source: SourceCitation;
-  options: QuizOption[];
-}
-
-export interface MissionModule {
-  id: string;
-  title: string;
-  learningSteps: LearningStep[];
-  chatSuggestions: string[];
-  quizSteps: QuizStep[];
-}
+export * from "./types";
 
 export const MODULE_1: MissionModule = {
   id: "modulo-1-fgc",
