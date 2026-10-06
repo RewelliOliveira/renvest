@@ -1,10 +1,8 @@
 import { useChatMission } from "../hooks/useChatMission";
-import {
-  MissionHeader,
-  LearningView,
-  QuizView,
-  MissionFooter,
-} from "../components";
+import { MissionHeader } from "../components/MissionHeader";
+import { LearningView } from "../components/LearningView";
+import { QuizView } from "../components/QuizView";
+import { MissionFooter } from "../components/MissionFooter";
 
 export function ChatMission() {
   const {

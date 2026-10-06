@@ -3,8 +3,8 @@ import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
 import { Home } from "@/app/Home/pages/Home";
-import { ChatMission } from "@/app/Chat";
-import { TrailProgress } from "@/app/Trail";
+import { ChatMission } from "@/app/Chat/pages/ChatMission";
+import { TrailProgress } from "@/app/Trail/pages/TrailProgress";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { isAuthenticated } = useAuth();

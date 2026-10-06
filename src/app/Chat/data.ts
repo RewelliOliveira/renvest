@@ -1,8 +1,6 @@
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
 import type { MissionModule } from "./types";
 
-export * from "./types";
-
 export const MODULE_1: MissionModule = {
   id: "modulo-1-fgc",
   title: "O Escudo do Dinheiro",
