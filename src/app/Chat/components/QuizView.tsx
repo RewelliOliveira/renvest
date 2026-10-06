@@ -2,7 +2,7 @@ import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { QuizOptionsList } from "./QuizOptionsList";
-import type { QuizStep } from "../types";
+import type { QuizStep } from "../types/types";
 
 interface QuizViewProps {
   quizIndex: number;

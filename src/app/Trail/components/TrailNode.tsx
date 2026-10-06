@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { Check, Lock, Star, Gift, Trophy, Play, Sparkles } from "lucide-react";
 import { MascotPoint } from "@/assets/icons";
 import { cn } from "cn";
-import type { TrailNodeItem } from "../types";
+import type { TrailNodeItem } from "../types/types";
 
 interface TrailNodeProps {
   node: TrailNodeItem;

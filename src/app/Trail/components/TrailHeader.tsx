@@ -1,6 +1,6 @@
 import { Flame, Coins, Heart, Zap } from "lucide-react";
 import { LogomarcaIcon } from "@/assets/icons";
-import type { UserStats } from "../types";
+import type { UserStats } from "../types/types";
 
 interface TrailHeaderProps {
   stats: UserStats;

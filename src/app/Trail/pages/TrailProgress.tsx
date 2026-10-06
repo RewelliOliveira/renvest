@@ -6,7 +6,7 @@ import { TrailNode } from "../components/TrailNode";
 import { MissionModal } from "../components/MissionModal";
 import { BottomNav } from "../components/BottomNav";
 import { TRAIL_MODULES, INITIAL_USER_STATS } from "../data/trailData";
-import type { TrailNodeItem, UserStats } from "../types";
+import type { TrailNodeItem, UserStats } from "../types/types";
 
 export function TrailProgress() {
   const [stats, setStats] = useState<UserStats>(INITIAL_USER_STATS);

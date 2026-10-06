@@ -1,4 +1,4 @@
-import type { TrailModule, UserStats } from "../types";
+import type { TrailModule, UserStats } from "../types/types";
 
 export const INITIAL_USER_STATS: UserStats = {
   streak: 3,

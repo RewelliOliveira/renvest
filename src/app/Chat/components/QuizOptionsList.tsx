@@ -1,7 +1,7 @@
 import { BarChart2, CheckCircle2, XCircle, FileText } from "lucide-react";
 import { motion } from "motion/react";
 import { OptionButton } from "@/components/ui/OptionButton";
-import type { QuizOption, SourceCitation } from "../types";
+import type { QuizOption, SourceCitation } from "../types/types";
 
 interface QuizOptionsListProps {
   options: QuizOption[];

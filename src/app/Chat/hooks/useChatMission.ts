@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MODULE_1 } from "../data";
 import { buildMockReply } from "../utils/mockReply";
-import type { MissionMode, LearningPhase } from "../types";
+import type { MissionMode, LearningPhase } from "../types/types";
 
 const TOTAL_PROGRESS = MODULE_1.learningSteps.length + MODULE_1.quizSteps.length + 1;
 

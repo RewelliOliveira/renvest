@@ -1,6 +1,6 @@
 import { BookOpen, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import type { TrailModule } from "../types";
+import type { TrailModule } from "../types/types";
 
 interface SectionBannerProps {
   module: TrailModule;

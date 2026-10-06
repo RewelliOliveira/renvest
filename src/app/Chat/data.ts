@@ -1,5 +1,5 @@
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
-import type { MissionModule } from "./types";
+import type { MissionModule } from "./types/types";
 
 export const MODULE_1: MissionModule = {
   id: "modulo-1-fgc",

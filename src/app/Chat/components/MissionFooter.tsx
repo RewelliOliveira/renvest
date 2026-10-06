@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { cn } from "cn";
 import { LearningChat } from "./LearningChat";
-import type { MissionMode, LearningPhase } from "../types";
+import type { MissionMode, LearningPhase } from "../types/types";
 
 interface MissionFooterProps {
   mode: MissionMode;
