@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+﻿import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
@@ -9,7 +9,18 @@ import { Profile } from "@/app/Profile/pages/Profile";
 import { TrailProgress } from "@/app/Trail/pages/TrailProgress";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#07090E] text-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+          <p className="text-sm text-neutral-400">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isPrivate && !isAuthenticated) {
     return <Navigate to="/login" replace />;
