@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+﻿import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
 import { useGoogleAuth } from "./useGoogleAuth";
@@ -12,10 +12,27 @@ export function useLoginForm() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login: executeGoogleLogin } = useGoogleAuth((profile) => {
-    loginWithGoogle(profile);
-    navigate("/home", { replace: true });
-  });
+  const { login: executeGoogleLogin } = useGoogleAuth(
+    async (tokenData) => {
+      setIsSubmitting(true);
+      setError("");
+      try {
+        const result = await loginWithGoogle(tokenData.access_token);
+        if (result.success) {
+          navigate("/home", { replace: true });
+        } else {
+          setError(result.error || "Erro ao autenticar com Google.");
+        }
+      } catch {
+        setError("Erro inesperado ao conectar com o Google.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    () => {
+      setError("Falha ou cancelamento da autenticação com o Google.");
+    }
+  );
 
   const handleGoogleLogin = () => {
     executeGoogleLogin();
@@ -24,6 +41,12 @@ export function useLoginForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!email.trim() || !password) {
+      setError("Informe seu e-mail e sua senha.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
