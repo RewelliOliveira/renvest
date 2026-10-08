@@ -1,4 +1,4 @@
-import { createContext } from "react";
+﻿import { createContext } from "react";
 
 export interface User {
   id: string;
@@ -6,6 +6,7 @@ export interface User {
   email: string;
   picture?: string;
   authProvider: "google" | "local";
+  createdAt?: string;
 }
 
 export interface AuthResult {
@@ -16,9 +17,10 @@ export interface AuthResult {
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (username: string, email: string, password: string) => Promise<AuthResult>;
-  loginWithGoogle: (profile: { sub: string; name: string; email: string; picture?: string }) => void;
+  loginWithGoogle: (authData: string | { access_token?: string; sub?: string; name?: string; email?: string; picture?: string }) => Promise<AuthResult>;
   logout: () => void;
 }
 
