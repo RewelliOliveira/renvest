@@ -1,7 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MODULE_1 } from "../data";
-import { buildMockReply } from "../utils/mockReply";
+import { sendChatMessage } from "../services/chatApi";
 import type { MissionMode, LearningPhase } from "../types/types";
 
 const TOTAL_PROGRESS = MODULE_1.learningSteps.length + MODULE_1.quizSteps.length + 1;
@@ -64,13 +64,20 @@ export function useChatMission() {
     }
   };
 
-  const handleChatMessage = (text: string) => {
+  const handleChatMessage = async (text: string) => {
     if (!text.trim() || isTyping) return;
     setIsTyping(true);
-    setTimeout(() => {
+    try {
+      const response = await sendChatMessage({
+        message: text.trim(),
+        module: "modulo_1",
+      });
+      setBubbleText(response.reply);
+    } catch {
+      setBubbleText("Desculpe, tive uma instabilidade temporária ao buscar a resposta. Tente novamente em instantes!");
+    } finally {
       setIsTyping(false);
-      setBubbleText(buildMockReply(text));
-    }, 900);
+    }
   };
 
   const handleSelectQuizOption = (optionId: string) => {
