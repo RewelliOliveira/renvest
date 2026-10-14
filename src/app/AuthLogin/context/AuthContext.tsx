@@ -1,11 +1,27 @@
-﻿import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { AuthContext, type User, type AuthResult } from "./authContextDef";
-import { apiRegister, apiLogin, apiGoogleAuth, apiGetMe } from "../services/authApi";
+import {
+  apiRegister,
+  apiLogin,
+  apiGoogleAuth,
+  apiGetMe,
+  type ApiUser,
+  type AuthResponseData,
+} from "../services/authApi";
+import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY, UNAUTHORIZED_EVENT, getStoredToken } from "@/lib/api";
 
 export type { User, AuthResult } from "./authContextDef";
 
-const USER_STORAGE_KEY = "@renvest:user";
-const TOKEN_STORAGE_KEY = "@renvest:token";
+function toUser(apiUser: ApiUser): User {
+  return {
+    id: apiUser.id,
+    name: apiUser.name,
+    email: apiUser.email,
+    picture: apiUser.picture,
+    authProvider: apiUser.auth_provider,
+    createdAt: apiUser.created_at,
+  };
+}
 
 function getStoredUser(): User | null {
   try {
@@ -16,124 +32,72 @@ function getStoredUser(): User | null {
   }
 }
 
+function clearStoredSession() {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem(USER_STORAGE_KEY);
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(getStoredUser);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const logout = useCallback(() => {
+    clearStoredSession();
+    setUser(null);
+  }, []);
+
   // Valida a sessão com o backend ao inicializar
   useEffect(() => {
     async function validateSession() {
-      const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-      if (!token) {
+      if (!getStoredToken()) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const profile = await apiGetMe(token);
-        const validatedUser: User = {
-          id: profile.id,
-          name: profile.name,
-          email: profile.email,
-          picture: profile.picture,
-          authProvider: profile.auth_provider,
-          createdAt: profile.created_at,
-        };
+        const validatedUser = toUser(await apiGetMe());
         setUser(validatedUser);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(validatedUser));
       } catch {
-        localStorage.removeItem(TOKEN_STORAGE_KEY);
-        localStorage.removeItem(USER_STORAGE_KEY);
-        setUser(null);
+        logout();
       } finally {
         setIsLoading(false);
       }
     }
 
     validateSession();
-  }, []);
+  }, [logout]);
 
-  const register = async (username: string, email: string, password: string): Promise<AuthResult> => {
-    try {
-      const response = await apiRegister(username, email, password);
-      const newUser: User = {
-        id: response.user.id,
-        name: response.user.name,
-        email: response.user.email,
-        picture: response.user.picture,
-        authProvider: response.user.auth_provider,
-        createdAt: response.user.created_at,
-      };
+  // Encerra a sessão quando qualquer requisição autenticada retorna 401 (token expirado)
+  useEffect(() => {
+    window.addEventListener(UNAUTHORIZED_EVENT, logout);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, logout);
+  }, [logout]);
 
-      localStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
-      setUser(newUser);
-
-      return { success: true };
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Erro ao cadastrar usuário.";
-      return { success: false, error: message };
-    }
-  };
-
-  const login = async (email: string, password: string): Promise<AuthResult> => {
-    try {
-      const response = await apiLogin(email, password);
-      const loggedUser: User = {
-        id: response.user.id,
-        name: response.user.name,
-        email: response.user.email,
-        picture: response.user.picture,
-        authProvider: response.user.auth_provider,
-        createdAt: response.user.created_at,
-      };
-
-      localStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(loggedUser));
-      setUser(loggedUser);
-
-      return { success: true };
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Erro ao efetuar login.";
-      return { success: false, error: message };
-    }
-  };
-
-  const loginWithGoogle = async (
-    authData: string | { access_token?: string; sub?: string; name?: string; email?: string; picture?: string }
+  const authenticate = async (
+    request: () => Promise<AuthResponseData>,
+    fallbackError: string
   ): Promise<AuthResult> => {
     try {
-      const token = typeof authData === "string" ? authData : authData.access_token;
-      if (!token) {
-        return { success: false, error: "Token de acesso do Google não fornecido." };
-      }
-
-      const response = await apiGoogleAuth(token);
-      const googleUser: User = {
-        id: response.user.id,
-        name: response.user.name,
-        email: response.user.email,
-        picture: response.user.picture,
-        authProvider: response.user.auth_provider,
-        createdAt: response.user.created_at,
-      };
-
+      const response = await request();
+      const authenticatedUser = toUser(response.user);
       localStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(googleUser));
-      setUser(googleUser);
-
-      return { success: true };
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(authenticatedUser));
+      setUser(authenticatedUser);
+      return { success: true, user: authenticatedUser };
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Erro ao efetuar login com Google.";
-      return { success: false, error: message };
+      return { success: false, error: err instanceof Error ? err.message : fallbackError };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem(TOKEN_STORAGE_KEY);
-    localStorage.removeItem(USER_STORAGE_KEY);
-    setUser(null);
-  };
+  const register = (username: string, email: string, password: string) =>
+    authenticate(() => apiRegister(username, email, password), "Erro ao cadastrar usuário.");
+
+  const login = (email: string, password: string) =>
+    authenticate(() => apiLogin(email, password), "Erro ao efetuar login.");
+
+  const loginWithGoogle = (accessToken: string) =>
+    authenticate(() => apiGoogleAuth(accessToken), "Erro ao efetuar login com Google.");
 
   return (
     <AuthContext.Provider

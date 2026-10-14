@@ -1,18 +1,5 @@
-﻿import type { ChatApiResponse, ChatHistoryItem, SuggestionsApiResponse } from "../types/types";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-const TOKEN_STORAGE_KEY = "@renvest:token";
-
-function getAuthHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-  const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-  return headers;
-}
+import { apiRequest } from "@/lib/api";
+import type { ChatApiResponse, ChatHistoryItem, SuggestionsApiResponse } from "../types/types";
 
 export interface SendChatMessageParams {
   message: string;
@@ -20,43 +7,25 @@ export interface SendChatMessageParams {
   history?: ChatHistoryItem[];
 }
 
-export async function sendChatMessage({
+export function sendChatMessage({
   message,
   module = "modulo_1",
   history = [],
 }: SendChatMessageParams): Promise<ChatApiResponse> {
-  const res = await fetch(`${API_URL}/chat`, {
+  return apiRequest("/chat", {
     method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      message,
-      module,
-      history,
-    }),
+    auth: true,
+    body: { message, module, history },
+    fallbackError: "Não foi possível obter resposta do Rev. Tente novamente em instantes.",
   });
-
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(
-      errorData.detail || "Não foi possível obter resposta do Rev. Tente novamente em instantes."
-    );
-  }
-
-  return res.json();
 }
 
 export async function getChatSuggestions(module: string = "modulo_1"): Promise<string[]> {
   try {
-    const res = await fetch(`${API_URL}/chat/suggestions?module=${encodeURIComponent(module)}`, {
-      method: "GET",
-      headers: getAuthHeaders(),
-    });
-
-    if (!res.ok) {
-      return [];
-    }
-
-    const data: SuggestionsApiResponse = await res.json();
+    const data = await apiRequest<SuggestionsApiResponse>(
+      `/chat/suggestions?module=${encodeURIComponent(module)}`,
+      { method: "GET", fallbackError: "" }
+    );
     return data.suggestions || [];
   } catch {
     return [];

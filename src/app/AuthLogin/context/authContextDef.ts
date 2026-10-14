@@ -1,4 +1,4 @@
-﻿import { createContext } from "react";
+import { createContext } from "react";
 
 export interface User {
   id: string;
@@ -11,6 +11,7 @@ export interface User {
 
 export interface AuthResult {
   success: boolean;
+  user?: User;
   error?: string;
 }
 
@@ -20,7 +21,7 @@ export interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<AuthResult>;
   register: (username: string, email: string, password: string) => Promise<AuthResult>;
-  loginWithGoogle: (authData: string | { access_token?: string; sub?: string; name?: string; email?: string; picture?: string }) => Promise<AuthResult>;
+  loginWithGoogle: (accessToken: string) => Promise<AuthResult>;
   logout: () => void;
 }
 

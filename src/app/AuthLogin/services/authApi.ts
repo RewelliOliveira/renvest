@@ -1,4 +1,4 @@
-﻿const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+import { apiRequest } from "@/lib/api";
 
 export interface ApiUser {
   id: string;
@@ -15,54 +15,34 @@ export interface AuthResponseData {
   token_type: string;
 }
 
-export async function apiRegister(name: string, email: string, password: string): Promise<AuthResponseData> {
-  const res = await fetch(`${API_URL}/auth/register`, {
+export function apiRegister(name: string, email: string, password: string): Promise<AuthResponseData> {
+  return apiRequest("/auth/register", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
+    body: { name, email, password },
+    fallbackError: "Erro ao realizar cadastro.",
   });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || "Erro ao realizar cadastro.");
-  }
-  return res.json();
 }
 
-export async function apiLogin(email: string, password: string): Promise<AuthResponseData> {
-  const res = await fetch(`${API_URL}/auth/login`, {
+export function apiLogin(email: string, password: string): Promise<AuthResponseData> {
+  return apiRequest("/auth/login", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: { email, password },
+    fallbackError: "Erro ao realizar login.",
   });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || "Erro ao realizar login.");
-  }
-  return res.json();
 }
 
-export async function apiGoogleAuth(accessToken: string): Promise<AuthResponseData> {
-  const res = await fetch(`${API_URL}/auth/google`, {
+export function apiGoogleAuth(accessToken: string): Promise<AuthResponseData> {
+  return apiRequest("/auth/google", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ access_token: accessToken }),
+    body: { access_token: accessToken },
+    fallbackError: "Erro na autenticação com Google.",
   });
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || "Erro na autenticação com Google.");
-  }
-  return res.json();
 }
 
-export async function apiGetMe(token: string): Promise<ApiUser> {
-  const res = await fetch(`${API_URL}/auth/me`, {
+export function apiGetMe(): Promise<ApiUser> {
+  return apiRequest("/auth/me", {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    auth: true,
+    fallbackError: "Sessão expirada ou inválida.",
   });
-  if (!res.ok) {
-    throw new Error("Sessão expirada ou inválida.");
-  }
-  return res.json();
 }
