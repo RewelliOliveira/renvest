@@ -26,11 +26,3 @@ export interface TrailModule {
   color: string;
   nodes: TrailNodeItem[];
 }
-
-export interface UserStats {
-  streak: number;
-  xp: number;
-  coins: number;
-  hearts: number;
-  maxHearts: number;
-}

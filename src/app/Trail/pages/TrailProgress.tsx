@@ -4,15 +4,13 @@ import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
 import { MissionModal } from "../components/MissionModal";
-import { BottomNav, type NavTab } from "../components/BottomNav";
-import { TRAIL_MODULES, INITIAL_USER_STATS } from "../data/trailData";
-import type { TrailNodeItem, UserStats } from "../types/types";
+import { BottomNav } from "../components/BottomNav";
+import { TRAIL_MODULES } from "../data/trailData";
+import type { TrailNodeItem } from "../types/types";
 
 export function TrailProgress() {
-  const [, setStats] = useState<UserStats>(INITIAL_USER_STATS);
   const [modules, setModules] = useState(TRAIL_MODULES);
   const [selectedNode, setSelectedNode] = useState<TrailNodeItem | null>(null);
-  const [currentTab, setCurrentTab] = useState<NavTab>("trail");
 
   const currentModule = modules[0];
 
@@ -29,13 +27,6 @@ export function TrailProgress() {
         ),
       }))
     );
-    if (selectedNode) {
-      setStats((prev) => ({
-        ...prev,
-        xp: prev.xp + selectedNode.xpReward,
-        coins: prev.coins + selectedNode.coinReward,
-      }));
-    }
     setSelectedNode(null);
   };
 
@@ -96,7 +87,7 @@ export function TrailProgress() {
         onOpenChest={handleOpenChest}
       />
 
-      <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
+      <BottomNav currentTab="trail" />
     </StarBurst>
   );
 }

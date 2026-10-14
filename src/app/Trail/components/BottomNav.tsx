@@ -6,10 +6,9 @@ export type NavTab = "trail" | "chat" | "profile";
 
 interface BottomNavProps {
   currentTab?: NavTab;
-  onTabChange?: (tab: NavTab) => void;
 }
 
-export function BottomNav({ currentTab = "trail", onTabChange }: BottomNavProps) {
+export function BottomNav({ currentTab = "trail" }: BottomNavProps) {
   const navigate = useNavigate();
 
   const tabs = [
@@ -18,10 +17,6 @@ export function BottomNav({ currentTab = "trail", onTabChange }: BottomNavProps)
     { id: "profile" as const, label: "Perfil", icon: User, path: "/profile" },
   ];
 
-  const handleTabClick = (tabId: NavTab, path: string) => {
-    if (onTabChange) onTabChange(tabId);
-    navigate(path);
-  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#000815]/90 backdrop-blur-md border-t border-white/10 px-4 py-2">
@@ -34,7 +29,7 @@ export function BottomNav({ currentTab = "trail", onTabChange }: BottomNavProps)
             <button
               key={tab.id}
               type="button"
-              onClick={() => handleTabClick(tab.id, tab.path)}
+              onClick={() => navigate(tab.path)}
               className={cn(
                 "flex flex-col items-center justify-center py-1 px-4 rounded-xl transition-all cursor-pointer",
                 isActive
