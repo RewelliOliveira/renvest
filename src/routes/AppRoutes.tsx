@@ -1,5 +1,6 @@
-﻿import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
+import { getPostAuthRoute } from "@/lib/onboarding";
 import { Login } from "@/app/AuthLogin/pages/Login";
 import { Register } from "@/app/AuthLogin/pages/Register";
 import { Home } from "@/app/Home/pages/Home";
@@ -9,7 +10,7 @@ import { Profile } from "@/app/Profile/pages/Profile";
 import { TrailProgress } from "@/app/Trail/pages/TrailProgress";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -27,7 +28,7 @@ function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   }
 
   if (!isPrivate && isAuthenticated) {
-    return <Navigate to="/trail" replace />;
+    return <Navigate to={getPostAuthRoute(user?.id)} replace />;
   }
 
   return <Outlet />;

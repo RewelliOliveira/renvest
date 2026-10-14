@@ -1,11 +1,13 @@
-﻿import { useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
-import { useGoogleAuth } from "./useGoogleAuth";
+import { useGoogleSignIn } from "./useGoogleAuth";
+
+const MIN_PASSWORD_LENGTH = 6;
 
 export function useRegisterForm() {
   const navigate = useNavigate();
-  const { register, loginWithGoogle } = useAuth();
+  const { register } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -14,31 +16,7 @@ export function useRegisterForm() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login: executeGoogleLogin } = useGoogleAuth(
-    async (tokenData) => {
-      setIsSubmitting(true);
-      setError("");
-      try {
-        const result = await loginWithGoogle(tokenData.access_token);
-        if (result.success) {
-          navigate("/home", { replace: true });
-        } else {
-          setError(result.error || "Erro ao autenticar com Google.");
-        }
-      } catch {
-        setError("Erro inesperado ao conectar com o Google.");
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    () => {
-      setError("Falha ou cancelamento da autenticação com o Google.");
-    }
-  );
-
-  const handleGoogleLogin = () => {
-    executeGoogleLogin();
-  };
+  const handleGoogleLogin = useGoogleSignIn({ setError, setIsSubmitting });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,8 +27,8 @@ export function useRegisterForm() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("A senha deve ter no mínimo 6 caracteres.");
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(`A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.`);
       return;
     }
 
@@ -60,16 +38,14 @@ export function useRegisterForm() {
     }
 
     setIsSubmitting(true);
-
     try {
       const result = await register(username, email, password);
       if (result.success) {
+        // Conta nova sempre passa pelo onboarding
         navigate("/home", { replace: true });
       } else {
         setError(result.error || "Erro ao cadastrar conta.");
       }
-    } catch {
-      setError("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -87,6 +63,6 @@ export function useRegisterForm() {
     error,
     isSubmitting,
     handleSubmit,
-    handleGoogleLogin,
+    handleGoogleLogin: () => handleGoogleLogin(),
   };
 }
