@@ -1,9 +1,10 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MODULE_1 } from "../data";
 import { sendChatMessage } from "../services/chatApi";
-import type { MissionMode, LearningPhase } from "../types/types";
+import type { MissionMode, LearningPhase, ChatHistoryItem } from "../types/types";
 
+const HISTORY_WINDOW = 6;
 const TOTAL_PROGRESS = MODULE_1.learningSteps.length + MODULE_1.quizSteps.length + 1;
 
 export function useChatMission() {
@@ -13,6 +14,7 @@ export function useChatMission() {
   const [phase, setPhase] = useState<LearningPhase>("slides");
   const [bubbleText, setBubbleText] = useState(MODULE_1.learningSteps[0].bubbleText);
   const [isTyping, setIsTyping] = useState(false);
+  const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
 
   const [quizIndex, setQuizIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -65,14 +67,21 @@ export function useChatMission() {
   };
 
   const handleChatMessage = async (text: string) => {
-    if (!text.trim() || isTyping) return;
+    const message = text.trim();
+    if (!message || isTyping) return;
     setIsTyping(true);
     try {
       const response = await sendChatMessage({
-        message: text.trim(),
+        message,
         module: "modulo_1",
+        history: chatHistory.slice(-HISTORY_WINDOW),
       });
       setBubbleText(response.reply);
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "user", content: message },
+        { role: "assistant", content: response.reply },
+      ]);
     } catch {
       setBubbleText("Desculpe, tive uma instabilidade temporária ao buscar a resposta. Tente novamente em instantes!");
     } finally {

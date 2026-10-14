@@ -44,7 +44,7 @@ export function QuizView({
               <SpeechBubble direction="left">
                 {hasAnswered
                   ? currentQuestion.explanation
-                  : "Vamos testar o que você aprendeu sobre o FGC!"}
+                  : "Vamos testar o que você aprendeu!"}
               </SpeechBubble>
             </div>
           </div>
