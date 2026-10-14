@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import type { FormEvent } from "react";
 import { Send, Sparkles, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -133,11 +133,11 @@ export function Chat() {
   };
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-gradient-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex flex-col justify-between">
+    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex flex-col justify-between">
       {/* Top Header */}
       <header className="sticky top-0 z-30 w-full bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
         <div className="max-w-md mx-auto flex items-center gap-3">
-          <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-red/30 to-sky-500/30 border border-white/15 flex items-center justify-center p-1 shadow-inner shrink-0">
+          <div className="relative w-10 h-10 rounded-full bg-linear-to-br from-red/30 to-sky-500/30 border border-white/15 flex items-center justify-center p-1 shadow-inner shrink-0">
             <MascotHello className="h-full w-auto object-contain" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#000815]" />
           </div>
