@@ -1,18 +1,16 @@
-﻿# Estagio 1: Build da aplicacao React/Vite
+# Estagio 1: Build da aplicacao React/Vite
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 ARG VITE_API_URL=http://localhost:8000/api
 ARG VITE_GOOGLE_CLIENT_ID
-ARG VITE_GOOGLE_USERINFO_URL
 
 ENV VITE_API_URL=$VITE_API_URL \
-    VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID \
-    VITE_GOOGLE_USERINFO_URL=$VITE_GOOGLE_USERINFO_URL
+    VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN npm run build
