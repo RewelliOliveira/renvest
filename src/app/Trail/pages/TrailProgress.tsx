@@ -5,19 +5,14 @@ import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
 import { MissionModal } from "../components/MissionModal";
 import { BottomNav } from "../components/BottomNav";
-import { TRAIL_MODULES, INITIAL_USER_STATS } from "../data/trailData";
-import type { TrailNodeItem, UserStats } from "../types";
+import { TRAIL_MODULES } from "../data/trailData";
+import type { TrailNodeItem } from "../types/types";
 
 export function TrailProgress() {
-  const [stats, setStats] = useState<UserStats>(INITIAL_USER_STATS);
   const [modules, setModules] = useState(TRAIL_MODULES);
   const [selectedNode, setSelectedNode] = useState<TrailNodeItem | null>(null);
-  const [currentTab, setCurrentTab] = useState<"trail" | "library" | "ranking" | "profile">("trail");
 
   const currentModule = modules[0];
-  const completedNodesCount = currentModule.nodes.filter(
-    (n) => n.status === "completed"
-  ).length;
 
   const handleNodeClick = (node: TrailNodeItem) => {
     setSelectedNode(node);
@@ -32,29 +27,19 @@ export function TrailProgress() {
         ),
       }))
     );
-    if (selectedNode) {
-      setStats((prev) => ({
-        ...prev,
-        xp: prev.xp + selectedNode.xpReward,
-        coins: prev.coins + selectedNode.coinReward,
-      }));
-    }
     setSelectedNode(null);
   };
 
   return (
     <StarBurst
       className="min-h-dvh w-full overflow-x-hidden text-white flex flex-col"
-      maxHeightPercent={35}
+      maxHeightPercent={100}
+      fixed
     >
-      <TrailHeader stats={stats} />
+      <TrailHeader />
 
       <main className="flex-1 w-full max-w-lg mx-auto flex flex-col items-center px-4 pt-2 pb-28">
-        <SectionBanner
-          module={currentModule}
-          completedCount={completedNodesCount}
-          totalCount={currentModule.nodes.length}
-        />
+        <SectionBanner module={currentModule} />
 
         <div className="relative w-full flex flex-col items-center mt-3">
           <svg
@@ -102,7 +87,7 @@ export function TrailProgress() {
         onOpenChest={handleOpenChest}
       />
 
-      <BottomNav currentTab={currentTab} onTabChange={setCurrentTab} />
+      <BottomNav currentTab="trail" />
     </StarBurst>
   );
 }

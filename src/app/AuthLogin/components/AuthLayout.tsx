@@ -8,7 +8,6 @@ export interface AuthLayoutProps {
   title: string;
   navLabel: string;
   to?: string;
-  onNavigate?: () => void;
   children: React.ReactNode;
   mobileBrand?: React.ReactNode;
 }

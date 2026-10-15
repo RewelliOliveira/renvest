@@ -1,7 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
-import type { LearningPhase } from "../types";
+import type { LearningPhase } from "../types/types";
 
 interface LearningViewProps {
   slideIndex: number;

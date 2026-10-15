@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
-import { useGoogleAuth } from "./useGoogleAuth";
+import { useGoogleSignIn } from "./useGoogleAuth";
+
+const MIN_PASSWORD_LENGTH = 6;
 
 export function useRegisterForm() {
   const navigate = useNavigate();
-  const { register, loginWithGoogle } = useAuth();
+  const { register } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -14,14 +16,7 @@ export function useRegisterForm() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login: executeGoogleLogin } = useGoogleAuth((profile) => {
-    loginWithGoogle(profile);
-    navigate("/home", { replace: true });
-  });
-
-  const handleGoogleLogin = () => {
-    executeGoogleLogin();
-  };
+  const handleGoogleLogin = useGoogleSignIn({ setError, setIsSubmitting });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -32,22 +27,25 @@ export function useRegisterForm() {
       return;
     }
 
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(`A senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres.`);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("As senhas digitadas não coincidem.");
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const result = await register(username, email, password);
       if (result.success) {
+        // Conta nova sempre passa pelo onboarding
         navigate("/home", { replace: true });
       } else {
         setError(result.error || "Erro ao cadastrar conta.");
       }
-    } catch {
-      setError("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,6 +63,6 @@ export function useRegisterForm() {
     error,
     isSubmitting,
     handleSubmit,
-    handleGoogleLogin,
+    handleGoogleLogin: () => handleGoogleLogin(),
   };
 }

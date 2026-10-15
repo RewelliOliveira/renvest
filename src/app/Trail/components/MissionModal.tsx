@@ -3,7 +3,7 @@ import { X, Zap, Coins, Star, Gift, ArrowRight, Lock, CheckCircle2 } from "lucid
 import { useNavigate } from "react-router-dom";
 import { MascotHello } from "@/assets/icons";
 import { cn } from "cn";
-import type { TrailNodeItem } from "../types";
+import type { TrailNodeItem } from "../types/types";
 
 interface MissionModalProps {
   node: TrailNodeItem | null;
@@ -26,7 +26,7 @@ export function MissionModal({ node, onClose, onOpenChest }: MissionModalProps) 
     if (node.route) {
       navigate(node.route);
     } else {
-      navigate("/chat");
+      navigate("/mission");
     }
   };
 

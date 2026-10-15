@@ -7,6 +7,7 @@ export interface StarBurstProps extends React.HTMLAttributes<HTMLDivElement> {
   backgroundColor?: string;
   transparent?: boolean;
   maxHeightPercent?: number;
+  fixed?: boolean;
   enableShootingStars?: boolean;
   minInterval?: number;
   maxInterval?: number;
@@ -101,6 +102,7 @@ export function StarBurst({
   backgroundColor = "#000000",
   transparent = false,
   maxHeightPercent = 42,
+  fixed = false,
   enableShootingStars = true,
   minInterval = 1.2,
   maxInterval = 3.0,
@@ -133,6 +135,8 @@ export function StarBurst({
       Math.min(1.0, (maxHeightPercent ?? 42) / 100),
     );
 
+    const isFullHeight = maxHeightRatio >= 0.95;
+
     const makeRng = (seed: number) => {
       let s = seed >>> 0;
       return () => {
@@ -147,10 +151,12 @@ export function StarBurst({
     const staticRng = makeRng(0xcafe123);
     const staticPoints: StaticStarPoint[] = [];
     if (showStaticStars) {
-      for (let i = 0; i < staticPointCount; i++) {
+      const pointCount =
+        isFullHeight && staticPointCount === 65 ? 95 : staticPointCount;
+      for (let i = 0; i < pointCount; i++) {
         staticPoints.push({
           relX: 0.02 + staticRng() * 0.96,
-          relY: 0.01 + staticRng() * (maxHeightRatio - 0.03),
+          relY: 0.01 + staticRng() * (maxHeightRatio - (isFullHeight ? 0.02 : 0.03)),
           radius: 0.4 + staticRng() * 1.0,
           baseOpacity: 0.15 + staticRng() * 0.65,
           twinkleSpeed: 0.7 + staticRng() * 2.0,
@@ -161,10 +167,12 @@ export function StarBurst({
 
     const staticNormals: StaticStarNormal[] = [];
     if (showStaticStars) {
-      for (let i = 0; i < staticNormalCount; i++) {
+      const normalCount =
+        isFullHeight && staticNormalCount === 16 ? 24 : staticNormalCount;
+      for (let i = 0; i < normalCount; i++) {
         staticNormals.push({
           relX: 0.03 + staticRng() * 0.94,
-          relY: 0.02 + staticRng() * (maxHeightRatio - 0.04),
+          relY: 0.02 + staticRng() * (maxHeightRatio - (isFullHeight ? 0.03 : 0.04)),
           scale: 0.35 + staticRng() * 0.65,
           rotation: (staticRng() - 0.5) * 0.6,
           baseOpacity: 0.2 + staticRng() * 0.65,
@@ -188,21 +196,23 @@ export function StarBurst({
       const isMobile = w < 640;
       const topLimitY = maxHeightRatio * h;
 
-      const startX = w * (0.15 + Math.random() * 0.8);
-      const startY = h * (0.02 + Math.random() * (maxHeightRatio * 0.45));
+      const startX = w * (0.12 + Math.random() * 0.8);
+      const startY = isFullHeight
+        ? h * (0.01 + Math.random() * 0.65)
+        : h * (0.02 + Math.random() * (maxHeightRatio * 0.45));
 
       const angleDeg = 152 + (Math.random() - 0.5) * 24;
       const angle = (angleDeg * Math.PI) / 180;
 
       const baseDistance = isMobile
-        ? Math.min(w * 0.36, 140)
-        : Math.min(w * 0.28, 260);
+        ? Math.min(w * 0.42, 180)
+        : Math.min(w * 0.35, 320);
 
       const wantedDistance =
-        (baseDistance * 0.8 + Math.random() * (baseDistance * 0.4)) *
+        (baseDistance * 0.8 + Math.random() * (baseDistance * 0.5)) *
         (shootingStarScale ?? 1);
 
-      const remainingY = topLimitY * 0.96 - startY;
+      const remainingY = topLimitY * 0.98 - startY;
       const maxAllowedDist = Math.max(
         60,
         remainingY / Math.max(0.1, Math.sin(angle)),
@@ -235,14 +245,16 @@ export function StarBurst({
     const resize = (entry?: ResizeObserverEntry) => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cr = entry?.contentRect;
-      const rectW =
-        cr?.width ||
-        container.clientWidth ||
-        container.getBoundingClientRect().width;
-      const rectH =
-        cr?.height ||
-        container.clientHeight ||
-        container.getBoundingClientRect().height;
+      const rectW = fixed
+        ? window.innerWidth
+        : cr?.width ||
+          container.clientWidth ||
+          container.getBoundingClientRect().width;
+      const rectH = fixed
+        ? window.innerHeight
+        : cr?.height ||
+          container.clientHeight ||
+          container.getBoundingClientRect().height;
       const w = Math.max(1, Math.floor(rectW) || 400);
       const h = Math.max(1, Math.floor(rectH) || 800);
       sizeRef.current = { w, h, dpr };
@@ -256,6 +268,11 @@ export function StarBurst({
     resize();
     const ro = new ResizeObserver((entries) => resize(entries[0]));
     ro.observe(container);
+
+    const onWindowResize = () => resize();
+    if (fixed) {
+      window.addEventListener("resize", onWindowResize);
+    }
 
     let timeSec = 0;
 
@@ -289,7 +306,9 @@ export function StarBurst({
 
           const yProgress = py / topLimitY;
           const edgeFade =
-            yProgress > 0.8 ? Math.max(0, (1 - yProgress) / 0.2) : 1.0;
+            !isFullHeight && yProgress > 0.8
+              ? Math.max(0, (1 - yProgress) / 0.2)
+              : 1.0;
 
           const twinkle =
             0.8 + 0.2 * Math.sin(timeSec * pt.twinkleSpeed + pt.phase);
@@ -313,7 +332,9 @@ export function StarBurst({
 
             const yProgress = py / topLimitY;
             const edgeFade =
-              yProgress > 0.8 ? Math.max(0, (1 - yProgress) / 0.2) : 1.0;
+              !isFullHeight && yProgress > 0.8
+                ? Math.max(0, (1 - yProgress) / 0.2)
+                : 1.0;
 
             const twinkle =
               0.75 + 0.25 * Math.sin(timeSec * sn.twinkleSpeed + sn.phase);
@@ -344,7 +365,7 @@ export function StarBurst({
           const safeMax = Math.max(safeMin, maxInterval);
           timeUntilNextSpawn = safeMin + Math.random() * (safeMax - safeMin);
 
-          if (shootingStars.length < 2) {
+          if (shootingStars.length < (isFullHeight ? 3 : 2)) {
             spawnShootingStar(w, h);
           }
         }
@@ -431,6 +452,9 @@ export function StarBurst({
 
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      if (fixed) {
+        window.removeEventListener("resize", onWindowResize);
+      }
       ro.disconnect();
     };
   }, [
@@ -438,6 +462,7 @@ export function StarBurst({
     backgroundColor,
     transparent,
     maxHeightPercent,
+    fixed,
     enableShootingStars,
     minInterval,
     maxInterval,
@@ -464,7 +489,10 @@ export function StarBurst({
     >
       <canvas
         ref={canvasRef}
-        className="pointer-events-none absolute inset-0 block h-full w-full"
+        className={cn(
+          "pointer-events-none block",
+          fixed ? "fixed inset-0 z-0 h-screen w-screen" : "absolute inset-0 h-full w-full"
+        )}
       />
       {children && (
         <div className="relative z-10 h-full w-full">{children}</div>

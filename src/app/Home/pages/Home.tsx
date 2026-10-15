@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -6,30 +6,42 @@ import { cn } from "cn";
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
 import { Progress } from "@/components/ui/progress";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
+import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
+import { markOnboardingCompleted } from "@/lib/onboarding";
+import { getOnboardingSteps, type OnboardingStepData } from "../services/onboardingApi";
 
-const STEPS = [
-  {
-    text: "Olá! Eu sou o Rev, Seu assistente de educação financeira para investidores iniciantes.",
-    mascot: MascotHello,
-  },
-  {
-    text: "Aqui, você aprende, pratica e evolui para tomar decisöes financeiras com mais confiança.",
-    mascot: MascotPoint,
-  },
-  {
-    text: "Vamos dar inicio com os conceitos iniciai sobre investimentos!",
-    mascot: MascotPlan,
-  },
+const MASCOTS = { MascotHello, MascotPoint, MascotPlan };
+
+// Usado enquanto o conteúdo da API (/api/steps) carrega ou se ela estiver indisponível
+const FALLBACK_STEPS: OnboardingStepData[] = [
+  { id: 1, text: "Olá! Eu sou o Rev, seu assistente de educação financeira para investidores iniciantes.", mascot: "MascotHello" },
+  { id: 2, text: "Aqui, você aprende, pratica e evolui para tomar decisões financeiras com mais confiança.", mascot: "MascotPoint" },
+  { id: 3, text: "Vamos dar início com os conceitos iniciais sobre investimentos!", mascot: "MascotPlan" },
 ];
 
 export function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [steps, setSteps] = useState<OnboardingStepData[]>(FALLBACK_STEPS);
   const [currentStep, setCurrentStep] = useState(1);
 
+  useEffect(() => {
+    let isMounted = true;
+    getOnboardingSteps()
+      .then((data) => {
+        if (isMounted && data.length > 0) setSteps(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleNext = () => {
-    if (currentStep < STEPS.length) {
+    if (currentStep < steps.length) {
       setCurrentStep((prev) => prev + 1);
     } else {
+      if (user) markOnboardingCompleted(user.id);
       navigate("/trail");
     }
   };
@@ -40,8 +52,8 @@ export function Home() {
     }
   };
 
-  const activeStep = STEPS[currentStep - 1];
-  const MascotComponent = activeStep.mascot;
+  const activeStep = steps[Math.min(currentStep, steps.length) - 1];
+  const MascotComponent = MASCOTS[activeStep.mascot as keyof typeof MASCOTS] ?? MascotHello;
 
   return (
     <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col justify-between items-center px-6 py-5 sm:py-8">
@@ -60,7 +72,7 @@ export function Home() {
             <ChevronLeft className="w-6 h-6" />
           </button>
           <Progress
-            value={(currentStep / STEPS.length) * 100}
+            value={(currentStep / steps.length) * 100}
             className="flex-1"
           />
         </header>

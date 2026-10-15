@@ -2,7 +2,7 @@ import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { QuizOptionsList } from "./QuizOptionsList";
-import type { QuizStep } from "../types";
+import type { QuizStep } from "../types/types";
 
 interface QuizViewProps {
   quizIndex: number;
@@ -44,7 +44,7 @@ export function QuizView({
               <SpeechBubble direction="left">
                 {hasAnswered
                   ? currentQuestion.explanation
-                  : "Vamos testar o que você aprendeu sobre o FGC!"}
+                  : "Vamos testar o que você aprendeu!"}
               </SpeechBubble>
             </div>
           </div>

@@ -1,17 +1,27 @@
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { AuthContext, type User, type AuthResult } from "./authContextDef";
+import {
+  apiRegister,
+  apiLogin,
+  apiGoogleAuth,
+  apiGetMe,
+  type ApiUser,
+  type AuthResponseData,
+} from "../services/authApi";
+import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY, UNAUTHORIZED_EVENT, getStoredToken } from "@/lib/api";
 
 export type { User, AuthResult } from "./authContextDef";
 
-interface StoredAccount {
-  id: string;
-  username: string;
-  email: string;
-  password: string;
+function toUser(apiUser: ApiUser): User {
+  return {
+    id: apiUser.id,
+    name: apiUser.name,
+    email: apiUser.email,
+    picture: apiUser.picture,
+    authProvider: apiUser.auth_provider,
+    createdAt: apiUser.created_at,
+  };
 }
-
-const USER_STORAGE_KEY = "@renvest:user";
-const ACCOUNTS_STORAGE_KEY = "@renvest:registered_users";
 
 function getStoredUser(): User | null {
   try {
@@ -22,107 +32,79 @@ function getStoredUser(): User | null {
   }
 }
 
+function clearStoredSession() {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem(USER_STORAGE_KEY);
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(getStoredUser);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const getStoredAccounts = (): StoredAccount[] => {
-    try {
-      const data = localStorage.getItem(ACCOUNTS_STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const register = async (username: string, email: string, password: string): Promise<AuthResult> => {
-    const trimmedEmail = email.trim().toLowerCase();
-    const trimmedUsername = username.trim();
-
-    if (!trimmedUsername || !trimmedEmail || !password) {
-      return { success: false, error: "Preencha todos os campos obrigatórios." };
-    }
-
-    const accounts = getStoredAccounts();
-    const existing = accounts.find((acc) => acc.email.toLowerCase() === trimmedEmail);
-    if (existing) {
-      return { success: false, error: "Este e-mail já está cadastrado no sistema." };
-    }
-
-    const newAccount: StoredAccount = {
-      id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-      username: trimmedUsername,
-      email: trimmedEmail,
-      password,
-    };
-
-    accounts.push(newAccount);
-    localStorage.setItem(ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
-
-    const loggedUser: User = {
-      id: newAccount.id,
-      name: newAccount.username,
-      email: newAccount.email,
-      authProvider: "local",
-    };
-
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(loggedUser));
-    setUser(loggedUser);
-
-    return { success: true };
-  };
-
-  const login = async (email: string, password: string): Promise<AuthResult> => {
-    const trimmedEmail = email.trim().toLowerCase();
-
-    if (!trimmedEmail || !password) {
-      return { success: false, error: "Informe seu e-mail e sua senha." };
-    }
-
-    const accounts = getStoredAccounts();
-    const account = accounts.find(
-      (acc) => acc.email.toLowerCase() === trimmedEmail && acc.password === password
-    );
-
-    if (!account) {
-      return { success: false, error: "E-mail ou senha incorretos." };
-    }
-
-    const loggedUser: User = {
-      id: account.id,
-      name: account.username,
-      email: account.email,
-      authProvider: "local",
-    };
-
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(loggedUser));
-    setUser(loggedUser);
-
-    return { success: true };
-  };
-
-  const loginWithGoogle = (profile: { sub: string; name: string; email: string; picture?: string }) => {
-    const loggedUser: User = {
-      id: profile.sub,
-      name: profile.name,
-      email: profile.email,
-      picture: profile.picture,
-      authProvider: "google",
-    };
-
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(loggedUser));
-    setUser(loggedUser);
-  };
-
-  const logout = () => {
-    localStorage.removeItem(USER_STORAGE_KEY);
+  const logout = useCallback(() => {
+    clearStoredSession();
     setUser(null);
+  }, []);
+
+  // Valida a sessão com o backend ao inicializar
+  useEffect(() => {
+    async function validateSession() {
+      if (!getStoredToken()) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const validatedUser = toUser(await apiGetMe());
+        setUser(validatedUser);
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(validatedUser));
+      } catch {
+        logout();
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    validateSession();
+  }, [logout]);
+
+  // Encerra a sessão quando qualquer requisição autenticada retorna 401 (token expirado)
+  useEffect(() => {
+    window.addEventListener(UNAUTHORIZED_EVENT, logout);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, logout);
+  }, [logout]);
+
+  const authenticate = async (
+    request: () => Promise<AuthResponseData>,
+    fallbackError: string
+  ): Promise<AuthResult> => {
+    try {
+      const response = await request();
+      const authenticatedUser = toUser(response.user);
+      localStorage.setItem(TOKEN_STORAGE_KEY, response.access_token);
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(authenticatedUser));
+      setUser(authenticatedUser);
+      return { success: true, user: authenticatedUser };
+    } catch (err: unknown) {
+      return { success: false, error: err instanceof Error ? err.message : fallbackError };
+    }
   };
+
+  const register = (username: string, email: string, password: string) =>
+    authenticate(() => apiRegister(username, email, password), "Erro ao cadastrar usuário.");
+
+  const login = (email: string, password: string) =>
+    authenticate(() => apiLogin(email, password), "Erro ao efetuar login.");
+
+  const loginWithGoogle = (accessToken: string) =>
+    authenticate(() => apiGoogleAuth(accessToken), "Erro ao efetuar login com Google.");
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: !!user,
+        isLoading,
         login,
         register,
         loginWithGoogle,

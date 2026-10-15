@@ -37,3 +37,34 @@ export interface MissionModule {
 
 export type MissionMode = "learning" | "quiz";
 export type LearningPhase = "slides" | "free-chat";
+
+export interface ChatSource {
+  document: string;
+  section: string;
+  institution?: string;
+  url?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: "bot" | "user";
+  text: string;
+  time: string;
+  source?: ChatSource;
+}
+
+export interface ChatHistoryItem {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface ChatApiResponse {
+  reply: string;
+  source?: ChatSource;
+  suggestions: string[];
+}
+
+export interface SuggestionsApiResponse {
+  module: string;
+  suggestions: string[];
+}

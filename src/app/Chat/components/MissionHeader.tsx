@@ -1,6 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import type { MissionMode } from "../types";
+import type { MissionMode } from "../types/types";
 
 interface MissionHeaderProps {
   progressValue: number;

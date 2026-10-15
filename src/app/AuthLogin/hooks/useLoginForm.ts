@@ -1,40 +1,37 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { getPostAuthRoute } from "@/lib/onboarding";
 import { useAuth } from "./useAuth";
-import { useGoogleAuth } from "./useGoogleAuth";
+import { useGoogleSignIn } from "./useGoogleAuth";
 
 export function useLoginForm() {
   const navigate = useNavigate();
-  const { login, loginWithGoogle } = useAuth();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login: executeGoogleLogin } = useGoogleAuth((profile) => {
-    loginWithGoogle(profile);
-    navigate("/home", { replace: true });
-  });
-
-  const handleGoogleLogin = () => {
-    executeGoogleLogin();
-  };
+  const handleGoogleLogin = useGoogleSignIn({ setError, setIsSubmitting });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsSubmitting(true);
 
+    if (!email.trim() || !password) {
+      setError("Informe seu e-mail e sua senha.");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const result = await login(email, password);
       if (result.success) {
-        navigate("/home", { replace: true });
+        navigate(getPostAuthRoute(result.user?.id), { replace: true });
       } else {
         setError(result.error || "Erro ao efetuar login.");
       }
-    } catch {
-      setError("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -48,6 +45,6 @@ export function useLoginForm() {
     error,
     isSubmitting,
     handleSubmit,
-    handleGoogleLogin,
+    handleGoogleLogin: () => handleGoogleLogin(),
   };
 }

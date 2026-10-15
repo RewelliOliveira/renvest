@@ -1,12 +1,4 @@
-import type { TrailModule, UserStats } from "../types";
-
-export const INITIAL_USER_STATS: UserStats = {
-  streak: 3,
-  xp: 140,
-  coins: 65,
-  hearts: 5,
-  maxHearts: 5,
-};
+import type { TrailModule } from "../types/types";
 
 export const TRAIL_MODULES: TrailModule[] = [
   {
@@ -29,7 +21,7 @@ export const TRAIL_MODULES: TrailModule[] = [
         xpReward: 30,
         coinReward: 10,
         positionX: 0,
-        route: "/chat",
+        route: "/mission",
       },
       {
         id: "m1-n2",

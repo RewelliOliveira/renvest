@@ -52,25 +52,15 @@ export function Login() {
           icon={<EmailIcon className="w-4.5 h-4.5" />}
         />
 
-        <div className="flex flex-col gap-1">
-          <AuthInput
-            id="password"
-            type="password"
-            label="Digite sua senha"
-            placeholder="••••••••"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div className="flex justify-end mt-0.5">
-            <button
-              type="button"
-              className="text-xs font-semibold text-neutral-300 hover:text-white transition-colors cursor-pointer"
-            >
-              Esqueceu sua senha?
-            </button>
-          </div>
-        </div>
+        <AuthInput
+          id="password"
+          type="password"
+          label="Digite sua senha"
+          placeholder="••••••••"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
         <AuthButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Entrando..." : "Entrar"}

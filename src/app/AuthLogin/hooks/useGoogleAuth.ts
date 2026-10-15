@@ -1,39 +1,35 @@
 import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { getPostAuthRoute } from "@/lib/onboarding";
+import { useAuth } from "./useAuth";
 
-export interface GoogleUserProfile {
-  sub: string;
-  name: string;
-  given_name?: string;
-  family_name?: string;
-  picture?: string;
-  email: string;
-  email_verified?: boolean;
+interface UseGoogleSignInParams {
+  setError: (message: string) => void;
+  setIsSubmitting: (value: boolean) => void;
 }
 
-const googleUserInfoUrl =
-  import.meta.env.VITE_GOOGLE_USERINFO_URL;
+/** Fluxo de login com Google compartilhado pelas telas de login e cadastro. */
+export function useGoogleSignIn({ setError, setIsSubmitting }: UseGoogleSignInParams) {
+  const navigate = useNavigate();
+  const { loginWithGoogle } = useAuth();
 
-export function useGoogleAuth(onSuccessCallback?: (user: GoogleUserProfile) => void) {
-  const login = useGoogleLogin({
+  return useGoogleLogin({
     onSuccess: async (tokenResponse) => {
+      setIsSubmitting(true);
+      setError("");
       try {
-        const response = await fetch(googleUserInfoUrl, {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-          },
-        });
-        const user: GoogleUserProfile = await response.json();
-        if (onSuccessCallback) {
-          onSuccessCallback(user);
+        const result = await loginWithGoogle(tokenResponse.access_token);
+        if (result.success) {
+          navigate(getPostAuthRoute(result.user?.id), { replace: true });
+        } else {
+          setError(result.error || "Erro ao autenticar com Google.");
         }
-      } catch (error) {
-        console.error("Erro ao autenticar com Google:", error);
+      } finally {
+        setIsSubmitting(false);
       }
     },
-    onError: (error) => {
-      console.error("Falha na autenticação do Google:", error);
+    onError: () => {
+      setError("Falha ou cancelamento da autenticação com o Google.");
     },
   });
-
-  return { login };
 }
