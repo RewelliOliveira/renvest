@@ -1,4 +1,5 @@
 import { UserIcon, EmailIcon, LogomarcaIcon } from "@/assets/icons";
+import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useRegisterForm } from "../hooks/useRegisterForm";
 
@@ -92,14 +93,18 @@ export function Register() {
           {isSubmitting ? "Cadastrando..." : "Cadastrar"}
         </AuthButton>
 
-        <AuthDivider />
+        {isGoogleAuthEnabled && (
+          <>
+            <AuthDivider />
 
-        <AuthButton
-          variant="google"
-          onClick={handleGoogleLogin}
-        >
-          Continuar com Google
-        </AuthButton>
+            <AuthButton
+              variant="google"
+              onClick={handleGoogleLogin}
+            >
+              Continuar com Google
+            </AuthButton>
+          </>
+        )}
       </form>
     </AuthLayout>
   );

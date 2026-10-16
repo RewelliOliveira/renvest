@@ -1,4 +1,5 @@
 import { EmailIcon, MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useLoginForm } from "../hooks/useLoginForm";
 
@@ -66,14 +67,18 @@ export function Login() {
           {isSubmitting ? "Entrando..." : "Entrar"}
         </AuthButton>
 
-        <AuthDivider />
+        {isGoogleAuthEnabled && (
+          <>
+            <AuthDivider />
 
-        <AuthButton
-          variant="google"
-          onClick={handleGoogleLogin}
-        >
-          Continuar com Google
-        </AuthButton>
+            <AuthButton
+              variant="google"
+              onClick={handleGoogleLogin}
+            >
+              Continuar com Google
+            </AuthButton>
+          </>
+        )}
       </form>
     </AuthLayout>
   );

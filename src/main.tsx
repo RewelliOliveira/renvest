@@ -3,13 +3,19 @@ import { createRoot } from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./index.css";
 import App from "./App.tsx";
-
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { GOOGLE_CLIENT_ID, isGoogleAuthEnabled } from "./lib/googleAuth";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <App />
-    </GoogleOAuthProvider>
+    <ErrorBoundary>
+      {isGoogleAuthEnabled ? (
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <App />
+        </GoogleOAuthProvider>
+      ) : (
+        <App />
+      )}
+    </ErrorBoundary>
   </StrictMode>
 );

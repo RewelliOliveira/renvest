@@ -57,7 +57,7 @@ cp .env.example .env
 | Variável | Descrição |
 | :--- | :--- |
 | `VITE_API_URL` | URL base da API do backend (ex: `http://localhost:8000/api`) |
-| `VITE_GOOGLE_CLIENT_ID` | OAuth Client ID do Google. Deve ser o mesmo `GOOGLE_CLIENT_ID` configurado no backend |
+| `VITE_GOOGLE_CLIENT_ID` | OAuth Client ID do Google. Deve ser o mesmo `GOOGLE_CLIENT_ID` configurado no backend. Opcional: sem ele o botão "Continuar com Google" é ocultado |
 
 > O Client ID do Google é público por natureza (fica embutido no JavaScript do navegador). Proteja-o cadastrando no Google Cloud Console apenas as **Authorized JavaScript origins** reais (ex: `http://localhost:5173` e o domínio de produção). Nunca coloque o `client_secret` no frontend.
 
@@ -70,6 +70,15 @@ npm run build   # checagem de tipos + build de produção em dist/
 npm run lint    # ESLint
 npm run preview # serve o build de produção localmente
 ```
+
+## Deploy na Vercel
+
+O `vercel.json` já define o build (`npm run build` → `dist/`), o fallback de rotas da SPA e o cache dos arquivos de `assets/`.
+
+1. Em **Project Settings → Environment Variables**, cadastre `VITE_API_URL` (URL **https** do backend, terminando em `/api`) e `VITE_GOOGLE_CLIENT_ID`. O arquivo `.env` não vai para o repositório, então sem esse passo o app usa `http://localhost:8000/api` e o login com Google fica oculto.
+2. As variáveis `VITE_*` são embutidas no build: depois de criar ou alterar uma variável, faça **Redeploy**.
+3. No backend, inclua o domínio da Vercel (ex: `https://seu-app.vercel.app`) em `CORS_ORIGINS`.
+4. No Google Cloud Console, inclua o mesmo domínio em **Authorized JavaScript origins**.
 
 ## Docker
 
