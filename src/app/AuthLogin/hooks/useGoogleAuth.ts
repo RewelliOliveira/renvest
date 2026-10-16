@@ -1,5 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
 import { useAuth } from "./useAuth";
 
@@ -8,8 +9,7 @@ interface UseGoogleSignInParams {
   setIsSubmitting: (value: boolean) => void;
 }
 
-/** Fluxo de login com Google compartilhado pelas telas de login e cadastro. */
-export function useGoogleSignIn({ setError, setIsSubmitting }: UseGoogleSignInParams) {
+function useGoogleSignInEnabled({ setError, setIsSubmitting }: UseGoogleSignInParams) {
   const navigate = useNavigate();
   const { loginWithGoogle } = useAuth();
 
@@ -33,3 +33,13 @@ export function useGoogleSignIn({ setError, setIsSubmitting }: UseGoogleSignInPa
     },
   });
 }
+
+function useGoogleSignInDisabled({ setError }: UseGoogleSignInParams) {
+  return () => setError("Login com Google indisponível no momento.");
+}
+
+/**
+ * Fluxo de login com Google compartilhado pelas telas de login e cadastro.
+ * A implementação é escolhida uma única vez no carregamento do módulo, então a ordem dos hooks não muda.
+ */
+export const useGoogleSignIn = isGoogleAuthEnabled ? useGoogleSignInEnabled : useGoogleSignInDisabled;
