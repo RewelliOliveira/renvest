@@ -11,6 +11,8 @@ const ChatMission = lazy(() => import("@/app/Chat/pages/ChatMission").then((m) =
 const Chat = lazy(() => import("@/app/Chat/pages/Chat").then((m) => ({ default: m.Chat })));
 const Profile = lazy(() => import("@/app/Profile/pages/Profile").then((m) => ({ default: m.Profile })));
 const TrailProgress = lazy(() => import("@/app/Trail/pages/TrailProgress").then((m) => ({ default: m.TrailProgress })));
+const Completion = lazy(() => import("@/app/Trail/pages/Completion").then((m) => ({ default: m.Completion })));
+const ExamPage = lazy(() => import("@/app/Exam/pages/ExamPage").then((m) => ({ default: m.ExamPage })));
 
 function LoadingScreen() {
   return (
@@ -56,7 +58,10 @@ export function AppRoutes() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/perfil" element={<Navigate to="/profile" replace />} />
-            <Route path="/mission" element={<ChatMission />} />
+            <Route path="/lesson/:lessonId" element={<ChatMission />} />
+            <Route path="/exam/:moduleId" element={<ExamPage />} />
+            <Route path="/conclusao" element={<Completion />} />
+            <Route path="/mission" element={<Navigate to="/trail" replace />} />
             <Route path="/progress" element={<Navigate to="/trail" replace />} />
             <Route path="/caminho" element={<Navigate to="/trail" replace />} />
             <Route path="/dashboard" element={<Navigate to="/trail" replace />} />
