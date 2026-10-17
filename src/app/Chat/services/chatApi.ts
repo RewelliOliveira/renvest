@@ -3,13 +3,13 @@ import type { ChatApiResponse, ChatHistoryItem, SuggestionsApiResponse } from ".
 
 export interface SendChatMessageParams {
   message: string;
-  module?: string;
+  module?: string | null;
   history?: ChatHistoryItem[];
 }
 
 export function sendChatMessage({
   message,
-  module = "modulo_1",
+  module,
   history = [],
 }: SendChatMessageParams): Promise<ChatApiResponse> {
   return apiRequest("/chat", {
@@ -20,7 +20,7 @@ export function sendChatMessage({
   });
 }
 
-export async function getChatSuggestions(module: string = "modulo_1"): Promise<string[]> {
+export async function getChatSuggestions(module: string): Promise<string[]> {
   try {
     const data = await apiRequest<SuggestionsApiResponse>(
       `/chat/suggestions?module=${encodeURIComponent(module)}`,

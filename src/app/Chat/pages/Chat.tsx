@@ -6,6 +6,7 @@ import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
+import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage, getChatSuggestions } from "../services/chatApi";
 import type { ChatMessage, ChatHistoryItem } from "../types/types";
 
@@ -30,6 +31,10 @@ export function Chat() {
     },
   ]);
 
+  const { trail } = useTrail();
+  const chatModule = trail ? trail.current_module_id : undefined;
+  const suggestionsModule = trail ? trail.current_module_id ?? trail.modules.at(-1)?.id : undefined;
+
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -46,12 +51,13 @@ export function Chat() {
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
 
-  // Carrega as sugestões iniciais do módulo ao montar
   useEffect(() => {
+    if (!suggestionsModule) return;
+    const moduleId = suggestionsModule;
     let isMounted = true;
     async function loadInitialSuggestions() {
       try {
-        const initial = await getChatSuggestions("modulo_1");
+        const initial = await getChatSuggestions(moduleId);
         if (isMounted && initial && initial.length > 0) {
           setSuggestions(initial);
         }
@@ -64,7 +70,7 @@ export function Chat() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [suggestionsModule]);
 
   const handleSendMessage = async (textToSend: string) => {
     const text = textToSend.trim();
@@ -94,7 +100,7 @@ export function Chat() {
     try {
       const response = await sendChatMessage({
         message: text,
-        module: "modulo_1",
+        module: chatModule,
         history: recentHistory,
       });
 
