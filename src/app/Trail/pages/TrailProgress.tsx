@@ -1,91 +1,138 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AlertCircle, PartyPopper, RefreshCw } from "lucide-react";
 import { StarBurst } from "@/components/ui/starsUI";
 import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
-import { MissionModal } from "../components/MissionModal";
 import { BottomNav } from "../components/BottomNav";
-import { TRAIL_MODULES } from "../data/trailData";
-import type { TrailNodeItem } from "../types/types";
+import { StreakBadge } from "../components/StreakBadge";
+import { useTrail } from "../hooks/useTrail";
+import type { TrailModule, TrailNodeItem } from "../types/types";
+
+// Deslocamento horizontal (px) dos nós; cada módulo curva para um lado
+const NODE_OFFSETS = [0, 48, 72, 48, 0];
+
+function buildNodes(module: TrailModule, moduleIndex: number): TrailNodeItem[] {
+  const side = moduleIndex % 2 === 0 ? 1 : -1;
+  const offsetAt = (index: number) => NODE_OFFSETS[index % NODE_OFFSETS.length] * side;
+
+  const lessons: TrailNodeItem[] = module.lessons.map((lesson, index) => ({
+    kind: "lesson",
+    key: lesson.id,
+    module,
+    lesson,
+    status: lesson.status,
+    positionX: offsetAt(index),
+  }));
+  return [
+    ...lessons,
+    {
+      kind: "exam",
+      key: `${module.id}-exam`,
+      module,
+      exam: module.exam,
+      status: module.exam.status,
+      positionX: offsetAt(lessons.length),
+    },
+  ];
+}
 
 export function TrailProgress() {
-  const [modules, setModules] = useState(TRAIL_MODULES);
-  const [selectedNode, setSelectedNode] = useState<TrailNodeItem | null>(null);
+  const navigate = useNavigate();
+  const { trail, isLoading, error, reload } = useTrail();
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
-  const currentModule = modules[0];
+  const modules = useMemo(
+    () => (trail?.modules ?? []).map((module, index) => ({ module, nodes: buildNodes(module, index) })),
+    [trail]
+  );
 
-  const handleNodeClick = (node: TrailNodeItem) => {
-    setSelectedNode(node);
-  };
+  useEffect(() => {
+    if (trail && !trail.completed) {
+      document.getElementById("trail-current-node")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }, [trail]);
 
-  const handleOpenChest = (nodeId: string) => {
-    setModules((prev) =>
-      prev.map((mod) => ({
-        ...mod,
-        nodes: mod.nodes.map((n) =>
-          n.id === nodeId ? { ...n, status: "completed", chestOpened: true } : n
-        ),
-      }))
-    );
-    setSelectedNode(null);
+  useEffect(() => {
+    if (!selectedKey) return;
+    document
+      .querySelector(`[data-node-key="${selectedKey}"]`)
+      ?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [selectedKey]);
+
+  const handleSelect = (node: TrailNodeItem) => {
+    setSelectedKey((current) => (current === node.key ? null : node.key));
   };
 
   return (
-    <StarBurst
-      className="min-h-dvh w-full overflow-x-hidden text-white flex flex-col"
-      maxHeightPercent={100}
-      fixed
-    >
-      <TrailHeader />
+    <StarBurst className="min-h-dvh h-auto w-full overflow-visible overflow-x-clip text-white flex flex-col" maxHeightPercent={100} fixed>
+      <TrailHeader trail={trail} />
 
-      <main className="flex-1 w-full max-w-lg mx-auto flex flex-col items-center px-4 pt-2 pb-28">
-        <SectionBanner module={currentModule} />
-
-        <div className="relative w-full flex flex-col items-center mt-3">
-          <svg
-            className="absolute top-10 left-0 w-full h-[85%] pointer-events-none z-0 overflow-visible opacity-30"
-            viewBox="0 0 320 620"
-            fill="none"
-          >
-            <path
-              d="M 160 30 Q 210 90 208 140 T 176 250 T 118 360 T 144 470 T 160 580"
-              stroke="#A4D6FF"
-              strokeWidth="4"
-              strokeDasharray="6 6"
-              strokeLinecap="round"
-            />
-          </svg>
-
-          <div className="relative z-10 w-full flex flex-col items-center gap-2">
-            {currentModule.nodes.map((node) => (
-              <TrailNode
-                key={node.id}
-                node={node}
-                isCurrent={node.status === "current"}
-                onSelect={handleNodeClick}
-              />
-            ))}
+      <main
+        className="flex-1 w-full max-w-lg mx-auto flex flex-col items-center px-4 pb-32"
+        onClick={() => setSelectedKey(null)}
+      >
+        {isLoading && !trail && (
+          <div className="flex flex-col items-center gap-3 py-24">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
+            <p className="text-sm text-neutral-400">Carregando sua trilha...</p>
           </div>
+        )}
 
-          <div className="w-full mt-10 pt-4 border-t border-white/10 flex flex-col items-center text-center opacity-60">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-sky-400">
-              Próxima Seção
-            </span>
-            <h3 className="text-base font-bold text-white mt-0.5">
-              {modules[1]?.title || "Renda Fixa na Prática"}
-            </h3>
-            <p className="text-xs text-neutral-400 mt-1 max-w-xs">
-              Conclua o Desafio da Seção 1 para desbloquear o próximo módulo!
+        {error && !trail && (
+          <div className="mt-16 w-full max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
+            <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
+            <p className="text-sm text-red-100">{error}</p>
+            <button
+              type="button"
+              onClick={reload}
+              className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white text-sm font-bold cursor-pointer hover:brightness-105"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Tentar de novo
+            </button>
+          </div>
+        )}
+
+        {modules.map(({ module, nodes }) => (
+          <section key={module.id} className="w-full flex flex-col items-center">
+            <SectionBanner module={module} />
+
+            <div className="w-full flex flex-col items-center gap-6 pt-8 pb-14">
+              {nodes.map((node) => (
+                <TrailNode
+                  key={node.key}
+                  node={node}
+                  streak={node.status === "current" ? trail?.streak : undefined}
+                  isSelected={selectedKey === node.key}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+
+        {trail?.completed && (
+          <div className="w-full max-w-md rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
+            <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
+            <h3 className="text-lg font-bold">Trilha concluída!</h3>
+            <p className="text-xs text-neutral-300 mt-1">
+              Você completou os {trail.progress.total_modules} módulos do Renvest.
             </p>
+            <div className="flex justify-center mt-3">
+              <StreakBadge streak={trail.streak} />
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/conclusao")}
+              className="mt-4 w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
+            >
+              Ver minha conquista
+            </button>
           </div>
-        </div>
+        )}
       </main>
-
-      <MissionModal
-        node={selectedNode}
-        onClose={() => setSelectedNode(null)}
-        onOpenChest={handleOpenChest}
-      />
 
       <BottomNav currentTab="trail" />
     </StarBurst>
