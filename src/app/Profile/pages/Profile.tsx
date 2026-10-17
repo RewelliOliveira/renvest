@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   LogOut,
   Flame,
-  Zap,
-  Coins,
+  BookOpenCheck,
+  Layers,
   ShieldCheck,
   Bell,
   HelpCircle,
@@ -13,12 +13,22 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
+import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { MascotHello } from "@/assets/icons";
 
 export function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { trail } = useTrail();
+  const currentModule = trail?.modules.find((module) => module.id === trail.current_module_id);
+  const levelLabel = trail?.completed
+    ? "Trilha concluída"
+    : currentModule
+    ? `Módulo ${currentModule.order} • ${currentModule.title}`
+    : "Investidor iniciante";
+  const stat = (value?: number, total?: number) =>
+    value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
 
   const handleLogout = () => {
     logout();
@@ -49,7 +59,7 @@ export function Profile() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-red/20 border border-red/30 text-red-light">
-                Nível 1 • Iniciante
+                {levelLabel}
               </span>
             </div>
             <h2 className="text-lg font-bold text-white truncate leading-snug">
@@ -64,20 +74,24 @@ export function Profile() {
         <div className="grid grid-cols-3 gap-2.5">
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
             <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">3</span>
+            <span className="text-base font-extrabold text-white">{stat(trail?.streak.current_days)}</span>
             <span className="text-[10px] text-neutral-400 font-medium">Dias de Ofensiva</span>
           </div>
 
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
-            <Zap className="w-5 h-5 text-sky-400 fill-sky-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">140</span>
-            <span className="text-[10px] text-neutral-400 font-medium">Total de XP</span>
+            <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
+            <span className="text-base font-extrabold text-white">
+              {stat(trail?.progress.completed_lessons, trail?.progress.total_lessons)}
+            </span>
+            <span className="text-[10px] text-neutral-400 font-medium">Lições</span>
           </div>
 
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
-            <Coins className="w-5 h-5 text-yellow-400 fill-yellow-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">65</span>
-            <span className="text-[10px] text-neutral-400 font-medium">RenCoins</span>
+            <Layers className="w-5 h-5 text-sky-400 mb-1" />
+            <span className="text-base font-extrabold text-white">
+              {stat(trail?.progress.completed_modules, trail?.progress.total_modules)}
+            </span>
+            <span className="text-[10px] text-neutral-400 font-medium">Módulos</span>
           </div>
         </div>
 
