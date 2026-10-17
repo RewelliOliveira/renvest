@@ -5,6 +5,7 @@ export interface LearningStep {
   mascot: ComponentType<SVGProps<SVGSVGElement>>;
   title: string;
   bubbleText: string;
+  source?: SourceCitation | null;
 }
 
 export interface QuizOption {
@@ -19,20 +20,12 @@ export interface SourceCitation {
 }
 
 export interface QuizStep {
-  id: number;
+  id: string;
   mascot: ComponentType<SVGProps<SVGSVGElement>>;
   question: string;
   explanation: string;
   source: SourceCitation;
   options: QuizOption[];
-}
-
-export interface MissionModule {
-  id: string;
-  title: string;
-  learningSteps: LearningStep[];
-  chatSuggestions: string[];
-  quizSteps: QuizStep[];
 }
 
 export type MissionMode = "learning" | "quiz";

@@ -1,12 +1,14 @@
 import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { FileText } from "lucide-react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
-import type { LearningPhase } from "../types/types";
+import type { LearningPhase, SourceCitation } from "../types/types";
 
 interface LearningViewProps {
   slideIndex: number;
   phase: LearningPhase;
   bubbleText: string;
+  source?: SourceCitation | null;
   isTyping: boolean;
   MascotComponent: ComponentType<SVGProps<SVGSVGElement>>;
 }
@@ -15,6 +17,7 @@ export function LearningView({
   slideIndex,
   phase,
   bubbleText,
+  source,
   isTyping,
   MascotComponent,
 }: LearningViewProps) {
@@ -37,6 +40,15 @@ export function LearningView({
             </div>
           ) : (
             <SpeechBubble direction="bottom">{bubbleText}</SpeechBubble>
+          )}
+
+          {source && !isTyping && (
+            <p className="mt-1 w-full max-w-sm sm:max-w-md flex items-start justify-center gap-1.5 text-[11px] text-white/55 text-center">
+              <FileText className="w-3.5 h-3.5 mt-px text-[#38bdf8] shrink-0" />
+              <span>
+                Fonte: <strong className="text-white/75">{source.document}</strong> ({source.section})
+              </span>
+            </p>
           )}
 
           <div className="mt-4 sm:mt-6 flex items-center justify-center h-44 sm:h-52 w-full">
