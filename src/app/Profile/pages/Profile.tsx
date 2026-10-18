@@ -6,7 +6,6 @@ import {
   BookOpenCheck,
   Layers,
   ShieldCheck,
-  Bell,
   HelpCircle,
   ChevronRight,
   Pencil,
@@ -22,7 +21,6 @@ import { AvatarPicker } from "../components/AvatarPicker";
 export function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const { trail } = useTrail();
   const [avatar, setAvatar] = useState<MascotVariant>(() => getSavedAvatar(user?.id));
   const [isPickingAvatar, setIsPickingAvatar] = useState(false);
@@ -31,12 +29,6 @@ export function Profile() {
     setAvatar(variant);
     if (user?.id) saveAvatar(user.id, variant);
   };
-  const currentModule = trail?.modules.find((module) => module.id === trail.current_module_id);
-  const levelLabel = trail?.completed
-    ? "Trilha concluída"
-    : currentModule
-    ? `Módulo ${currentModule.order} • ${currentModule.title}`
-    : "Investidor iniciante";
   const stat = (value?: number, total?: number) =>
     value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
 
@@ -76,11 +68,6 @@ export function Profile() {
           </button>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-red/20 border border-red/30 text-red-light">
-                {levelLabel}
-              </span>
-            </div>
             <h2 className="text-lg font-bold text-white truncate leading-snug">
               {displayName}
             </h2>
@@ -117,28 +104,6 @@ export function Profile() {
         </div>
 
         <div className="rounded-2xl bg-[#071329]/80 border border-white/10 overflow-hidden shadow-lg divide-y divide-white/5">
-          <div className="px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Bell className="w-4 h-4 text-sky-400 shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-neutral-200">
-                Notificações diárias
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setNotificationsEnabled((v) => !v)}
-              className={`w-11 h-6 rounded-full transition-colors p-0.5 cursor-pointer ${
-                notificationsEnabled ? "bg-red" : "bg-neutral-700"
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                  notificationsEnabled ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
-
           <button
             type="button"
             onClick={() => navigate("/profile/privacidade")}
