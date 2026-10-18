@@ -9,17 +9,28 @@ import {
   Bell,
   HelpCircle,
   ChevronRight,
+  Pencil,
 } from "lucide-react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { MascotHello } from "@/assets/icons";
+import type { MascotVariant } from "@/assets/mascotPalettes";
+import { getSavedAvatar, saveAvatar } from "@/lib/avatar";
+import { AvatarPicker } from "../components/AvatarPicker";
 
 export function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const { trail } = useTrail();
+  const [avatar, setAvatar] = useState<MascotVariant>(() => getSavedAvatar(user?.id));
+  const [isPickingAvatar, setIsPickingAvatar] = useState(false);
+
+  const handleAvatarSelect = (variant: MascotVariant) => {
+    setAvatar(variant);
+    if (user?.id) saveAvatar(user.id, variant);
+  };
   const currentModule = trail?.modules.find((module) => module.id === trail.current_module_id);
   const levelLabel = trail?.completed
     ? "Trilha concluída"
@@ -51,9 +62,18 @@ export function Profile() {
         <div className="rounded-2xl bg-[#071329]/90 border border-white/10 p-5 flex items-center gap-4 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-linear-to-br from-red/30 to-sky-500/20 border border-white/15 p-1.5 flex items-center justify-center shadow-inner shrink-0">
-            <MascotHello className="h-full w-auto object-contain" />
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsPickingAvatar((v) => !v)}
+            aria-label="Trocar avatar"
+            aria-expanded={isPickingAvatar}
+            className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-linear-to-br from-red/30 to-sky-500/20 border border-white/15 p-1.5 flex items-center justify-center shadow-inner shrink-0 cursor-pointer hover:border-white/30 transition-colors"
+          >
+            <MascotHello variant={avatar} className="h-full w-auto object-contain" />
+            <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-[#071329] border border-white/20 flex items-center justify-center">
+              <Pencil className="w-3 h-3 text-white/80" />
+            </span>
+          </button>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
@@ -69,6 +89,8 @@ export function Profile() {
             </p>
           </div>
         </div>
+
+        {isPickingAvatar && <AvatarPicker selected={avatar} onSelect={handleAvatarSelect} />}
 
         <div className="grid grid-cols-3 gap-2.5">
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
