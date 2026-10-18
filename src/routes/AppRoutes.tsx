@@ -1,16 +1,57 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
 
-// Cada página vira um chunk próprio, carregado apenas quando a rota é acessada
-const Login = lazy(() => import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })));
-const Register = lazy(() => import("@/app/AuthLogin/pages/Register").then((m) => ({ default: m.Register })));
-const Home = lazy(() => import("@/app/Home/pages/Home").then((m) => ({ default: m.Home })));
-const ChatMission = lazy(() => import("@/app/Chat/pages/ChatMission").then((m) => ({ default: m.ChatMission })));
-const Chat = lazy(() => import("@/app/Chat/pages/Chat").then((m) => ({ default: m.Chat })));
-const Profile = lazy(() => import("@/app/Profile/pages/Profile").then((m) => ({ default: m.Profile })));
-const TrailProgress = lazy(() => import("@/app/Trail/pages/TrailProgress").then((m) => ({ default: m.TrailProgress })));
+const Login = lazy(() =>
+  import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })),
+);
+const Register = lazy(() =>
+  import("@/app/AuthLogin/pages/Register").then((m) => ({
+    default: m.Register,
+  })),
+);
+const Home = lazy(() =>
+  import("@/app/Home/pages/Home").then((m) => ({ default: m.Home })),
+);
+const ChatMission = lazy(() =>
+  import("@/app/Chat/pages/ChatMission").then((m) => ({
+    default: m.ChatMission,
+  })),
+);
+const Chat = lazy(() =>
+  import("@/app/Chat/pages/Chat").then((m) => ({ default: m.Chat })),
+);
+const Profile = lazy(() =>
+  import("@/app/Profile/pages/Profile").then((m) => ({ default: m.Profile })),
+);
+const PrivacySecurity = lazy(() =>
+  import("@/app/Profile/pages/PrivacySecurity").then((m) => ({
+    default: m.PrivacySecurity,
+  })),
+);
+const About = lazy(() =>
+  import("@/app/Profile/pages/About").then((m) => ({ default: m.About })),
+);
+const TrailProgress = lazy(() =>
+  import("@/app/Trail/pages/TrailProgress").then((m) => ({
+    default: m.TrailProgress,
+  })),
+);
+const Completion = lazy(() =>
+  import("@/app/Trail/pages/Completion").then((m) => ({
+    default: m.Completion,
+  })),
+);
+const ExamPage = lazy(() =>
+  import("@/app/Exam/pages/ExamPage").then((m) => ({ default: m.ExamPage })),
+);
 
 function LoadingScreen() {
   return (
@@ -55,11 +96,25 @@ export function AppRoutes() {
             <Route path="/trail" element={<TrailProgress />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/perfil" element={<Navigate to="/profile" replace />} />
-            <Route path="/mission" element={<ChatMission />} />
-            <Route path="/progress" element={<Navigate to="/trail" replace />} />
+            <Route path="/profile/privacidade" element={<PrivacySecurity />} />
+            <Route path="/profile/sobre" element={<About />} />
+            <Route
+              path="/perfil"
+              element={<Navigate to="/profile" replace />}
+            />
+            <Route path="/lesson/:lessonId" element={<ChatMission />} />
+            <Route path="/exam/:moduleId" element={<ExamPage />} />
+            <Route path="/conclusao" element={<Completion />} />
+            <Route path="/mission" element={<Navigate to="/trail" replace />} />
+            <Route
+              path="/progress"
+              element={<Navigate to="/trail" replace />}
+            />
             <Route path="/caminho" element={<Navigate to="/trail" replace />} />
-            <Route path="/dashboard" element={<Navigate to="/trail" replace />} />
+            <Route
+              path="/dashboard"
+              element={<Navigate to="/trail" replace />}
+            />
             <Route path="/home" element={<Home />} />
             <Route path="/" element={<Navigate to="/trail" replace />} />
           </Route>

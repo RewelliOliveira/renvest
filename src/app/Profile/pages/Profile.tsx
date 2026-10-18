@@ -3,22 +3,34 @@ import { useNavigate } from "react-router-dom";
 import {
   LogOut,
   Flame,
-  Zap,
-  Coins,
+  BookOpenCheck,
+  Layers,
   ShieldCheck,
-  Bell,
   HelpCircle,
-  ExternalLink,
   ChevronRight,
+  Pencil,
 } from "lucide-react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
+import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { MascotHello } from "@/assets/icons";
+import type { MascotVariant } from "@/assets/mascotPalettes";
+import { getSavedAvatar, saveAvatar } from "@/lib/avatar";
+import { AvatarPicker } from "../components/AvatarPicker";
 
 export function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { trail } = useTrail();
+  const [avatar, setAvatar] = useState<MascotVariant>(() => getSavedAvatar(user?.id));
+  const [isPickingAvatar, setIsPickingAvatar] = useState(false);
+
+  const handleAvatarSelect = (variant: MascotVariant) => {
+    setAvatar(variant);
+    if (user?.id) saveAvatar(user.id, variant);
+  };
+  const stat = (value?: number, total?: number) =>
+    value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
 
   const handleLogout = () => {
     logout();
@@ -42,16 +54,20 @@ export function Profile() {
         <div className="rounded-2xl bg-[#071329]/90 border border-white/10 p-5 flex items-center gap-4 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
 
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-linear-to-br from-red/30 to-sky-500/20 border border-white/15 p-1.5 flex items-center justify-center shadow-inner shrink-0">
-            <MascotHello className="h-full w-auto object-contain" />
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsPickingAvatar((v) => !v)}
+            aria-label="Trocar avatar"
+            aria-expanded={isPickingAvatar}
+            className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-linear-to-br from-red/30 to-sky-500/20 border border-white/15 p-1.5 flex items-center justify-center shadow-inner shrink-0 cursor-pointer hover:border-white/30 transition-colors"
+          >
+            <MascotHello variant={avatar} className="h-full w-auto object-contain" />
+            <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-[#071329] border border-white/20 flex items-center justify-center">
+              <Pencil className="w-3 h-3 text-white/80" />
+            </span>
+          </button>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-red/20 border border-red/30 text-red-light">
-                Nível 1 • Iniciante
-              </span>
-            </div>
             <h2 className="text-lg font-bold text-white truncate leading-snug">
               {displayName}
             </h2>
@@ -61,52 +77,36 @@ export function Profile() {
           </div>
         </div>
 
+        {isPickingAvatar && <AvatarPicker selected={avatar} onSelect={handleAvatarSelect} />}
+
         <div className="grid grid-cols-3 gap-2.5">
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
             <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">3</span>
+            <span className="text-base font-extrabold text-white">{stat(trail?.streak.current_days)}</span>
             <span className="text-[10px] text-neutral-400 font-medium">Dias de Ofensiva</span>
           </div>
 
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
-            <Zap className="w-5 h-5 text-sky-400 fill-sky-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">140</span>
-            <span className="text-[10px] text-neutral-400 font-medium">Total de XP</span>
+            <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
+            <span className="text-base font-extrabold text-white">
+              {stat(trail?.progress.completed_lessons, trail?.progress.total_lessons)}
+            </span>
+            <span className="text-[10px] text-neutral-400 font-medium">Lições</span>
           </div>
 
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">
-            <Coins className="w-5 h-5 text-yellow-400 fill-yellow-400/20 mb-1" />
-            <span className="text-base font-extrabold text-white">65</span>
-            <span className="text-[10px] text-neutral-400 font-medium">RenCoins</span>
+            <Layers className="w-5 h-5 text-sky-400 mb-1" />
+            <span className="text-base font-extrabold text-white">
+              {stat(trail?.progress.completed_modules, trail?.progress.total_modules)}
+            </span>
+            <span className="text-[10px] text-neutral-400 font-medium">Módulos</span>
           </div>
         </div>
 
         <div className="rounded-2xl bg-[#071329]/80 border border-white/10 overflow-hidden shadow-lg divide-y divide-white/5">
-          <div className="px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Bell className="w-4 h-4 text-sky-400 shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-neutral-200">
-                Notificações diárias
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setNotificationsEnabled((v) => !v)}
-              className={`w-11 h-6 rounded-full transition-colors p-0.5 cursor-pointer ${
-                notificationsEnabled ? "bg-red" : "bg-neutral-700"
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                  notificationsEnabled ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
-
           <button
             type="button"
-            onClick={() => alert("Segurança: Seus dados são salvos localmente no navegador.")}
+            onClick={() => navigate("/profile/privacidade")}
             className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
@@ -120,16 +120,16 @@ export function Profile() {
 
           <button
             type="button"
-            onClick={() => alert("Renvest: TCC de Educação Financeira com base nos dados oficiais da B3 e CVM.")}
+            onClick={() => navigate("/profile/sobre")}
             className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
               <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="text-xs sm:text-sm font-medium text-neutral-200">
-                Sobre a Plataforma Renvest
+                Sobre o Renvest
               </span>
             </div>
-            <ExternalLink className="w-4 h-4 text-white/40" />
+            <ChevronRight className="w-4 h-4 text-white/40" />
           </button>
         </div>
 

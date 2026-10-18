@@ -5,7 +5,8 @@ import { QuizOptionsList } from "./QuizOptionsList";
 import type { QuizStep } from "../types/types";
 
 interface QuizViewProps {
-  quizIndex: number;
+  attemptKey: number;
+  isRetry: boolean;
   currentQuestion: QuizStep;
   selectedId: string | null;
   hasAnswered: boolean;
@@ -14,7 +15,8 @@ interface QuizViewProps {
 }
 
 export function QuizView({
-  quizIndex,
+  attemptKey,
+  isRetry,
   currentQuestion,
   selectedId,
   hasAnswered,
@@ -25,7 +27,7 @@ export function QuizView({
     <main className="flex-1 flex flex-col justify-center w-full min-h-0 overflow-y-auto no-scrollbar py-2">
       <AnimatePresence mode="wait">
         <motion.div
-          key={`quiz-${quizIndex}`}
+          key={`quiz-${attemptKey}`}
           initial={{ opacity: 0, y: 16, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -12, scale: 0.97 }}
@@ -44,12 +46,19 @@ export function QuizView({
               <SpeechBubble direction="left">
                 {hasAnswered
                   ? currentQuestion.explanation
+                  : isRetry
+                  ? "Essa você errou antes. Vamos tentar de novo?"
                   : "Vamos testar o que você aprendeu!"}
               </SpeechBubble>
             </div>
           </div>
 
           <div className="w-full pt-1">
+            {isRetry && (
+              <span className="inline-block mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+                Erro anterior
+              </span>
+            )}
             <h2 className="text-white text-base sm:text-lg font-bold leading-snug">
               {currentQuestion.question}
             </h2>

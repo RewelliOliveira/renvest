@@ -5,16 +5,14 @@ import type { MissionMode } from "../types/types";
 interface MissionHeaderProps {
   progressValue: number;
   mode: MissionMode;
-  currentQuestionIndex: number;
-  totalQuestions: number;
+  counterLabel: string;
   onBack: () => void;
 }
 
 export function MissionHeader({
   progressValue,
   mode,
-  currentQuestionIndex,
-  totalQuestions,
+  counterLabel,
   onBack,
 }: MissionHeaderProps) {
   return (
@@ -30,9 +28,9 @@ export function MissionHeader({
 
       <Progress value={progressValue} className="flex-1" />
 
-      {mode === "quiz" && (
+      {mode === "quiz" && counterLabel && (
         <span className="text-xs font-semibold text-white/50 shrink-0">
-          {currentQuestionIndex + 1}/{totalQuestions}
+          {counterLabel}
         </span>
       )}
     </header>

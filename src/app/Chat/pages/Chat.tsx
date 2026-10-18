@@ -6,6 +6,7 @@ import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
+import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage, getChatSuggestions } from "../services/chatApi";
 import type { ChatMessage, ChatHistoryItem } from "../types/types";
 
@@ -30,6 +31,10 @@ export function Chat() {
     },
   ]);
 
+  const { trail } = useTrail();
+  const chatModule = trail ? trail.current_module_id : undefined;
+  const suggestionsModule = trail ? trail.current_module_id ?? trail.modules.at(-1)?.id : undefined;
+
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -46,12 +51,13 @@ export function Chat() {
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
 
-  // Carrega as sugestões iniciais do módulo ao montar
   useEffect(() => {
+    if (!suggestionsModule) return;
+    const moduleId = suggestionsModule;
     let isMounted = true;
     async function loadInitialSuggestions() {
       try {
-        const initial = await getChatSuggestions("modulo_1");
+        const initial = await getChatSuggestions(moduleId);
         if (isMounted && initial && initial.length > 0) {
           setSuggestions(initial);
         }
@@ -64,7 +70,7 @@ export function Chat() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [suggestionsModule]);
 
   const handleSendMessage = async (textToSend: string) => {
     const text = textToSend.trim();
@@ -94,7 +100,7 @@ export function Chat() {
     try {
       const response = await sendChatMessage({
         message: text,
-        module: "modulo_1",
+        module: chatModule,
         history: recentHistory,
       });
 
@@ -181,7 +187,7 @@ export function Chat() {
 
                 <div
                   className={cn(
-                    "rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm leading-relaxed shadow-md flex flex-col gap-1.5",
+                    "min-w-0 wrap-break-word rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm leading-relaxed shadow-md flex flex-col gap-1.5",
                     isBot
                       ? "bg-[#0b162a] border border-white/10 text-neutral-100 rounded-bl-xs"
                       : "bg-red text-white font-medium border-b-2 border-red-dark rounded-br-xs"
@@ -191,10 +197,10 @@ export function Chat() {
 
                   {/* Fonte oficial RAG quando disponível */}
                   {isBot && msg.source && (
-                    <div className="mt-1 pt-1.5 border-t border-white/10 flex items-center justify-between gap-2 text-[10px] text-sky-300">
-                      <div className="flex items-center gap-1 truncate">
-                        <ShieldCheck className="w-3 h-3 text-sky-400 shrink-0" />
-                        <span className="truncate">
+                    <div className="mt-1 pt-1.5 border-t border-white/10 flex items-start justify-between gap-2 text-[10px] leading-snug text-sky-300">
+                      <div className="flex items-start gap-1 min-w-0">
+                        <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
+                        <span className="line-clamp-2">
                           {msg.source.institution ? `${msg.source.institution} • ` : ""}
                           {msg.source.document} ({msg.source.section})
                         </span>
@@ -254,7 +260,7 @@ export function Chat() {
                 exit={{ opacity: 0 }}
                 className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 text-xs text-red-200 flex items-center justify-between gap-2"
               >
-                <div className="flex items-center gap-1.5 truncate">
+                <div className="flex items-center gap-1.5 min-w-0">
                   <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
                   <span className="truncate">{errorMessage}</span>
                 </div>
