@@ -54,6 +54,17 @@ export function TrailProgress() {
     }
   }, [trail]);
 
+  // Snap vertical entre módulos: cada módulo ocupa a tela inteira, estilo Duolingo
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.scrollSnapType = "y proximity";
+    root.style.scrollPaddingTop = window.matchMedia("(min-width: 640px)").matches ? "3.75rem" : "3.5rem";
+    return () => {
+      root.style.scrollSnapType = "";
+      root.style.scrollPaddingTop = "";
+    };
+  }, []);
+
   useEffect(() => {
     if (!selectedKey) return;
     document
@@ -70,18 +81,18 @@ export function TrailProgress() {
       <TrailHeader trail={trail} />
 
       <main
-        className="flex-1 w-full max-w-lg mx-auto flex flex-col items-center px-4 pb-32"
+        className="flex-1 w-full flex flex-col items-center [--trail-header-height:3.5rem] sm:[--trail-header-height:3.75rem]"
         onClick={() => setSelectedKey(null)}
       >
         {isLoading && !trail && (
-          <div className="flex flex-col items-center gap-3 py-24">
+          <div className="flex flex-col items-center gap-3 py-24 px-4">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
             <p className="text-sm text-neutral-400">Carregando sua trilha...</p>
           </div>
         )}
 
         {error && !trail && (
-          <div className="mt-16 w-full max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
+          <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
             <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
             <p className="text-sm text-red-100">{error}</p>
             <button
@@ -96,10 +107,16 @@ export function TrailProgress() {
         )}
 
         {modules.map(({ module, nodes }) => (
-          <section key={module.id} className="w-full flex flex-col items-center">
+          <section
+            key={module.id}
+            className="w-full min-h-[calc(100dvh-var(--trail-header-height))] snap-start flex flex-col items-center border-t border-white/5"
+            style={{
+              background: `linear-gradient(to bottom, color-mix(in srgb, ${module.color} 14%, transparent), color-mix(in srgb, ${module.color} 4%, transparent))`,
+            }}
+          >
             <SectionBanner module={module} />
 
-            <div className="w-full flex flex-col items-center gap-6 pt-8 pb-14">
+            <div className="w-full max-w-lg flex-1 flex flex-col items-center justify-center gap-6 px-4 pt-8 pb-28">
               {nodes.map((node) => (
                 <TrailNode
                   key={node.key}
@@ -113,7 +130,7 @@ export function TrailProgress() {
         ))}
 
         {trail?.completed && (
-          <div className="w-full max-w-md rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
+          <div className="w-[calc(100%-2rem)] max-w-md mx-4 mt-6 mb-32 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
             <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
             <h3 className="text-lg font-bold">Trilha concluída!</h3>
             <p className="text-xs text-neutral-300 mt-1">

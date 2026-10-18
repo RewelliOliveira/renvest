@@ -12,15 +12,18 @@ export function SectionBanner({ module }: SectionBannerProps) {
   const completedLessons = module.lessons.filter((lesson) => lesson.status === "completed").length;
 
   return (
-    <div className="sticky top-14 sm:top-15 z-30 w-[calc(100%+2rem)] -mx-4 px-4 pt-2 pb-2 bg-[#000815]/90 backdrop-blur-md">
+    <div className="sticky top-14 sm:top-15 z-30 w-full px-4 pt-2 pb-2 bg-[#000815]/90 backdrop-blur-md">
       <div
         className={cn(
           "max-w-md mx-auto rounded-2xl px-4 py-3.5 shadow-lg flex items-center gap-3",
-          isLocked ? "bg-neutral-800 border border-white/10" : "text-white"
+          isLocked ? "border" : "text-white"
         )}
         style={
           isLocked
-            ? undefined
+            ? {
+                backgroundColor: `color-mix(in srgb, ${module.color} 18%, #0b1220)`,
+                borderColor: `color-mix(in srgb, ${module.color} 45%, transparent)`,
+              }
             : { backgroundColor: module.color, boxShadow: `0 4px 0 color-mix(in srgb, ${module.color} 60%, black)` }
         }
       >
