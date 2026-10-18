@@ -1,17 +1,15 @@
 import { Check, Lock, Trophy, Star } from "lucide-react";
 import { cn } from "cn";
-import { StreakBadge } from "./StreakBadge";
 import { NodePopover } from "./NodePopover";
-import type { Streak, TrailNodeItem } from "../types/types";
+import type { TrailNodeItem } from "../types/types";
 
 interface TrailNodeProps {
   node: TrailNodeItem;
-  streak?: Streak;
   isSelected: boolean;
   onSelect: (node: TrailNodeItem) => void;
 }
 
-export function TrailNode({ node, streak, isSelected, onSelect }: TrailNodeProps) {
+export function TrailNode({ node, isSelected, onSelect }: TrailNodeProps) {
   const isCompleted = node.status === "completed";
   const isCurrent = node.status === "current";
   const isLocked = node.status === "locked";
@@ -26,17 +24,6 @@ export function TrailNode({ node, streak, isSelected, onSelect }: TrailNodeProps
       className={cn("relative flex flex-col items-center select-none scroll-mt-40", isSelected ? "z-40" : "z-10")}
       style={{ transform: `translateX(${node.positionX}px)` }}
     >
-      {isCurrent && streak && (
-        <div
-          className={cn(
-            "absolute top-2 z-30 w-max pointer-events-none",
-            node.positionX > 0 ? "right-full mr-4" : "left-full ml-4"
-          )}
-        >
-          <StreakBadge streak={streak} />
-        </div>
-      )}
-
       {isCurrent && (
         <span
           className="absolute -top-2 w-22 h-22 sm:w-24 sm:h-24 rounded-full border-4 pointer-events-none"

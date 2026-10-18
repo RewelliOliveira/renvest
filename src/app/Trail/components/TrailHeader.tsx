@@ -9,6 +9,7 @@ interface TrailHeaderProps {
 
 export function TrailHeader({ trail }: TrailHeaderProps) {
   const lit = trail?.streak.active_today ?? false;
+  const days = trail?.streak.current_days ?? 0;
 
   return (
     <header className="sticky top-0 z-40 w-full h-14 sm:h-15 bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 sm:px-6">
@@ -16,17 +17,27 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
         <LogomarcaIcon className="h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
 
         {trail && (
-          <div className="flex items-center gap-4 text-sm font-extrabold">
-            <span className="flex items-center gap-1 text-sky-300" title="Lições concluídas">
-              <BookOpenCheck className="w-5 h-5" />
+          <div className="flex items-center gap-5 text-base font-extrabold">
+            <span className="flex items-center gap-1.5 text-sky-300" title="Lições concluídas">
+              <BookOpenCheck className="w-6 h-6" />
               {trail.progress.completed_lessons}/{trail.progress.total_lessons}
             </span>
             <span
-              className={cn("flex items-center gap-1", lit ? "text-amber-400" : "text-neutral-400")}
-              title="Ofensiva: dias seguidos estudando"
+              className={cn("flex items-center gap-1.5", lit ? "text-amber-400" : "text-neutral-500")}
+              title={
+                lit
+                  ? `Ofensiva de ${days} ${days === 1 ? "dia" : "dias"}`
+                  : "Ofensiva: conclua uma lição hoje para mantê-la"
+              }
+              aria-label={`Ofensiva: ${days} ${days === 1 ? "dia" : "dias"}`}
             >
-              <Flame className={cn("w-5 h-5", lit && "fill-amber-400/40")} />
-              {trail.streak.current_days}
+              <Flame
+                className={cn(
+                  "w-6 h-6",
+                  lit && "fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+                )}
+              />
+              {days}
             </span>
           </div>
         )}

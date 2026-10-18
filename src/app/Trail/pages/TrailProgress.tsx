@@ -104,7 +104,6 @@ export function TrailProgress() {
                 <TrailNode
                   key={node.key}
                   node={node}
-                  streak={node.status === "current" ? trail?.streak : undefined}
                   isSelected={selectedKey === node.key}
                   onSelect={handleSelect}
                 />
