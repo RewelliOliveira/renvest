@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Bell,
   HelpCircle,
-  ExternalLink,
   ChevronRight,
 } from "lucide-react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
@@ -120,7 +119,7 @@ export function Profile() {
 
           <button
             type="button"
-            onClick={() => alert("Segurança: Seus dados são salvos localmente no navegador.")}
+            onClick={() => navigate("/profile/privacidade")}
             className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
@@ -134,16 +133,16 @@ export function Profile() {
 
           <button
             type="button"
-            onClick={() => alert("Renvest: TCC de Educação Financeira com base nos dados oficiais da B3 e CVM.")}
+            onClick={() => navigate("/profile/sobre")}
             className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
               <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="text-xs sm:text-sm font-medium text-neutral-200">
-                Sobre a Plataforma Renvest
+                Sobre o Renvest
               </span>
             </div>
-            <ExternalLink className="w-4 h-4 text-white/40" />
+            <ChevronRight className="w-4 h-4 text-white/40" />
           </button>
         </div>
 
