@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { MessageCircle, ChevronUp, ChevronDown, Sparkles, Send } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
+import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
 
 interface LearningChatProps {
   suggestions: string[];
@@ -18,12 +19,16 @@ export function LearningChat({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const submit = () => {
     if (!inputValue.trim() || disabled) return;
     onSend(inputValue.trim());
     setInputValue("");
     setIsOpen(false);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    submit();
   };
 
   const handleChip = (text: string) => {
@@ -70,20 +75,20 @@ export function LearningChat({
               ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-2.5">
-              <input
-                type="text"
+            <form onSubmit={handleSubmit} className="flex items-end gap-2 px-3 py-2.5">
+              <AutoGrowTextarea
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onValueChange={setInputValue}
+                onSubmit={submit}
                 placeholder="Ou digite sua dúvida..."
                 disabled={disabled}
-                className="flex-1 bg-transparent px-2 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
+                className="flex-1 min-w-0 bg-transparent px-2 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || disabled}
                 className={cn(
-                  "p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center",
+                  "p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0",
                   inputValue.trim() && !disabled
                     ? "bg-red border-b-2 border-red-dark text-white"
                     : "text-white/30 cursor-not-allowed"

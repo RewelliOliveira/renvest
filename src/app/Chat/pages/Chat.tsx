@@ -4,6 +4,7 @@ import { Send, Sparkles, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw 
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
+import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
 import { useAvatar } from "@/lib/avatar";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
@@ -311,16 +312,16 @@ export function Chat() {
       <div className="w-full max-w-md mx-auto px-4 pb-20 pt-2 shrink-0">
         <form
           onSubmit={handleSubmit}
-          className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#0b162a]/90 border border-white/10 shadow-lg"
+          className="flex items-end gap-2 p-1.5 rounded-2xl bg-[#0b162a]/90 border border-white/10 shadow-lg"
         >
-          <input
-            type="text"
+          <AutoGrowTextarea
             value={inputValue}
             maxLength={MAX_INPUT_LENGTH}
-            onChange={(e) => setInputValue(e.target.value)}
+            onValueChange={setInputValue}
+            onSubmit={() => handleSendMessage(inputValue)}
             placeholder="Pergunte ao Rev sobre investimentos..."
             disabled={isTyping}
-            className="flex-1 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-50"
+            className="flex-1 min-w-0 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-50"
           />
           <button
             type="submit"
