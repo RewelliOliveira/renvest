@@ -4,14 +4,15 @@ import type { TrailModule } from "../types/types";
 
 interface SectionBannerProps {
   module: TrailModule;
+  className?: string;
 }
 
-export function SectionBanner({ module }: SectionBannerProps) {
+export function SectionBanner({ module, className }: SectionBannerProps) {
   const isLocked = module.status === "locked";
   const isCompleted = module.status === "completed";
 
   return (
-    <div className="sticky lg:static top-14 sm:top-15 z-30 w-full px-4 pt-2 pb-2 lg:pt-8 xl:pt-10 bg-[#000815]/90 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none">
+    <div className={cn("w-full px-4 pt-2 pb-2 lg:pt-8 xl:pt-10", className)}>
       <div
         className={cn(
           "max-w-md lg:max-w-2xl mx-auto rounded-2xl px-4 py-3.5 lg:px-6 lg:py-5 shadow-lg flex items-center gap-3 lg:gap-5",
