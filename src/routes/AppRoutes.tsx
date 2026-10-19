@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -10,50 +10,19 @@ import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { AppShell } from "@/components/layout/AppShell";
-
-const Login = lazy(() =>
-  import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })),
-);
-const Register = lazy(() =>
-  import("@/app/AuthLogin/pages/Register").then((m) => ({
-    default: m.Register,
-  })),
-);
-const Home = lazy(() =>
-  import("@/app/Home/pages/Home").then((m) => ({ default: m.Home })),
-);
-const ChatMission = lazy(() =>
-  import("@/app/Chat/pages/ChatMission").then((m) => ({
-    default: m.ChatMission,
-  })),
-);
-const Chat = lazy(() =>
-  import("@/app/Chat/pages/Chat").then((m) => ({ default: m.Chat })),
-);
-const Profile = lazy(() =>
-  import("@/app/Profile/pages/Profile").then((m) => ({ default: m.Profile })),
-);
-const PrivacySecurity = lazy(() =>
-  import("@/app/Profile/pages/PrivacySecurity").then((m) => ({
-    default: m.PrivacySecurity,
-  })),
-);
-const About = lazy(() =>
-  import("@/app/Profile/pages/About").then((m) => ({ default: m.About })),
-);
-const TrailProgress = lazy(() =>
-  import("@/app/Trail/pages/TrailProgress").then((m) => ({
-    default: m.TrailProgress,
-  })),
-);
-const Completion = lazy(() =>
-  import("@/app/Trail/pages/Completion").then((m) => ({
-    default: m.Completion,
-  })),
-);
-const ExamPage = lazy(() =>
-  import("@/app/Exam/pages/ExamPage").then((m) => ({ default: m.ExamPage })),
-);
+import {
+  Login,
+  Register,
+  Home,
+  ChatMission,
+  Chat,
+  Profile,
+  PrivacySecurity,
+  About,
+  TrailProgress,
+  Completion,
+  ExamPage,
+} from "./lazyPages";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { user, isAuthenticated, isLoading } = useAuth();
