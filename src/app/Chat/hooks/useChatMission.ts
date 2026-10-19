@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
+import { MascotHello, MascotPoint, MascotPlan, MascotThinking } from "@/assets/icons";
 import { completeLesson, getLesson } from "@/app/Trail/services/trailApi";
 import type { LessonContent } from "@/app/Trail/types/types";
 import { sendChatMessage } from "../services/chatApi";
@@ -194,8 +194,10 @@ export function useChatMission(lessonId: string) {
     }
   };
 
-  const MascotComponent =
-    (mode === "quiz" ? currentQuestion?.mascot : currentSlide?.mascot) ?? MascotHello;
+  // Enquanto o Rev busca a resposta de uma dúvida, o mascote fica pensativo
+  const MascotComponent = isTyping
+    ? MascotThinking
+    : (mode === "quiz" ? currentQuestion?.mascot : currentSlide?.mascot) ?? MascotHello;
 
   return {
     lesson,
