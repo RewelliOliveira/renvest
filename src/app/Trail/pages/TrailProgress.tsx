@@ -10,12 +10,12 @@ import { StreakBadge } from "../components/StreakBadge";
 import { useTrail } from "../hooks/useTrail";
 import type { TrailModule, TrailNodeItem } from "../types/types";
 
-// Deslocamento horizontal (px) dos nós; cada módulo curva para um lado
 const NODE_OFFSETS = [0, 48, 72, 48, 0];
 
 function buildNodes(module: TrailModule, moduleIndex: number): TrailNodeItem[] {
   const side = moduleIndex % 2 === 0 ? 1 : -1;
-  const offsetAt = (index: number) => NODE_OFFSETS[index % NODE_OFFSETS.length] * side;
+  const offsetAt = (index: number) =>
+    NODE_OFFSETS[index % NODE_OFFSETS.length] * side;
 
   const lessons: TrailNodeItem[] = module.lessons.map((lesson, index) => ({
     kind: "lesson",
@@ -44,13 +44,19 @@ export function TrailProgress() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
   const modules = useMemo(
-    () => (trail?.modules ?? []).map((module, index) => ({ module, nodes: buildNodes(module, index) })),
-    [trail]
+    () =>
+      (trail?.modules ?? []).map((module, index) => ({
+        module,
+        nodes: buildNodes(module, index),
+      })),
+    [trail],
   );
 
   useEffect(() => {
     if (trail && !trail.completed) {
-      document.getElementById("trail-current-node")?.scrollIntoView({ block: "center", behavior: "smooth" });
+      document
+        .getElementById("trail-current-node")
+        ?.scrollIntoView({ block: "center", behavior: "smooth" });
     }
   }, [trail]);
 
@@ -58,7 +64,10 @@ export function TrailProgress() {
   useEffect(() => {
     const root = document.documentElement;
     root.style.scrollSnapType = "y proximity";
-    root.style.scrollPaddingTop = window.matchMedia("(min-width: 640px)").matches ? "3.75rem" : "3.5rem";
+    root.style.scrollPaddingTop = window.matchMedia("(min-width: 640px)")
+      .matches
+      ? "3.75rem"
+      : "3.5rem";
     return () => {
       root.style.scrollSnapType = "";
       root.style.scrollPaddingTop = "";
@@ -77,7 +86,11 @@ export function TrailProgress() {
   };
 
   return (
-    <StarBurst className="min-h-dvh h-auto w-full overflow-visible overflow-x-clip text-white flex flex-col" maxHeightPercent={100} fixed>
+    <StarBurst
+      className="min-h-dvh h-auto w-full overflow-visible overflow-x-clip text-white flex flex-col"
+      maxHeightPercent={100}
+      fixed
+    >
       <TrailHeader trail={trail} />
 
       <main
@@ -134,7 +147,8 @@ export function TrailProgress() {
             <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
             <h3 className="text-lg font-bold">Trilha concluída!</h3>
             <p className="text-xs text-neutral-300 mt-1">
-              Você completou os {trail.progress.total_modules} módulos do Renvest.
+              Você completou os {trail.progress.total_modules} módulos do
+              Renvest.
             </p>
             <div className="flex justify-center mt-3">
               <StreakBadge streak={trail.streak} />
