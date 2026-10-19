@@ -1,6 +1,9 @@
+import { useCallback, useSyncExternalStore } from "react";
 import { MASCOT_PALETTES, type MascotVariant } from "@/assets/mascotPalettes";
+import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 
 const AVATAR_STORAGE_PREFIX = "@renvest:avatar:";
+const AVATAR_CHANGE_EVENT = "renvest:avatar-change";
 
 export const DEFAULT_AVATAR: MascotVariant = "red";
 
@@ -24,4 +27,28 @@ export function saveAvatar(userId: string, variant: MascotVariant): void {
   } catch {
     // Sem storage disponível o avatar volta ao padrão no próximo acesso
   }
+  window.dispatchEvent(new Event(AVATAR_CHANGE_EVENT));
+}
+
+function subscribe(onChange: () => void) {
+  window.addEventListener(AVATAR_CHANGE_EVENT, onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    window.removeEventListener(AVATAR_CHANGE_EVENT, onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+// Avatar do usuário logado, sincronizado entre todas as telas montadas
+export function useAvatar() {
+  const { user } = useAuth();
+  const userId = user?.id;
+  const avatar = useSyncExternalStore(subscribe, () => getSavedAvatar(userId));
+  const setAvatar = useCallback(
+    (variant: MascotVariant) => {
+      if (userId) saveAvatar(userId, variant);
+    },
+    [userId]
+  );
+  return [avatar, setAvatar] as const;
 }

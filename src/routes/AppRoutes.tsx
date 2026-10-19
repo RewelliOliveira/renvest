@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -8,67 +8,27 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
-
-const Login = lazy(() =>
-  import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })),
-);
-const Register = lazy(() =>
-  import("@/app/AuthLogin/pages/Register").then((m) => ({
-    default: m.Register,
-  })),
-);
-const Home = lazy(() =>
-  import("@/app/Home/pages/Home").then((m) => ({ default: m.Home })),
-);
-const ChatMission = lazy(() =>
-  import("@/app/Chat/pages/ChatMission").then((m) => ({
-    default: m.ChatMission,
-  })),
-);
-const Chat = lazy(() =>
-  import("@/app/Chat/pages/Chat").then((m) => ({ default: m.Chat })),
-);
-const Profile = lazy(() =>
-  import("@/app/Profile/pages/Profile").then((m) => ({ default: m.Profile })),
-);
-const PrivacySecurity = lazy(() =>
-  import("@/app/Profile/pages/PrivacySecurity").then((m) => ({
-    default: m.PrivacySecurity,
-  })),
-);
-const About = lazy(() =>
-  import("@/app/Profile/pages/About").then((m) => ({ default: m.About })),
-);
-const TrailProgress = lazy(() =>
-  import("@/app/Trail/pages/TrailProgress").then((m) => ({
-    default: m.TrailProgress,
-  })),
-);
-const Completion = lazy(() =>
-  import("@/app/Trail/pages/Completion").then((m) => ({
-    default: m.Completion,
-  })),
-);
-const ExamPage = lazy(() =>
-  import("@/app/Exam/pages/ExamPage").then((m) => ({ default: m.ExamPage })),
-);
-
-function LoadingScreen() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[#07090E] text-white">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-        <p className="text-sm text-neutral-400">Carregando...</p>
-      </div>
-    </div>
-  );
-}
+import { MascotLoader } from "@/components/ui/MascotLoader";
+import { AppShell } from "@/components/layout/AppShell";
+import {
+  Login,
+  Register,
+  Home,
+  ChatMission,
+  Chat,
+  Profile,
+  PrivacySecurity,
+  About,
+  TrailProgress,
+  Completion,
+  ExamPage,
+} from "./lazyPages";
 
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <MascotLoader />;
   }
 
   if (isPrivate && !isAuthenticated) {
@@ -85,7 +45,7 @@ function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
 export function AppRoutes() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<LoadingScreen />}>
+      <Suspense fallback={<MascotLoader />}>
         <Routes>
           <Route element={<RouteGuard />}>
             <Route path="/login" element={<Login />} />
@@ -93,11 +53,13 @@ export function AppRoutes() {
           </Route>
 
           <Route element={<RouteGuard isPrivate />}>
-            <Route path="/trail" element={<TrailProgress />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/privacidade" element={<PrivacySecurity />} />
-            <Route path="/profile/sobre" element={<About />} />
+            <Route element={<AppShell />}>
+              <Route path="/trail" element={<TrailProgress />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/privacidade" element={<PrivacySecurity />} />
+              <Route path="/profile/sobre" element={<About />} />
+            </Route>
             <Route
               path="/perfil"
               element={<Navigate to="/profile" replace />}

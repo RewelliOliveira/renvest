@@ -1,6 +1,7 @@
-import { Flame, BookOpenCheck } from "lucide-react";
+import { Flame } from "lucide-react";
 import { LogomarcaIcon } from "@/assets/icons";
 import { cn } from "cn";
+import { StreakFlame } from "./StreakFlame";
 import type { TrailData } from "../types/types";
 
 interface TrailHeaderProps {
@@ -12,16 +13,12 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
   const days = trail?.streak.current_days ?? 0;
 
   return (
-    <header className="sticky top-0 z-40 w-full h-14 sm:h-15 bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 sm:px-6">
-      <div className="max-w-md h-full mx-auto flex items-center justify-between">
-        <LogomarcaIcon className="h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
+    <header className="sticky lg:static top-0 z-40 w-full h-14 sm:h-15 bg-[#000815]/90 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-b border-white/10 lg:border-0 px-4 sm:px-6 lg:pt-4 xl:hidden">
+      <div className="max-w-md lg:max-w-2xl h-full mx-auto flex items-center justify-between lg:justify-end">
+        <LogomarcaIcon className="lg:hidden h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
 
         {trail && (
           <div className="flex items-center gap-5 text-base font-extrabold">
-            <span className="flex items-center gap-1.5 text-sky-300" title="Lições concluídas">
-              <BookOpenCheck className="w-6 h-6" />
-              {trail.progress.completed_lessons}/{trail.progress.total_lessons}
-            </span>
             <span
               className={cn("flex items-center gap-1.5", lit ? "text-amber-400" : "text-neutral-500")}
               title={
@@ -31,12 +28,14 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
               }
               aria-label={`Ofensiva: ${days} ${days === 1 ? "dia" : "dias"}`}
             >
-              <Flame
-                className={cn(
-                  "w-6 h-6",
-                  lit && "fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
-                )}
-              />
+              <StreakFlame lit={lit}>
+                <Flame
+                  className={cn(
+                    "w-6 h-6",
+                    lit && "fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+                  )}
+                />
+              </StreakFlame>
               {days}
             </span>
           </div>

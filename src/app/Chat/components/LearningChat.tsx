@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { MessageCircle, ChevronUp, ChevronDown, Sparkles, Send } from "lucide-react";
+import { ChevronUp, ChevronDown, Send } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
+import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
 
 interface LearningChatProps {
   suggestions: string[];
@@ -18,12 +19,16 @@ export function LearningChat({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const submit = () => {
     if (!inputValue.trim() || disabled) return;
     onSend(inputValue.trim());
     setInputValue("");
     setIsOpen(false);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    submit();
   };
 
   const handleChip = (text: string) => {
@@ -38,10 +43,7 @@ export function LearningChat({
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 text-white/70 hover:text-white transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <MessageCircle className="w-4 h-4 text-[#38bdf8]" />
-          <span>Ficou com alguma dúvida?</span>
-        </div>
+        <span className="text-sm font-medium">Ficou com alguma dúvida?</span>
         {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
@@ -62,28 +64,27 @@ export function LearningChat({
                   type="button"
                   onClick={() => handleChip(chip)}
                   disabled={disabled}
-                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-40"
                 >
-                  <Sparkles className="w-3 h-3 text-[#38bdf8]" />
                   {chip}
                 </motion.button>
               ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-2.5">
-              <input
-                type="text"
+            <form onSubmit={handleSubmit} className="flex items-end gap-2 px-3 py-2.5">
+              <AutoGrowTextarea
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onValueChange={setInputValue}
+                onSubmit={submit}
                 placeholder="Ou digite sua dúvida..."
                 disabled={disabled}
-                className="flex-1 bg-transparent px-2 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
+                className="flex-1 min-w-0 bg-transparent px-2 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || disabled}
                 className={cn(
-                  "p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center",
+                  "p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0",
                   inputValue.trim() && !disabled
                     ? "bg-red border-b-2 border-red-dark text-white"
                     : "text-white/30 cursor-not-allowed"

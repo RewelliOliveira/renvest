@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { markOnboardingCompleted } from "@/lib/onboarding";
+import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
+import { ImmersiveFooter } from "@/components/layout/ImmersiveFooter";
 import { getOnboardingSteps, type OnboardingStepData } from "../services/onboardingApi";
 
 const MASCOTS = { MascotHello, MascotPoint, MascotPlan };
@@ -52,13 +54,15 @@ export function Home() {
     }
   };
 
+  useQuizKeyboard({ optionCount: 0, onEnter: handleNext });
+
   const activeStep = steps[Math.min(currentStep, steps.length) - 1];
   const MascotComponent = MASCOTS[activeStep.mascot as keyof typeof MASCOTS] ?? MascotHello;
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col justify-between items-center px-6 py-5 sm:py-8">
-      <div className="w-full max-w-sm sm:max-w-md flex flex-col justify-between h-full">
-        <header className="w-full flex items-center gap-3 pt-1 pb-3">
+    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col justify-between items-center px-6 pt-5 sm:pt-8 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-[max(2rem,env(safe-area-inset-bottom))] lg:p-0">
+      <div className="w-full max-w-sm sm:max-w-md lg:max-w-none flex flex-col justify-between h-full">
+        <header className="w-full flex items-center gap-3 pt-1 pb-3 lg:max-w-5xl lg:mx-auto lg:px-10 lg:pt-8 lg:pb-6 lg:gap-5">
           <button
             type="button"
             onClick={handleBack}
@@ -77,7 +81,7 @@ export function Home() {
           />
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center w-full my-auto min-h-0 py-2 overflow-hidden">
+        <main className="flex-1 flex flex-col items-center justify-center w-full my-auto min-h-0 py-2 lg:px-10 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={`content-${currentStep}`}
@@ -85,13 +89,13 @@ export function Home() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -14, scale: 0.94 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="w-full flex flex-col items-center justify-center"
+              className="w-full flex flex-col items-center justify-center lg:max-w-5xl lg:flex-row-reverse lg:gap-12"
             >
-              <SpeechBubble>
+              <SpeechBubble direction="auto">
                 {activeStep.text}
               </SpeechBubble>
 
-              <div className="mt-4 sm:mt-6 flex items-center justify-center h-48 sm:h-56 w-full">
+              <div className="mt-4 sm:mt-6 lg:mt-0 flex items-center justify-center h-48 sm:h-56 lg:h-80 w-full lg:w-auto lg:shrink-0">
                 <motion.div
                   animate={
                     currentStep === 1
@@ -107,14 +111,14 @@ export function Home() {
                   }}
                   className="h-full flex items-center justify-center"
                 >
-                  <MascotComponent className="h-full w-auto max-w-55 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
+                  <MascotComponent className="h-full w-auto max-w-55 lg:max-w-80 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
                 </motion.div>
               </div>
             </motion.div>
           </AnimatePresence>
         </main>
 
-        <footer className="w-full pt-3 pb-2">
+        <ImmersiveFooter className="pt-3 pb-2">
           <motion.button
             whileTap={{ scale: 0.98 }}
             type="button"
@@ -123,7 +127,7 @@ export function Home() {
           >
             Continuar
           </motion.button>
-        </footer>
+        </ImmersiveFooter>
       </div>
     </div>
   );

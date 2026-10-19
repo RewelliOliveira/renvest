@@ -37,7 +37,7 @@ export function Login() {
         className="flex flex-col w-full gap-3.5 pb-2"
       >
         {error && (
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light text-xs font-medium">
+          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light text-xs font-medium">
             {error}
           </div>
         )}

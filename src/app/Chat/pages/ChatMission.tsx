@@ -1,13 +1,21 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
+import { MascotLoader } from "@/components/ui/MascotLoader";
+import { useAvatar } from "@/lib/avatar";
+import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
+import { ImmersiveLayout } from "@/components/layout/ImmersiveLayout";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useChatMission } from "../hooks/useChatMission";
 import { MissionHeader } from "../components/MissionHeader";
 import { LearningView } from "../components/LearningView";
 import { QuizView } from "../components/QuizView";
 import { MissionFooter } from "../components/MissionFooter";
+import { LessonComplete } from "../components/LessonComplete";
 
 function LessonScreen({ lessonId }: { lessonId: string }) {
   const navigate = useNavigate();
+  const [avatar] = useAvatar();
   const {
     lesson,
     loadError,
@@ -15,14 +23,11 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     slideIndex,
     phase,
     bubbleText,
-    bubbleSource,
+    isShowingReply,
     isTyping,
     attemptCount,
-    quizSteps,
-    correctCount,
     isCorrectAnswer,
     isRetry,
-    correctOptionText,
     selectedId,
     hasAnswered,
     currentQuestion,
@@ -31,6 +36,8 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     MascotComponent,
     isFinishing,
     finishError,
+    completion,
+    handleFinish,
     handleBack,
     handleContinueLearning,
     handleChatMessage,
@@ -39,6 +46,31 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     handleConfirmQuiz,
     handleContinueQuiz,
   } = useChatMission(lessonId);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const hasProgress = mode === "quiz" || phase === "free-chat" || slideIndex > 0;
+  const leaveLesson = () => navigate("/trail");
+  const handleClose = () => (hasProgress ? setIsLeaving(true) : leaveLesson());
+
+  useQuizKeyboard({
+    optionCount: mode === "quiz" && !hasAnswered ? (currentQuestion?.options.length ?? 0) : 0,
+    onSelect: (index) => {
+      const option = currentQuestion?.options[index];
+      if (option) handleSelectQuizOption(option.id);
+    },
+    onEnter: () => {
+      if (completion) {
+        handleFinish();
+      } else if (mode === "quiz") {
+        if (hasAnswered) void handleContinueQuiz();
+        else handleConfirmQuiz();
+      } else if (!isTyping) {
+        if (phase === "slides") handleContinueLearning();
+        else handleStartQuiz();
+      }
+    },
+    enabled: !!lesson && !isFinishing && !isLeaving,
+  });
 
   if (loadError) {
     return (
@@ -57,11 +89,19 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
   }
 
   if (!lesson) {
+    return <MascotLoader title="Preparando sua lição" />;
+  }
+
+  if (completion) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
-        <p className="text-sm text-neutral-400">Preparando a lição...</p>
-      </div>
+      <LessonComplete
+        lessonTitle={lesson.title}
+        firstTryCorrect={completion.firstTryCorrect}
+        total={completion.total}
+        streak={completion.streak}
+        mascotVariant={avatar}
+        onContinue={handleFinish}
+      />
     );
   }
 
@@ -69,9 +109,8 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     <>
       <MissionHeader
         progressValue={progressValue}
-        mode={mode}
-        counterLabel={`${correctCount}/${quizSteps.length}`}
         onBack={handleBack}
+        onClose={handleClose}
       />
 
       {mode === "learning" && (
@@ -79,9 +118,10 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
           slideIndex={slideIndex}
           phase={phase}
           bubbleText={bubbleText}
-          source={bubbleSource}
+          isShowingReply={isShowingReply}
           isTyping={isTyping}
           MascotComponent={MascotComponent}
+          mascotVariant={avatar}
         />
       )}
 
@@ -93,12 +133,13 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
           selectedId={selectedId}
           hasAnswered={hasAnswered}
           MascotComponent={MascotComponent}
+          mascotVariant={avatar}
           onSelectOption={handleSelectQuizOption}
         />
       )}
 
       {finishError && (
-        <p className="text-xs text-red-300 text-center pb-1" role="alert">
+        <p className="text-xs text-red-300 text-center pb-1 lg:pt-2" role="alert">
           {finishError}
         </p>
       )}
@@ -112,13 +153,22 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
         hasAnswered={hasAnswered}
         isLastQuestion={isLastQuestion}
         isCorrectAnswer={isCorrectAnswer}
-        correctOptionText={correctOptionText}
         isFinishing={isFinishing}
         onChatMessage={handleChatMessage}
         onStartQuiz={handleStartQuiz}
         onContinueLearning={handleContinueLearning}
         onConfirmQuiz={handleConfirmQuiz}
         onContinueQuiz={handleContinueQuiz}
+      />
+
+      <ConfirmDialog
+        open={isLeaving}
+        title="Sair da lição?"
+        description="Se sair agora, você perde o progresso desta lição e vai precisar começar de novo."
+        cancelLabel="Continuar estudando"
+        confirmLabel="Sair da lição"
+        onCancel={() => setIsLeaving(false)}
+        onConfirm={leaveLesson}
       />
     </>
   );
@@ -128,11 +178,9 @@ export function ChatMission() {
   const { lessonId = "" } = useParams();
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col items-center px-4 sm:px-6 py-4 sm:py-6">
-      <div className="w-full max-w-sm sm:max-w-md flex flex-col justify-between h-full">
-        {/* key reinicia o estado ao trocar de lição */}
-        <LessonScreen key={lessonId} lessonId={lessonId} />
-      </div>
-    </div>
+    <ImmersiveLayout>
+      {/* key reinicia o estado ao trocar de lição */}
+      <LessonScreen key={lessonId} lessonId={lessonId} />
+    </ImmersiveLayout>
   );
 }

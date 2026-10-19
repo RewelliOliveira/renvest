@@ -1,5 +1,6 @@
 import { Target, Map, Library, GraduationCap, AlertTriangle } from "lucide-react";
 import { LogomarcaIcon, MascotHello } from "@/assets/icons";
+import { useAvatar } from "@/lib/avatar";
 import { ProfileSubpage, InfoSection } from "../components/ProfileSubpage";
 
 const MODULES = [
@@ -11,11 +12,13 @@ const MODULES = [
 const SOURCES = ["CVM", "B3", "Banco Central", "CMN", "Tesouro Nacional"];
 
 export function About() {
+  const [avatar] = useAvatar();
+
   return (
     <ProfileSubpage title="Sobre o Renvest">
       <div className="rounded-2xl bg-[#071329]/90 border border-white/10 p-5 flex flex-col items-center text-center shadow-xl relative overflow-hidden">
         <div className="absolute -top-8 -right-8 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
-        <MascotHello className="h-24 w-auto mb-3" />
+        <MascotHello variant={avatar} className="h-24 w-auto mb-3" />
         <LogomarcaIcon className="h-7 w-auto mb-2" />
         <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
           Educação financeira gamificada para investidores iniciantes, com o Rev como seu tutor e respostas

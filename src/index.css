@@ -144,9 +144,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: #000815;
   }
   html {
     @apply font-sans;
+    background-color: #000815;
+    color-scheme: dark;
   }
 }
 
@@ -183,3 +186,51 @@
   animation: bubbleTransition 0.35s ease-out both;
 }
 
+@keyframes optionShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes optionPop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-shake {
+  animation: optionShake 0.42s ease-in-out both;
+}
+
+.animate-pop {
+  animation: optionPop 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-mascot,
+  .animate-bubble,
+  .animate-shake,
+  .animate-pop,
+  .animate-bounce {
+    animation: none;
+  }
+}

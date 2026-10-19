@@ -1,11 +1,13 @@
-import type { ComponentType, SVGProps } from "react";
+import type { ComponentType } from "react";
+import type { MascotVariant } from "@/assets/mascotPalettes";
+
+export type MascotComponentType = ComponentType<{ className?: string; variant?: MascotVariant }>;
 
 export interface LearningStep {
   id: number;
-  mascot: ComponentType<SVGProps<SVGSVGElement>>;
+  mascot: MascotComponentType;
   title: string;
   bubbleText: string;
-  source?: SourceCitation | null;
 }
 
 export interface QuizOption {
@@ -14,17 +16,11 @@ export interface QuizOption {
   isCorrect?: boolean;
 }
 
-export interface SourceCitation {
-  document: string;
-  section: string;
-}
-
 export interface QuizStep {
   id: string;
-  mascot: ComponentType<SVGProps<SVGSVGElement>>;
+  mascot: MascotComponentType;
   question: string;
   explanation: string;
-  source: SourceCitation;
   options: QuizOption[];
 }
 

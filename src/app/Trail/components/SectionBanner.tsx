@@ -9,13 +9,12 @@ interface SectionBannerProps {
 export function SectionBanner({ module }: SectionBannerProps) {
   const isLocked = module.status === "locked";
   const isCompleted = module.status === "completed";
-  const completedLessons = module.lessons.filter((lesson) => lesson.status === "completed").length;
 
   return (
-    <div className="sticky top-14 sm:top-15 z-30 w-full px-4 pt-2 pb-2 bg-[#000815]/90 backdrop-blur-md">
+    <div className="sticky lg:static top-14 sm:top-15 z-30 w-full px-4 pt-2 pb-2 lg:pt-8 xl:pt-10 bg-[#000815]/90 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none">
       <div
         className={cn(
-          "max-w-md mx-auto rounded-2xl px-4 py-3.5 shadow-lg flex items-center gap-3",
+          "max-w-md lg:max-w-2xl mx-auto rounded-2xl px-4 py-3.5 lg:px-6 lg:py-5 shadow-lg flex items-center gap-3 lg:gap-5",
           isLocked ? "border" : "text-white"
         )}
         style={
@@ -36,33 +35,24 @@ export function SectionBanner({ module }: SectionBannerProps) {
           >
             Módulo {module.order}
           </span>
-          <h2 className={cn("text-lg font-extrabold leading-tight", isLocked ? "text-neutral-300" : "text-white")}>
+          <h2 className={cn("text-lg lg:text-2xl font-extrabold leading-tight", isLocked ? "text-neutral-300" : "text-white")}>
             {module.title}
           </h2>
-          <p className={cn("text-xs mt-0.5 truncate", isLocked ? "text-neutral-500" : "text-white/80")}>
+          <p className={cn("text-xs lg:text-sm mt-0.5 lg:mt-1 truncate", isLocked ? "text-neutral-500" : "text-white/80")}>
             {module.subtitle}
           </p>
         </div>
 
-        <div
-          className={cn(
-            "shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl text-[11px] font-bold",
-            isLocked ? "bg-white/5 text-neutral-500" : "bg-black/15 text-white"
-          )}
-        >
-          {isLocked ? (
-            <Lock className="w-5 h-5" />
-          ) : isCompleted ? (
-            <CheckCircle2 className="w-6 h-6" />
-          ) : (
-            <>
-              <span className="text-base font-extrabold leading-none">
-                {completedLessons}/{module.lessons.length}
-              </span>
-              <span className="text-[10px] opacity-80 mt-0.5">lições</span>
-            </>
-          )}
-        </div>
+        {(isLocked || isCompleted) && (
+          <div
+            className={cn(
+              "shrink-0 flex items-center justify-center w-14 h-14 rounded-xl",
+              isLocked ? "bg-white/5 text-neutral-500" : "bg-black/15 text-white"
+            )}
+          >
+            {isLocked ? <Lock className="w-5 h-5" /> : <CheckCircle2 className="w-6 h-6" />}
+          </div>
+        )}
       </div>
     </div>
   );
