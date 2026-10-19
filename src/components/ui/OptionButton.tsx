@@ -7,6 +7,7 @@ export interface OptionButtonProps
   isCorrect?: boolean;
   hasAnswered?: boolean;
   icon?: ReactNode;
+  shortcut?: number;
   children: ReactNode;
 }
 
@@ -15,6 +16,7 @@ export function OptionButton({
   isCorrect,
   hasAnswered = false,
   icon,
+  shortcut,
   children,
   className,
   disabled,
@@ -28,7 +30,7 @@ export function OptionButton({
       type="button"
       disabled={disabled || hasAnswered}
       className={cn(
-        "w-full py-3 sm:py-3.5 px-4 rounded-xl font-bold text-sm sm:text-base transition-all flex items-center justify-between text-left shadow-lg cursor-pointer",
+        "w-full py-3 sm:py-3.5 lg:py-4 px-4 lg:px-5 rounded-xl font-bold text-sm sm:text-base transition-all flex items-center justify-between text-left shadow-lg cursor-pointer",
         "border-b-4 active:border-b-0 active:translate-y-0.5 focus-visible:outline-none",
         showSuccess
           ? "bg-emerald-500/20 border border-emerald-500/30 border-b-4 border-b-emerald-600 text-white shadow-emerald-500/10"
@@ -46,6 +48,11 @@ export function OptionButton({
         {icon && <span className="shrink-0">{icon}</span>}
         <span className="truncate whitespace-normal leading-snug">{children}</span>
       </div>
+      {shortcut !== undefined && (
+        <kbd className="hidden lg:flex ml-3 w-7 h-7 shrink-0 items-center justify-center rounded-lg border-2 border-current/25 text-xs font-extrabold opacity-60">
+          {shortcut}
+        </kbd>
+      )}
     </button>
   );
 }
