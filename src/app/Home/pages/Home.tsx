@@ -60,7 +60,7 @@ export function Home() {
   const MascotComponent = MASCOTS[activeStep.mascot as keyof typeof MASCOTS] ?? MascotHello;
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col justify-between items-center px-6 py-5 sm:py-8 lg:p-0">
+    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col justify-between items-center px-6 pt-5 sm:pt-8 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:pb-[max(2rem,env(safe-area-inset-bottom))] lg:p-0">
       <div className="w-full max-w-sm sm:max-w-md lg:max-w-none flex flex-col justify-between h-full">
         <header className="w-full flex items-center gap-3 pt-1 pb-3 lg:max-w-5xl lg:mx-auto lg:px-10 lg:pt-8 lg:pb-6 lg:gap-5">
           <button

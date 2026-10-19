@@ -16,6 +16,7 @@ const TIPS = [
 ];
 
 const TIP_INTERVAL_MS = 4000;
+const LOADER_DELAY_S = 0.3;
 const DANCE = { repeat: Infinity, duration: 1.2, ease: "easeInOut" } as const;
 
 interface MascotLoaderProps {
@@ -32,9 +33,12 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
   }, []);
 
   return (
-    <div
+    <motion.div
       role="status"
       aria-live="polite"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, delay: LOADER_DELAY_S }}
       className="fixed inset-0 lg:left-[var(--side-nav-width,0px)] z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
     >
       <div className="w-full max-w-sm flex flex-col items-center text-center">
@@ -80,6 +84,6 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
