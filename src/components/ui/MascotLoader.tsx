@@ -35,7 +35,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
     <div
       role="status"
       aria-live="polite"
-      className="fixed inset-0 z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
+      className="fixed inset-0 lg:left-[var(--side-nav-width,0px)] z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
     >
       <div className="w-full max-w-sm flex flex-col items-center text-center">
         <div className="relative h-36 w-40 flex flex-col items-center justify-end">
