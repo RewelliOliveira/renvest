@@ -5,6 +5,7 @@ import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 import { SidePanel, PanelCard } from "@/components/layout/SidePanel";
 import { moduleProgress } from "../utils/progress";
+import { StreakFlame } from "./StreakFlame";
 import type { TrailData } from "../types/types";
 
 export function TrailSidePanel({ trail }: { trail: TrailData }) {
@@ -15,12 +16,14 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
     <SidePanel>
       <PanelCard title="Ofensiva">
         <div className="flex items-center gap-4">
-          <Flame
-            className={cn(
-              "w-12 h-12 shrink-0",
-              lit ? "text-amber-400 fill-amber-400/40 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]" : "text-neutral-500"
-            )}
-          />
+          <StreakFlame lit={lit}>
+            <Flame
+              className={cn(
+                "w-12 h-12 shrink-0",
+                lit ? "text-amber-400 fill-amber-400/40 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]" : "text-neutral-500"
+              )}
+            />
+          </StreakFlame>
           <div className="min-w-0">
             <p className={cn("text-2xl font-extrabold", lit ? "text-amber-200" : "text-white")}>
               {days} {days === 1 ? "dia" : "dias"}
