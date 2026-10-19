@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
 import { useChatMission } from "../hooks/useChatMission";
 import { MissionHeader } from "../components/MissionHeader";
@@ -59,12 +60,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
   }
 
   if (!lesson) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
-        <p className="text-sm text-neutral-400">Preparando a lição...</p>
-      </div>
-    );
+    return <MascotLoader title="Preparando sua lição" />;
   }
 
   return (

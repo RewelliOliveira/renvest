@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 
 const Login = lazy(() =>
   import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })),
@@ -53,22 +54,11 @@ const ExamPage = lazy(() =>
   import("@/app/Exam/pages/ExamPage").then((m) => ({ default: m.ExamPage })),
 );
 
-function LoadingScreen() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[#07090E] text-white">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-        <p className="text-sm text-neutral-400">Carregando...</p>
-      </div>
-    </div>
-  );
-}
-
 function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <MascotLoader />;
   }
 
   if (isPrivate && !isAuthenticated) {
@@ -85,7 +75,7 @@ function RouteGuard({ isPrivate }: { isPrivate?: boolean }) {
 export function AppRoutes() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<LoadingScreen />}>
+      <Suspense fallback={<MascotLoader />}>
         <Routes>
           <Route element={<RouteGuard />}>
             <Route path="/login" element={<Login />} />

@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { AlertCircle, BarChart2, CheckCircle2, FileText, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
 import { OptionButton } from "@/components/ui/OptionButton";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
@@ -162,12 +163,7 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
   }
 
   if (!exam) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
-        <p className="text-sm text-neutral-400">Sorteando as questões...</p>
-      </div>
-    );
+    return <MascotLoader title="Sorteando as questões" />;
   }
 
   if (result) {

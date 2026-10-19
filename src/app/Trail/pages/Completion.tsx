@@ -2,6 +2,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { BookOpenCheck, Layers, MessageSquare } from "lucide-react";
 import { StarBurst } from "@/components/ui/starsUI";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { MascotHello } from "@/assets/icons";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useAvatar } from "@/lib/avatar";
@@ -16,11 +17,7 @@ export function Completion() {
   const firstName = user?.name?.split(" ")[0];
 
   if (isLoading && !trail) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-[#07090E]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
-      </div>
-    );
+    return <MascotLoader title="Carregando sua conquista" />;
   }
 
   if (!trail?.completed) {

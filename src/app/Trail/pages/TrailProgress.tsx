@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AlertCircle, PartyPopper, RefreshCw } from "lucide-react";
 import { StarBurst } from "@/components/ui/starsUI";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
@@ -97,12 +98,7 @@ export function TrailProgress() {
         className="flex-1 w-full flex flex-col items-center [--trail-header-height:3.5rem] sm:[--trail-header-height:3.75rem]"
         onClick={() => setSelectedKey(null)}
       >
-        {isLoading && !trail && (
-          <div className="flex flex-col items-center gap-3 py-24 px-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-red border-t-transparent" />
-            <p className="text-sm text-neutral-400">Carregando sua trilha...</p>
-          </div>
-        )}
+        {isLoading && !trail && <MascotLoader title="Carregando sua trilha" />}
 
         {error && !trail && (
           <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
