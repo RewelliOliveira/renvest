@@ -6,6 +6,9 @@ import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
+import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
+import { ImmersiveLayout } from "@/components/layout/ImmersiveLayout";
+import { ImmersiveFooter } from "@/components/layout/ImmersiveFooter";
 import { OptionButton } from "@/components/ui/OptionButton";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { MissionHeader } from "@/app/Chat/components/MissionHeader";
@@ -26,36 +29,59 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
   const finishedTrail = result.passed && result.trail.completed;
 
   return (
-    <main className="flex-1 w-full min-h-0 overflow-y-auto no-scrollbar py-2 flex flex-col gap-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={cn(
-          "rounded-2xl border p-5 text-center",
-          result.passed ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red/10 border-red/30"
-        )}
-      >
-        {result.passed ? (
-          <Trophy className="w-10 h-10 text-yellow-300 fill-yellow-400/30 mx-auto mb-2" />
-        ) : (
-          <RotateCcw className="w-10 h-10 text-red-light mx-auto mb-2" />
-        )}
-        <p className="text-3xl font-extrabold text-white">
-          {result.correct_count}/{result.total}
-        </p>
-        <h2 className="text-base font-bold text-white mt-1">
-          {result.passed ? "Você foi aprovado!" : "Quase lá!"}
-        </h2>
-        <p className="text-xs text-neutral-300 mt-1">
-          {result.passed
-            ? finishedTrail
-              ? "Você concluiu o último módulo da trilha."
-              : "O próximo módulo está liberado na trilha."
-            : `Você precisa de pelo menos ${percent(result.pass_score)} de acertos. Revise as explicações e tente de novo.`}
-        </p>
-      </motion.div>
+    <main className="flex-1 w-full min-h-0 overflow-y-auto no-scrollbar py-2 flex flex-col gap-4 lg:max-w-6xl lg:mx-auto lg:px-10 lg:pb-10 lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-8 lg:items-start">
+      <div className="contents lg:flex lg:flex-col lg:gap-4 lg:sticky lg:top-0">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className={cn(
+            "order-1 lg:order-none rounded-2xl border p-5 lg:p-7 text-center",
+            result.passed ? "bg-emerald-500/10 border-emerald-500/30" : "bg-red/10 border-red/30"
+          )}
+        >
+          {result.passed ? (
+            <Trophy className="w-10 h-10 text-yellow-300 fill-yellow-400/30 mx-auto mb-2" />
+          ) : (
+            <RotateCcw className="w-10 h-10 text-red-light mx-auto mb-2" />
+          )}
+          <p className="text-3xl font-extrabold text-white">
+            {result.correct_count}/{result.total}
+          </p>
+          <h2 className="text-base font-bold text-white mt-1">
+            {result.passed ? "Você foi aprovado!" : "Quase lá!"}
+          </h2>
+          <p className="text-xs text-neutral-300 mt-1">
+            {result.passed
+              ? finishedTrail
+                ? "Você concluiu o último módulo da trilha."
+                : "O próximo módulo está liberado na trilha."
+              : `Você precisa de pelo menos ${percent(result.pass_score)} de acertos. Revise as explicações e tente de novo.`}
+          </p>
+        </motion.div>
 
-      <div className="flex flex-col gap-3">
+        <div className="order-3 lg:order-none flex flex-col gap-2.5 pt-1 pb-2">
+          {finishedTrail ? (
+            <button type="button" className={primaryButton} onClick={() => navigate("/conclusao", { replace: true })}>
+              Ver minha conquista
+            </button>
+          ) : result.passed ? (
+            <button type="button" className={primaryButton} onClick={() => navigate("/trail", { replace: true })}>
+              Continuar na trilha
+            </button>
+          ) : (
+            <>
+              <button type="button" className={primaryButton} onClick={onRetry}>
+                Tentar novamente
+              </button>
+              <button type="button" className={secondaryButton} onClick={() => navigate("/trail", { replace: true })}>
+                Revisar as lições
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="order-2 lg:order-none flex flex-col gap-3">
         <h3 className="text-xs font-bold uppercase tracking-wider text-white/50">Revisão das questões</h3>
         {result.results.map((item, index) => (
           <div key={item.question_id} className="rounded-xl bg-white/5 border border-white/10 p-3.5 flex flex-col gap-2">
@@ -91,27 +117,6 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
           </div>
         ))}
       </div>
-
-      <div className="flex flex-col gap-2.5 pt-1 pb-2">
-        {finishedTrail ? (
-          <button type="button" className={primaryButton} onClick={() => navigate("/conclusao", { replace: true })}>
-            Ver minha conquista
-          </button>
-        ) : result.passed ? (
-          <button type="button" className={primaryButton} onClick={() => navigate("/trail", { replace: true })}>
-            Continuar na trilha
-          </button>
-        ) : (
-          <>
-            <button type="button" className={primaryButton} onClick={onRetry}>
-              Tentar novamente
-            </button>
-            <button type="button" className={secondaryButton} onClick={() => navigate("/trail", { replace: true })}>
-              Revisar as lições
-            </button>
-          </>
-        )}
-      </div>
     </main>
   );
 }
@@ -144,37 +149,16 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
     };
   }, [moduleId]);
 
-  if (error) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
-        <AlertCircle className="w-8 h-8 text-red-400" />
-        <p className="text-sm text-neutral-200">{error}</p>
-        <button type="button" className={cn(primaryButton, "max-w-xs")} onClick={() => navigate("/trail")}>
-          Voltar para a trilha
-        </button>
-      </div>
-    );
-  }
+  const question = exam?.questions[index];
+  const selected = question ? (answers[question.id] ?? null) : null;
+  const isLast = !!exam && index === exam.questions.length - 1;
 
-  if (!exam) {
-    return <MascotLoader title="Sorteando as questões" />;
-  }
-
-  if (result) {
-    return (
-      <>
-        <MissionHeader progressValue={100} mode="learning" counterLabel="" onBack={() => navigate("/trail")} />
-        <ExamResultView result={result} onRetry={onRetry} />
-      </>
-    );
-  }
-
-  const question = exam.questions[index];
-  const selected = answers[question.id] ?? null;
-  const isLast = index === exam.questions.length - 1;
+  const selectOption = (optionId: string) => {
+    if (question) setAnswers((prev) => ({ ...prev, [question.id]: optionId }));
+  };
 
   const handleNext = async () => {
-    if (!selected) return;
+    if (!exam || !selected || isSubmitting) return;
     if (!isLast) {
       setIndex((prev) => prev + 1);
       return;
@@ -190,6 +174,41 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
     }
   };
 
+  useQuizKeyboard({
+    optionCount: question?.options.length ?? 0,
+    onSelect: (optionIndex) => {
+      const option = question?.options[optionIndex];
+      if (option) selectOption(option.id);
+    },
+    onEnter: () => void handleNext(),
+    enabled: !!question && !result,
+  });
+
+  if (error) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
+        <AlertCircle className="w-8 h-8 text-red-400" />
+        <p className="text-sm text-neutral-200">{error}</p>
+        <button type="button" className={cn(primaryButton, "max-w-xs")} onClick={() => navigate("/trail")}>
+          Voltar para a trilha
+        </button>
+      </div>
+    );
+  }
+
+  if (!exam || !question) {
+    return <MascotLoader title="Sorteando as questões" />;
+  }
+
+  if (result) {
+    return (
+      <>
+        <MissionHeader progressValue={100} mode="learning" counterLabel="" onBack={() => navigate("/trail")} />
+        <ExamResultView result={result} onRetry={onRetry} />
+      </>
+    );
+  }
+
   return (
     <>
       <MissionHeader
@@ -199,15 +218,15 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
         onBack={() => (index > 0 ? setIndex((prev) => prev - 1) : navigate("/trail"))}
       />
 
-      <main className="flex-1 flex flex-col justify-center w-full min-h-0 overflow-y-auto no-scrollbar py-2">
+      <main className="flex-1 flex flex-col justify-center w-full min-h-0 overflow-y-auto no-scrollbar py-2 lg:px-10">
         <motion.div
           key={question.id}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex flex-col gap-4 my-auto"
+          className="w-full flex flex-col gap-4 my-auto lg:max-w-3xl lg:mx-auto lg:gap-6"
         >
           <div className="w-full flex items-center gap-3">
-            <div className="w-20 h-20 shrink-0 flex items-center justify-center">
+            <div className="w-20 h-20 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center">
               {index % 2 === 0 ? (
                 <MascotPlan className="h-full w-auto object-contain" />
               ) : (
@@ -221,14 +240,15 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
             </div>
           </div>
 
-          <h2 className="text-white text-base sm:text-lg font-bold leading-snug">{question.question}</h2>
+          <h2 className="text-white text-base sm:text-lg lg:text-2xl font-bold leading-snug">{question.question}</h2>
 
           <div className="w-full flex flex-col gap-2.5 sm:gap-3">
-            {question.options.map((option) => (
+            {question.options.map((option, optionIndex) => (
               <OptionButton
                 key={option.id}
                 isSelected={selected === option.id}
-                onClick={() => setAnswers((prev) => ({ ...prev, [question.id]: option.id }))}
+                shortcut={optionIndex + 1}
+                onClick={() => selectOption(option.id)}
                 icon={
                   <BarChart2
                     className={selected === option.id ? "w-5 h-5 text-option-selected-text" : "w-5 h-5 text-blue-400/80"}
@@ -242,16 +262,19 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
         </motion.div>
       </main>
 
-      <footer className="w-full pt-2 pb-1 shrink-0">
-        {submitError && (
-          <p className="text-xs text-red-300 text-center pb-2" role="alert">
-            {submitError}
-          </p>
-        )}
+      <ImmersiveFooter
+        aside={
+          submitError && (
+            <p className="text-xs text-red-300 text-center lg:text-left" role="alert">
+              {submitError}
+            </p>
+          )
+        }
+      >
         <button type="button" className={primaryButton} disabled={!selected || isSubmitting} onClick={handleNext}>
           {isLast ? (isSubmitting ? "Corrigindo..." : "Enviar respostas") : "Próxima"}
         </button>
-      </footer>
+      </ImmersiveFooter>
     </>
   );
 }
@@ -261,11 +284,9 @@ export function ExamPage() {
   const [attempt, setAttempt] = useState(0);
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col items-center px-4 sm:px-6 py-4 sm:py-6">
-      <div className="w-full max-w-sm sm:max-w-md flex flex-col justify-between h-full">
-        {/* Nova key a cada tentativa: novo sorteio de questões */}
-        <ExamScreen key={`${moduleId}-${attempt}`} moduleId={moduleId} onRetry={() => setAttempt((prev) => prev + 1)} />
-      </div>
-    </div>
+    <ImmersiveLayout>
+      {/* Nova key a cada tentativa: novo sorteio de questões */}
+      <ExamScreen key={`${moduleId}-${attempt}`} moduleId={moduleId} onRetry={() => setAttempt((prev) => prev + 1)} />
+    </ImmersiveLayout>
   );
 }
