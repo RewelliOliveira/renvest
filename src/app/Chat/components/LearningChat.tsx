@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { MessageCircle, ChevronUp, ChevronDown, Sparkles, Send } from "lucide-react";
+import { ChevronUp, ChevronDown, Send } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
@@ -43,10 +43,7 @@ export function LearningChat({
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 text-white/70 hover:text-white transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <MessageCircle className="w-4 h-4 text-[#38bdf8]" />
-          <span>Ficou com alguma dúvida?</span>
-        </div>
+        <span className="text-sm font-medium">Ficou com alguma dúvida?</span>
         {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
@@ -67,9 +64,8 @@ export function LearningChat({
                   type="button"
                   onClick={() => handleChip(chip)}
                   disabled={disabled}
-                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-40"
                 >
-                  <Sparkles className="w-3 h-3 text-[#38bdf8]" />
                   {chip}
                 </motion.button>
               ))}

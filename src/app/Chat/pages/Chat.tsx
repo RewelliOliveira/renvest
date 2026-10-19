@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { FormEvent } from "react";
-import { Send, Sparkles, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from "lucide-react";
+import { Send, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
@@ -23,7 +23,7 @@ export function Chat() {
     {
       id: "welcome-1",
       sender: "bot",
-      text: `Olá${userName ? `, ${userName}` : ""}! Eu sou o Rev, seu tutor de inteligência financeira da Renvest. 🚀`,
+      text: `Olá${userName ? `, ${userName}` : ""}! Eu sou o Rev, seu tutor de inteligência financeira da Renvest.`,
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
     {
@@ -152,15 +152,10 @@ export function Chat() {
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
-                Rev • Tutor Renvest
-              </h1>
-              <Sparkles className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-            </div>
-            <p className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-              Online • Respostas com base oficial
-            </p>
+            <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+              Rev • Tutor Renvest
+            </h1>
+            <p className="text-[11px] text-emerald-400 font-semibold">Online</p>
           </div>
         </div>
       </header>
@@ -297,10 +292,9 @@ export function Chat() {
                   type="button"
                   disabled={isTyping}
                   onClick={() => handleSendMessage(item)}
-                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-1 cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
                 >
-                  <Sparkles className="w-3 h-3 text-sky-400" />
-                  <span>{item}</span>
+                  {item}
                 </button>
               ))}
             </div>

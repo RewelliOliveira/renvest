@@ -58,7 +58,7 @@ export function MissionFooter({
           onClick={onStartQuiz}
           className="w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
         >
-          Estou pronto para o teste! 🚀
+          Estou pronto para o teste
         </motion.button>
       )}
 
@@ -122,7 +122,7 @@ export function MissionFooter({
             ? isLastQuestion
               ? isFinishing
                 ? "Salvando..."
-                : "Concluir lição 🎉"
+                : "Concluir lição"
               : "Continuar"
             : "Confirmar"}
         </motion.button>

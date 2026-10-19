@@ -41,7 +41,7 @@ export function Completion() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <span className="text-xs font-extrabold uppercase tracking-widest text-amber-300">Trilha concluída</span>
           <h1 className="text-2xl sm:text-3xl font-extrabold mt-2">
-            Parabéns{firstName ? `, ${firstName}` : ""}! 🎉
+            Parabéns{firstName ? `, ${firstName}` : ""}!
           </h1>
           <p className="text-sm text-neutral-300 mt-2 leading-relaxed">
             Você concluiu os módulos do Renvest: dos fundamentos de finanças à bolsa de valores e à regulação da CVM.

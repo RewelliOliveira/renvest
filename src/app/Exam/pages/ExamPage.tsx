@@ -95,7 +95,7 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
       <div className="flex flex-col gap-2.5 pt-1 pb-2">
         {finishedTrail ? (
           <button type="button" className={primaryButton} onClick={() => navigate("/conclusao", { replace: true })}>
-            Ver minha conquista 🎉
+            Ver minha conquista
           </button>
         ) : result.passed ? (
           <button type="button" className={primaryButton} onClick={() => navigate("/trail", { replace: true })}>
