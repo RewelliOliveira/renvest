@@ -14,21 +14,16 @@ import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { MascotHello } from "@/assets/icons";
-import type { MascotVariant } from "@/assets/mascotPalettes";
-import { getSavedAvatar, saveAvatar } from "@/lib/avatar";
+import { useAvatar } from "@/lib/avatar";
 import { AvatarPicker } from "../components/AvatarPicker";
 
 export function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { trail } = useTrail();
-  const [avatar, setAvatar] = useState<MascotVariant>(() => getSavedAvatar(user?.id));
+  const [avatar, setAvatar] = useAvatar();
   const [isPickingAvatar, setIsPickingAvatar] = useState(false);
 
-  const handleAvatarSelect = (variant: MascotVariant) => {
-    setAvatar(variant);
-    if (user?.id) saveAvatar(user.id, variant);
-  };
   const stat = (value?: number, total?: number) =>
     value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
 
@@ -77,7 +72,7 @@ export function Profile() {
           </div>
         </div>
 
-        {isPickingAvatar && <AvatarPicker selected={avatar} onSelect={handleAvatarSelect} />}
+        {isPickingAvatar && <AvatarPicker selected={avatar} onSelect={setAvatar} />}
 
         <div className="grid grid-cols-3 gap-2.5">
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 flex flex-col items-center text-center">

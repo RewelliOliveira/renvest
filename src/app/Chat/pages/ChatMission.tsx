@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
+import { useAvatar } from "@/lib/avatar";
 import { useChatMission } from "../hooks/useChatMission";
 import { MissionHeader } from "../components/MissionHeader";
 import { LearningView } from "../components/LearningView";
@@ -8,6 +9,7 @@ import { MissionFooter } from "../components/MissionFooter";
 
 function LessonScreen({ lessonId }: { lessonId: string }) {
   const navigate = useNavigate();
+  const [avatar] = useAvatar();
   const {
     lesson,
     loadError,
@@ -82,6 +84,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
           source={bubbleSource}
           isTyping={isTyping}
           MascotComponent={MascotComponent}
+          mascotVariant={avatar}
         />
       )}
 
@@ -93,6 +96,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
           selectedId={selectedId}
           hasAnswered={hasAnswered}
           MascotComponent={MascotComponent}
+          mascotVariant={avatar}
           onSelectOption={handleSelectQuizOption}
         />
       )}

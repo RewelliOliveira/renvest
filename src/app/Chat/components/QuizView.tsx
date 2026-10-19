@@ -1,8 +1,8 @@
-import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { QuizOptionsList } from "./QuizOptionsList";
-import type { QuizStep } from "../types/types";
+import type { MascotVariant } from "@/assets/mascotPalettes";
+import type { MascotComponentType, QuizStep } from "../types/types";
 
 interface QuizViewProps {
   attemptKey: number;
@@ -10,7 +10,8 @@ interface QuizViewProps {
   currentQuestion: QuizStep;
   selectedId: string | null;
   hasAnswered: boolean;
-  MascotComponent: ComponentType<SVGProps<SVGSVGElement>>;
+  MascotComponent: MascotComponentType;
+  mascotVariant: MascotVariant;
   onSelectOption: (optionId: string) => void;
 }
 
@@ -21,6 +22,7 @@ export function QuizView({
   selectedId,
   hasAnswered,
   MascotComponent,
+  mascotVariant,
   onSelectOption,
 }: QuizViewProps) {
   return (
@@ -40,7 +42,7 @@ export function QuizView({
               animate={{ opacity: 1, scale: 1 }}
               className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 flex items-center justify-center"
             >
-              <MascotComponent className="h-full w-auto object-contain drop-shadow-[0_8px_20px_rgba(240,86,86,0.25)]" />
+              <MascotComponent variant={mascotVariant} className="h-full w-auto object-contain drop-shadow-[0_8px_20px_rgba(240,86,86,0.25)]" />
             </motion.div>
             <div className="flex-1">
               <SpeechBubble direction="left">

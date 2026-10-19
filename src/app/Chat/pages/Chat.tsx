@@ -4,6 +4,7 @@ import { Send, Sparkles, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw 
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
+import { useAvatar } from "@/lib/avatar";
 import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
@@ -14,6 +15,7 @@ const MAX_INPUT_LENGTH = 500;
 
 export function Chat() {
   const { user } = useAuth();
+  const [avatar] = useAvatar();
   const userName = user?.name ? user.name.split(" ")[0] : "";
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
@@ -144,7 +146,7 @@ export function Chat() {
       <header className="sticky top-0 z-30 w-full bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
         <div className="max-w-md mx-auto flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full bg-linear-to-br from-red/30 to-sky-500/30 border border-white/15 flex items-center justify-center p-1 shadow-inner shrink-0">
-            <MascotHello className="h-full w-auto object-contain" />
+            <MascotHello variant={avatar} className="h-full w-auto object-contain" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#000815]" />
           </div>
 

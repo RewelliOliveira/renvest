@@ -4,6 +4,7 @@ import { BookOpenCheck, Layers, MessageSquare } from "lucide-react";
 import { StarBurst } from "@/components/ui/starsUI";
 import { MascotHello } from "@/assets/icons";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
+import { useAvatar } from "@/lib/avatar";
 import { StreakBadge } from "../components/StreakBadge";
 import { useTrail } from "../hooks/useTrail";
 
@@ -11,6 +12,7 @@ export function Completion() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { trail, isLoading } = useTrail();
+  const [avatar] = useAvatar();
   const firstName = user?.name?.split(" ")[0];
 
   if (isLoading && !trail) {
@@ -35,7 +37,7 @@ export function Completion() {
           className="h-48 flex items-center justify-center"
         >
           <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }} className="h-full">
-            <MascotHello className="h-full w-auto object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.35)]" />
+            <MascotHello variant={avatar} className="h-full w-auto object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.35)]" />
           </motion.div>
         </motion.div>
 

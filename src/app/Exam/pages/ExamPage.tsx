@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { AlertCircle, BarChart2, CheckCircle2, FileText, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
+import { useAvatar } from "@/lib/avatar";
 import { OptionButton } from "@/components/ui/OptionButton";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { MissionHeader } from "@/app/Chat/components/MissionHeader";
@@ -122,6 +123,7 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
 
 function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => void }) {
   const navigate = useNavigate();
+  const [avatar] = useAvatar();
   const startRequest = useRef<Promise<ExamStart> | null>(null);
   const [exam, setExam] = useState<ExamStart | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -219,7 +221,7 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
               {index % 2 === 0 ? (
                 <MascotPlan className="h-full w-auto object-contain" />
               ) : (
-                <MascotHello className="h-full w-auto object-contain" />
+                <MascotHello variant={avatar} className="h-full w-auto object-contain" />
               )}
             </div>
             <div className="flex-1">

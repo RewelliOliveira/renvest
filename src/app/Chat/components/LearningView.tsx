@@ -1,8 +1,8 @@
-import type { ComponentType, SVGProps } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FileText } from "lucide-react";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
-import type { LearningPhase, SourceCitation } from "../types/types";
+import type { MascotVariant } from "@/assets/mascotPalettes";
+import type { LearningPhase, MascotComponentType, SourceCitation } from "../types/types";
 
 interface LearningViewProps {
   slideIndex: number;
@@ -10,7 +10,8 @@ interface LearningViewProps {
   bubbleText: string;
   source?: SourceCitation | null;
   isTyping: boolean;
-  MascotComponent: ComponentType<SVGProps<SVGSVGElement>>;
+  MascotComponent: MascotComponentType;
+  mascotVariant: MascotVariant;
 }
 
 export function LearningView({
@@ -20,6 +21,7 @@ export function LearningView({
   source,
   isTyping,
   MascotComponent,
+  mascotVariant,
 }: LearningViewProps) {
   return (
     <main className="flex-1 flex flex-col items-center justify-center w-full my-auto min-h-0 py-2 overflow-y-auto no-scrollbar">
@@ -57,7 +59,7 @@ export function LearningView({
               transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
               className="h-full flex items-center justify-center"
             >
-              <MascotComponent className="h-full w-auto max-w-48 sm:max-w-55 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
+              <MascotComponent variant={mascotVariant} className="h-full w-auto max-w-48 sm:max-w-55 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
             </motion.div>
           </div>
         </motion.div>
