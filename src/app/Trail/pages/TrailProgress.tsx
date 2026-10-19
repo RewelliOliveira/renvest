@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AlertCircle, PartyPopper, RefreshCw } from "lucide-react";
 import { StarBurst } from "@/components/ui/starsUI";
 import { MascotLoader } from "@/components/ui/MascotLoader";
@@ -42,7 +42,11 @@ function buildNodes(module: TrailModule, moduleIndex: number): TrailNodeItem[] {
 export function TrailProgress() {
   const navigate = useNavigate();
   const { trail, isLoading, error, reload } = useTrail();
+  const location = useLocation();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [justCompletedKey] = useState<string | null>(
+    () => (location.state as { completedNodeKey?: string } | null)?.completedNodeKey ?? null,
+  );
 
   const modules = useMemo(
     () =>
@@ -53,13 +57,22 @@ export function TrailProgress() {
     [trail],
   );
 
+  const currentNodeKey = useMemo(
+    () =>
+      modules
+        .flatMap(({ nodes }) => nodes)
+        .find((node) => node.status === "current")?.key ?? null,
+    [modules],
+  );
+  const scrolledNodeKey = useRef<string | null>(null);
+
   useEffect(() => {
-    if (trail && !trail.completed) {
-      document
-        .getElementById("trail-current-node")
-        ?.scrollIntoView({ block: "center", behavior: "smooth" });
-    }
-  }, [trail]);
+    if (!currentNodeKey || scrolledNodeKey.current === currentNodeKey) return;
+    scrolledNodeKey.current = currentNodeKey;
+    document
+      .getElementById("trail-current-node")
+      ?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [currentNodeKey]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -80,6 +93,19 @@ export function TrailProgress() {
       root.style.scrollPaddingTop = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (justCompletedKey) navigate(location.pathname, { replace: true, state: null });
+  }, [justCompletedKey, navigate, location.pathname]);
+
+  useEffect(() => {
+    if (!selectedKey) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedKey(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedKey]);
 
   useEffect(() => {
     if (!selectedKey) return;
@@ -139,6 +165,7 @@ export function TrailProgress() {
                       key={node.key}
                       node={node}
                       isSelected={selectedKey === node.key}
+                      justCompleted={justCompletedKey === node.key}
                       onSelect={handleSelect}
                     />
                   ))}
