@@ -13,7 +13,7 @@ export function ProfileSubpage({ title, children }: ProfileSubpageProps) {
   return (
     <div className="min-h-dvh w-full overflow-x-hidden bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex flex-col">
       <header className="sticky top-0 z-30 w-full bg-[#000815]/85 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
-        <div className="max-w-md mx-auto relative flex items-center justify-center">
+        <div className="max-w-md lg:max-w-5xl mx-auto relative flex items-center justify-center">
           <button
             type="button"
             onClick={() => navigate("/profile")}
@@ -26,7 +26,9 @@ export function ProfileSubpage({ title, children }: ProfileSubpageProps) {
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-md mx-auto px-4 py-5 pb-28 lg:pb-10 flex flex-col gap-4">{children}</main>
+      <main className="flex-1 w-full max-w-md lg:max-w-5xl mx-auto px-4 lg:px-8 py-5 lg:py-10 pb-28 lg:pb-10 flex flex-col gap-4 lg:block lg:columns-2 lg:gap-6 lg:*:mb-6 lg:*:break-inside-avoid lg:*:first:[column-span:all]">
+        {children}
+      </main>
     </div>
   );
 }
