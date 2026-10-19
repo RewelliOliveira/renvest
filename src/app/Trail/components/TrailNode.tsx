@@ -23,7 +23,7 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
     <div
       id={isCurrent ? "trail-current-node" : undefined}
       data-node-key={node.key}
-      className={cn("group relative flex flex-col items-center select-none scroll-mt-40", isSelected ? "z-40" : "z-10")}
+      className={cn("group relative flex flex-col items-center select-none scroll-mt-40", isSelected ? "z-20" : "z-10")}
       style={{ transform: `translateX(calc(${node.positionX}px * var(--trail-spread, 1)))` }}
     >
       {isCurrent && (

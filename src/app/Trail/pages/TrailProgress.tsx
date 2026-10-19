@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import { AlertCircle, PartyPopper, RefreshCw } from "lucide-react";
+import { cn } from "cn";
 import { StarBurst } from "@/components/ui/starsUI";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { TrailHeader } from "../components/TrailHeader";
@@ -65,6 +67,36 @@ export function TrailProgress() {
     [modules],
   );
   const scrolledNodeKey = useRef<string | null>(null);
+  const stickyBannerRef = useRef<HTMLDivElement>(null);
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
+  const activeModule =
+    modules.find(({ module }) => module.id === activeModuleId)?.module ?? modules[0]?.module;
+
+  useEffect(() => {
+    if (!modules.length) return;
+    let frame = 0;
+    const updateActiveModule = () => {
+      frame = 0;
+      const limit = stickyBannerRef.current?.getBoundingClientRect().bottom ?? 0;
+      const sections = document.querySelectorAll<HTMLElement>("[data-module-id]");
+      let activeId = sections[0]?.dataset.moduleId ?? null;
+      sections.forEach((section) => {
+        if (section.getBoundingClientRect().top <= limit + 1) activeId = section.dataset.moduleId ?? activeId;
+      });
+      setActiveModuleId(activeId);
+    };
+    const handleScroll = () => {
+      if (!frame) frame = requestAnimationFrame(updateActiveModule);
+    };
+    updateActiveModule();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [modules]);
 
   useEffect(() => {
     if (!currentNodeKey || scrolledNodeKey.current === currentNodeKey) return;
@@ -75,26 +107,6 @@ export function TrailProgress() {
   }, [currentNodeKey]);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const desktop = window.matchMedia("(min-width: 1024px)");
-    const applySnap = () => {
-      root.style.scrollSnapType = desktop.matches ? "" : "y proximity";
-      root.style.scrollPaddingTop = desktop.matches
-        ? ""
-        : window.matchMedia("(min-width: 640px)").matches
-          ? "3.75rem"
-          : "3.5rem";
-    };
-    applySnap();
-    desktop.addEventListener("change", applySnap);
-    return () => {
-      desktop.removeEventListener("change", applySnap);
-      root.style.scrollSnapType = "";
-      root.style.scrollPaddingTop = "";
-    };
-  }, []);
-
-  useEffect(() => {
     if (justCompletedKey) navigate(location.pathname, { replace: true, state: null });
   }, [justCompletedKey, navigate, location.pathname]);
 
@@ -103,8 +115,19 @@ export function TrailProgress() {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setSelectedKey(null);
     };
+    const handleUserScroll = (event: Event) => {
+      const target = event.target as Element | null;
+      if (target?.closest?.(`[data-node-key="${selectedKey}"]`)) return;
+      setSelectedKey(null);
+    };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("touchmove", handleUserScroll, { passive: true });
+    window.addEventListener("wheel", handleUserScroll, { passive: true });
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("touchmove", handleUserScroll);
+      window.removeEventListener("wheel", handleUserScroll);
+    };
   }, [selectedKey]);
 
   useEffect(() => {
@@ -129,7 +152,7 @@ export function TrailProgress() {
           <TrailHeader trail={trail} />
 
           <main
-            className="flex-1 w-full flex flex-col items-center [--trail-header-height:3.5rem] sm:[--trail-header-height:3.75rem] [--trail-spread:1] lg:[--trail-spread:1.6]"
+            className="flex-1 w-full flex flex-col items-center [--trail-spread:1] lg:[--trail-spread:1.6]"
             onClick={() => setSelectedKey(null)}
           >
             {isLoading && !trail && <MascotLoader title="Carregando sua trilha" />}
@@ -149,17 +172,46 @@ export function TrailProgress() {
               </div>
             )}
 
-            {modules.map(({ module, nodes }) => (
+            {activeModule && (
+              <div
+                ref={stickyBannerRef}
+                className="lg:hidden sticky top-14 sm:top-15 z-30 w-full bg-[#000815]"
+              >
+                <motion.div
+                  key={activeModule.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <SectionBanner module={activeModule} />
+                </motion.div>
+              </div>
+            )}
+
+            {modules.map(({ module, nodes }, index) => (
               <section
                 key={module.id}
-                className="w-full min-h-[calc(100dvh-var(--trail-header-height))] lg:min-h-0 snap-start flex flex-col items-center border-t border-white/5 lg:border-0 [background:var(--module-bg)] lg:[background:none]"
-                style={{
-                  ["--module-bg" as string]: `linear-gradient(to bottom, color-mix(in srgb, ${module.color} 14%, transparent), color-mix(in srgb, ${module.color} 4%, transparent))`,
-                }}
+                data-module-id={module.id}
+                className="w-full flex flex-col items-center"
               >
-                <SectionBanner module={module} />
+                <SectionBanner module={module} className="hidden lg:block" />
 
-                <div className="w-full max-w-lg lg:max-w-2xl flex-1 flex flex-col items-center justify-center gap-6 lg:gap-9 px-4 pt-8 pb-28 lg:pt-14 lg:pb-20">
+                {index > 0 && (
+                  <div className="lg:hidden w-full max-w-lg flex items-center gap-4 px-6 pt-6">
+                    <span className="flex-1 h-0.5 rounded-full bg-white/15" />
+                    <span className="shrink min-w-0 truncate text-base font-bold text-neutral-400">
+                      {module.title}
+                    </span>
+                    <span className="flex-1 h-0.5 rounded-full bg-white/15" />
+                  </div>
+                )}
+
+                <div
+                  className={cn(
+                    "w-full max-w-lg lg:max-w-2xl flex-1 flex flex-col items-center justify-center gap-6 lg:gap-9 px-4 pt-16 lg:pt-14 lg:pb-20",
+                    index === modules.length - 1 && !trail?.completed ? "pb-28" : "pb-12",
+                  )}
+                >
                   {nodes.map((node) => (
                     <TrailNode
                       key={node.key}
