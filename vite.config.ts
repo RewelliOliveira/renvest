@@ -10,6 +10,12 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  server: {
+    host: true,
+    proxy: {
+      "/api": "http://localhost:8000",
+    },
+  },
   build: {
     rollupOptions: {
       output: {
