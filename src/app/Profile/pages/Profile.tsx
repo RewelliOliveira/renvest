@@ -11,7 +11,6 @@ import {
   Pencil,
 } from "lucide-react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
-import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
@@ -45,7 +44,7 @@ export function Profile() {
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-md mx-auto px-4 py-5 pb-28 flex flex-col gap-4">
+      <main className="flex-1 w-full max-w-md mx-auto px-4 py-5 pb-28 lg:pb-10 flex flex-col gap-4">
         <div className="rounded-2xl bg-[#071329]/90 border border-white/10 p-5 flex items-center gap-4 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -138,7 +137,6 @@ export function Profile() {
         </button>
       </main>
 
-      <BottomNav currentTab="profile" />
     </div>
   );
 }

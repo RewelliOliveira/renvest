@@ -9,6 +9,7 @@ import {
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { getPostAuthRoute } from "@/lib/onboarding";
 import { MascotLoader } from "@/components/ui/MascotLoader";
+import { AppShell } from "@/components/layout/AppShell";
 
 const Login = lazy(() =>
   import("@/app/AuthLogin/pages/Login").then((m) => ({ default: m.Login })),
@@ -83,11 +84,13 @@ export function AppRoutes() {
           </Route>
 
           <Route element={<RouteGuard isPrivate />}>
-            <Route path="/trail" element={<TrailProgress />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/privacidade" element={<PrivacySecurity />} />
-            <Route path="/profile/sobre" element={<About />} />
+            <Route element={<AppShell />}>
+              <Route path="/trail" element={<TrailProgress />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/privacidade" element={<PrivacySecurity />} />
+              <Route path="/profile/sobre" element={<About />} />
+            </Route>
             <Route
               path="/perfil"
               element={<Navigate to="/profile" replace />}

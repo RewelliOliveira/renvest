@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, type LucideIcon } from "lucide-react";
-import { BottomNav } from "@/app/Trail/components/BottomNav";
 
 interface ProfileSubpageProps {
   title: string;
@@ -27,9 +26,7 @@ export function ProfileSubpage({ title, children }: ProfileSubpageProps) {
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-md mx-auto px-4 py-5 pb-28 flex flex-col gap-4">{children}</main>
-
-      <BottomNav currentTab="profile" />
+      <main className="flex-1 w-full max-w-md mx-auto px-4 py-5 pb-28 lg:pb-10 flex flex-col gap-4">{children}</main>
     </div>
   );
 }

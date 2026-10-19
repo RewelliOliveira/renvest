@@ -6,7 +6,6 @@ import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
 import { useAvatar } from "@/lib/avatar";
-import { BottomNav } from "@/app/Trail/components/BottomNav";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage, getChatSuggestions } from "../services/chatApi";
@@ -303,7 +302,7 @@ export function Chat() {
       </main>
 
       {/* Input Box */}
-      <div className="w-full max-w-md mx-auto px-4 pb-20 pt-2 shrink-0">
+      <div className="w-full max-w-md mx-auto px-4 pb-20 lg:pb-5 pt-2 shrink-0">
         <form
           onSubmit={handleSubmit}
           className="flex items-end gap-2 p-1.5 rounded-2xl bg-[#0b162a]/90 border border-white/10 shadow-lg"
@@ -333,7 +332,6 @@ export function Chat() {
         </form>
       </div>
 
-      <BottomNav currentTab="chat" />
     </div>
   );
 }

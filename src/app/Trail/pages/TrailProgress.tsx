@@ -6,7 +6,6 @@ import { MascotLoader } from "@/components/ui/MascotLoader";
 import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
-import { BottomNav } from "../components/BottomNav";
 import { StreakBadge } from "../components/StreakBadge";
 import { useTrail } from "../hooks/useTrail";
 import type { TrailModule, TrailNodeItem } from "../types/types";
@@ -125,7 +124,7 @@ export function TrailProgress() {
           >
             <SectionBanner module={module} />
 
-            <div className="w-full max-w-lg flex-1 flex flex-col items-center justify-center gap-6 px-4 pt-8 pb-28">
+            <div className="w-full max-w-lg flex-1 flex flex-col items-center justify-center gap-6 px-4 pt-8 pb-28 lg:pb-12">
               {nodes.map((node) => (
                 <TrailNode
                   key={node.key}
@@ -139,7 +138,7 @@ export function TrailProgress() {
         ))}
 
         {trail?.completed && (
-          <div className="w-[calc(100%-2rem)] max-w-md mx-4 mt-6 mb-32 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
+          <div className="w-[calc(100%-2rem)] max-w-md mx-4 mt-6 mb-32 lg:mb-12 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
             <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
             <h3 className="text-lg font-bold">Trilha concluída!</h3>
             <p className="text-xs text-neutral-300 mt-1">
@@ -160,7 +159,6 @@ export function TrailProgress() {
         )}
       </main>
 
-      <BottomNav currentTab="trail" />
     </StarBurst>
   );
 }
