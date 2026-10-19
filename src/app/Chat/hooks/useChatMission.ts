@@ -15,7 +15,6 @@ function toLearningSteps(lesson: LessonContent): LearningStep[] {
     mascot: MASCOTS[index % MASCOTS.length],
     title: slide.title,
     bubbleText: slide.text,
-    source: slide.source ?? null,
   }));
 }
 
@@ -25,7 +24,6 @@ function toQuizSteps(lesson: LessonContent): QuizStep[] {
     mascot: MASCOTS[index % MASCOTS.length],
     question: question.question,
     explanation: question.explanation,
-    source: question.source,
     options: question.options.map((option) => ({
       ...option,
       isCorrect: option.id === question.correct_option,
@@ -87,7 +85,6 @@ export function useChatMission(lessonId: string) {
     : "";
   const bubbleText =
     phase === "free-chat" ? chatReply ?? freeChatIntro : currentSlide?.bubbleText ?? "";
-  const bubbleSource = phase === "slides" ? currentSlide?.source ?? null : null;
 
   const progressValue =
     mode === "learning"
@@ -202,7 +199,6 @@ export function useChatMission(lessonId: string) {
     slideIndex,
     phase,
     bubbleText,
-    bubbleSource,
     isTyping,
     attemptCount,
     quizSteps,

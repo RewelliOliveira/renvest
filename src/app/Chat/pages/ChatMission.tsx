@@ -18,7 +18,6 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     slideIndex,
     phase,
     bubbleText,
-    bubbleSource,
     isTyping,
     attemptCount,
     quizSteps,
@@ -77,7 +76,6 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
           slideIndex={slideIndex}
           phase={phase}
           bubbleText={bubbleText}
-          source={bubbleSource}
           isTyping={isTyping}
           MascotComponent={MascotComponent}
           mascotVariant={avatar}

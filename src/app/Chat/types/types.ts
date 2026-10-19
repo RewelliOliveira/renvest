@@ -8,7 +8,6 @@ export interface LearningStep {
   mascot: MascotComponentType;
   title: string;
   bubbleText: string;
-  source?: SourceCitation | null;
 }
 
 export interface QuizOption {
@@ -17,17 +16,11 @@ export interface QuizOption {
   isCorrect?: boolean;
 }
 
-export interface SourceCitation {
-  document: string;
-  section: string;
-}
-
 export interface QuizStep {
   id: string;
   mascot: MascotComponentType;
   question: string;
   explanation: string;
-  source: SourceCitation;
   options: QuizOption[];
 }
 

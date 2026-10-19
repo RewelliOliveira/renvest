@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { AlertCircle, BarChart2, CheckCircle2, FileText, RotateCcw, Trophy, XCircle } from "lucide-react";
+import { AlertCircle, BarChart2, CheckCircle2, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
 import { MascotLoader } from "@/components/ui/MascotLoader";
@@ -88,12 +88,6 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
               })}
             </ul>
             <p className="text-xs text-neutral-300 leading-relaxed pl-6">{item.explanation}</p>
-            <p className="text-[11px] text-white/55 pl-6 flex items-start gap-1">
-              <FileText className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
-              <span>
-                Fonte: <strong className="text-white/75">{item.source.document}</strong> ({item.source.section})
-              </span>
-            </p>
           </div>
         ))}
       </div>

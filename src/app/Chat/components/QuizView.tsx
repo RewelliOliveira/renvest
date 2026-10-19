@@ -70,7 +70,6 @@ export function QuizView({
             options={currentQuestion.options}
             selectedId={selectedId}
             hasAnswered={hasAnswered}
-            source={currentQuestion.source}
             onSelect={onSelectOption}
           />
         </motion.div>
