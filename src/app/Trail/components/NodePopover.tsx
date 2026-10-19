@@ -45,12 +45,12 @@ export function NodePopover({ node, offsetX }: NodePopoverProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
       className="absolute top-full left-1/2 mt-3 z-50 w-[min(18rem,calc(100vw-2rem))]"
-      style={{ x: `calc(-50% - ${offsetX}px)` }}
+      style={{ x: `calc(-50% - ${offsetX}px * var(--trail-spread, 1))` }}
       onClick={(event) => event.stopPropagation()}
     >
       <span
         className={cn("absolute -top-2 w-4 h-4 rotate-45 rounded-sm", isLocked && "bg-neutral-800 border-l border-t border-white/10")}
-        style={{ left: `calc(50% + ${offsetX}px - 0.5rem)`, backgroundColor: color }}
+        style={{ left: `calc(50% + ${offsetX}px * var(--trail-spread, 1) - 0.5rem)`, backgroundColor: color }}
       />
       <div
         className={cn(

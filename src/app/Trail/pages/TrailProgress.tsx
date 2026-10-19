@@ -7,6 +7,7 @@ import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
 import { StreakBadge } from "../components/StreakBadge";
+import { TrailSidePanel } from "../components/TrailSidePanel";
 import { useTrail } from "../hooks/useTrail";
 import type { TrailModule, TrailNodeItem } from "../types/types";
 
@@ -60,15 +61,21 @@ export function TrailProgress() {
     }
   }, [trail]);
 
-  // Snap vertical entre módulos: cada módulo ocupa a tela inteira, estilo Duolingo
   useEffect(() => {
     const root = document.documentElement;
-    root.style.scrollSnapType = "y proximity";
-    root.style.scrollPaddingTop = window.matchMedia("(min-width: 640px)")
-      .matches
-      ? "3.75rem"
-      : "3.5rem";
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const applySnap = () => {
+      root.style.scrollSnapType = desktop.matches ? "" : "y proximity";
+      root.style.scrollPaddingTop = desktop.matches
+        ? ""
+        : window.matchMedia("(min-width: 640px)").matches
+          ? "3.75rem"
+          : "3.5rem";
+    };
+    applySnap();
+    desktop.addEventListener("change", applySnap);
     return () => {
+      desktop.removeEventListener("change", applySnap);
       root.style.scrollSnapType = "";
       root.style.scrollPaddingTop = "";
     };
@@ -91,74 +98,79 @@ export function TrailProgress() {
       maxHeightPercent={100}
       fixed
     >
-      <TrailHeader trail={trail} />
+      <div className="w-full flex">
+        <div className="flex-1 min-w-0 flex flex-col">
+          <TrailHeader trail={trail} />
 
-      <main
-        className="flex-1 w-full flex flex-col items-center [--trail-header-height:3.5rem] sm:[--trail-header-height:3.75rem]"
-        onClick={() => setSelectedKey(null)}
-      >
-        {isLoading && !trail && <MascotLoader title="Carregando sua trilha" />}
-
-        {error && !trail && (
-          <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
-            <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
-            <p className="text-sm text-red-100">{error}</p>
-            <button
-              type="button"
-              onClick={reload}
-              className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white text-sm font-bold cursor-pointer hover:brightness-105"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Tentar de novo
-            </button>
-          </div>
-        )}
-
-        {modules.map(({ module, nodes }) => (
-          <section
-            key={module.id}
-            className="w-full min-h-[calc(100dvh-var(--trail-header-height))] snap-start flex flex-col items-center border-t border-white/5"
-            style={{
-              background: `linear-gradient(to bottom, color-mix(in srgb, ${module.color} 14%, transparent), color-mix(in srgb, ${module.color} 4%, transparent))`,
-            }}
+          <main
+            className="flex-1 w-full flex flex-col items-center [--trail-header-height:3.5rem] sm:[--trail-header-height:3.75rem] [--trail-spread:1] lg:[--trail-spread:1.6]"
+            onClick={() => setSelectedKey(null)}
           >
-            <SectionBanner module={module} />
+            {isLoading && !trail && <MascotLoader title="Carregando sua trilha" />}
 
-            <div className="w-full max-w-lg flex-1 flex flex-col items-center justify-center gap-6 px-4 pt-8 pb-28 lg:pb-12">
-              {nodes.map((node) => (
-                <TrailNode
-                  key={node.key}
-                  node={node}
-                  isSelected={selectedKey === node.key}
-                  onSelect={handleSelect}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+            {error && !trail && (
+              <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
+                <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                <p className="text-sm text-red-100">{error}</p>
+                <button
+                  type="button"
+                  onClick={reload}
+                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white text-sm font-bold cursor-pointer hover:brightness-105"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Tentar de novo
+                </button>
+              </div>
+            )}
 
-        {trail?.completed && (
-          <div className="w-[calc(100%-2rem)] max-w-md mx-4 mt-6 mb-32 lg:mb-12 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
-            <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
-            <h3 className="text-lg font-bold">Trilha concluída!</h3>
-            <p className="text-xs text-neutral-300 mt-1">
-              Você completou os {trail.progress.total_modules} módulos do
-              Renvest.
-            </p>
-            <div className="flex justify-center mt-3">
-              <StreakBadge streak={trail.streak} />
-            </div>
-            <button
-              type="button"
-              onClick={() => navigate("/conclusao")}
-              className="mt-4 w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
-            >
-              Ver minha conquista
-            </button>
-          </div>
-        )}
-      </main>
+            {modules.map(({ module, nodes }) => (
+              <section
+                key={module.id}
+                className="w-full min-h-[calc(100dvh-var(--trail-header-height))] lg:min-h-0 snap-start flex flex-col items-center border-t border-white/5 lg:border-0 [background:var(--module-bg)] lg:[background:none]"
+                style={{
+                  ["--module-bg" as string]: `linear-gradient(to bottom, color-mix(in srgb, ${module.color} 14%, transparent), color-mix(in srgb, ${module.color} 4%, transparent))`,
+                }}
+              >
+                <SectionBanner module={module} />
 
+                <div className="w-full max-w-lg lg:max-w-2xl flex-1 flex flex-col items-center justify-center gap-6 lg:gap-9 px-4 pt-8 pb-28 lg:pt-14 lg:pb-20">
+                  {nodes.map((node) => (
+                    <TrailNode
+                      key={node.key}
+                      node={node}
+                      isSelected={selectedKey === node.key}
+                      onSelect={handleSelect}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {trail?.completed && (
+              <div className="w-[calc(100%-2rem)] max-w-md lg:max-w-2xl mx-4 mt-6 mb-32 lg:mb-12 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
+                <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
+                <h3 className="text-lg font-bold">Trilha concluída!</h3>
+                <p className="text-xs text-neutral-300 mt-1">
+                  Você completou os {trail.progress.total_modules} módulos do
+                  Renvest.
+                </p>
+                <div className="flex justify-center mt-3">
+                  <StreakBadge streak={trail.streak} />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate("/conclusao")}
+                  className="mt-4 w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
+                >
+                  Ver minha conquista
+                </button>
+              </div>
+            )}
+          </main>
+        </div>
+
+        {trail && <TrailSidePanel trail={trail} />}
+      </div>
     </StarBurst>
   );
 }

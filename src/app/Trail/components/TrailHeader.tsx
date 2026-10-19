@@ -12,9 +12,9 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
   const days = trail?.streak.current_days ?? 0;
 
   return (
-    <header className="sticky top-0 z-40 w-full h-14 sm:h-15 bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 sm:px-6">
-      <div className="max-w-md h-full mx-auto flex items-center justify-between">
-        <LogomarcaIcon className="h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
+    <header className="sticky lg:static top-0 z-40 w-full h-14 sm:h-15 bg-[#000815]/90 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border-b border-white/10 lg:border-0 px-4 sm:px-6 lg:pt-4 xl:hidden">
+      <div className="max-w-md lg:max-w-2xl h-full mx-auto flex items-center justify-between lg:justify-end">
+        <LogomarcaIcon className="lg:hidden h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
 
         {trail && (
           <div className="flex items-center gap-5 text-base font-extrabold">
