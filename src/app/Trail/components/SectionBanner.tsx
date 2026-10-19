@@ -9,7 +9,6 @@ interface SectionBannerProps {
 export function SectionBanner({ module }: SectionBannerProps) {
   const isLocked = module.status === "locked";
   const isCompleted = module.status === "completed";
-  const completedLessons = module.lessons.filter((lesson) => lesson.status === "completed").length;
 
   return (
     <div className="sticky top-14 sm:top-15 z-30 w-full px-4 pt-2 pb-2 bg-[#000815]/90 backdrop-blur-md">
@@ -44,25 +43,16 @@ export function SectionBanner({ module }: SectionBannerProps) {
           </p>
         </div>
 
-        <div
-          className={cn(
-            "shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-xl text-[11px] font-bold",
-            isLocked ? "bg-white/5 text-neutral-500" : "bg-black/15 text-white"
-          )}
-        >
-          {isLocked ? (
-            <Lock className="w-5 h-5" />
-          ) : isCompleted ? (
-            <CheckCircle2 className="w-6 h-6" />
-          ) : (
-            <>
-              <span className="text-base font-extrabold leading-none">
-                {completedLessons}/{module.lessons.length}
-              </span>
-              <span className="text-[10px] opacity-80 mt-0.5">lições</span>
-            </>
-          )}
-        </div>
+        {(isLocked || isCompleted) && (
+          <div
+            className={cn(
+              "shrink-0 flex items-center justify-center w-14 h-14 rounded-xl",
+              isLocked ? "bg-white/5 text-neutral-500" : "bg-black/15 text-white"
+            )}
+          >
+            {isLocked ? <Lock className="w-5 h-5" /> : <CheckCircle2 className="w-6 h-6" />}
+          </div>
+        )}
       </div>
     </div>
   );

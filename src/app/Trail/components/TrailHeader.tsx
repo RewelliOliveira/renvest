@@ -1,4 +1,4 @@
-import { Flame, BookOpenCheck } from "lucide-react";
+import { Flame } from "lucide-react";
 import { LogomarcaIcon } from "@/assets/icons";
 import { cn } from "cn";
 import type { TrailData } from "../types/types";
@@ -18,10 +18,6 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
 
         {trail && (
           <div className="flex items-center gap-5 text-base font-extrabold">
-            <span className="flex items-center gap-1.5 text-sky-300" title="Lições concluídas">
-              <BookOpenCheck className="w-6 h-6" />
-              {trail.progress.completed_lessons}/{trail.progress.total_lessons}
-            </span>
             <span
               className={cn("flex items-center gap-1.5", lit ? "text-amber-400" : "text-neutral-500")}
               title={
