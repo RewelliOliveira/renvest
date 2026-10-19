@@ -16,7 +16,7 @@ export function MissionHeader({
   onBack,
 }: MissionHeaderProps) {
   return (
-    <header className="w-full flex items-center gap-3 pt-1 pb-3 shrink-0">
+    <header className="w-full flex items-center gap-3 pt-1 pb-3 shrink-0 lg:max-w-5xl lg:mx-auto lg:px-10 lg:pt-8 lg:pb-6 lg:gap-5">
       <button
         type="button"
         onClick={onBack}

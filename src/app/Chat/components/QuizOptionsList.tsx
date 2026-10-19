@@ -17,7 +17,7 @@ export function QuizOptionsList({
 }: QuizOptionsListProps) {
   return (
     <div className="w-full flex flex-col gap-2.5 sm:gap-3">
-      {options.map((option) => {
+      {options.map((option, index) => {
         const isSelected = selectedId === option.id;
         const showSuccess = hasAnswered && option.isCorrect;
         const showError = hasAnswered && isSelected && !option.isCorrect;
@@ -28,6 +28,7 @@ export function QuizOptionsList({
             isSelected={isSelected}
             isCorrect={option.isCorrect}
             hasAnswered={hasAnswered}
+            shortcut={index + 1}
             onClick={() => onSelect(option.id)}
             icon={
               showSuccess ? (

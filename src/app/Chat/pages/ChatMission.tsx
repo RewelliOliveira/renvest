@@ -2,6 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
+import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
+import { ImmersiveLayout } from "@/components/layout/ImmersiveLayout";
 import { useChatMission } from "../hooks/useChatMission";
 import { MissionHeader } from "../components/MissionHeader";
 import { LearningView } from "../components/LearningView";
@@ -42,6 +44,24 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     handleConfirmQuiz,
     handleContinueQuiz,
   } = useChatMission(lessonId);
+
+  useQuizKeyboard({
+    optionCount: mode === "quiz" && !hasAnswered ? (currentQuestion?.options.length ?? 0) : 0,
+    onSelect: (index) => {
+      const option = currentQuestion?.options[index];
+      if (option) handleSelectQuizOption(option.id);
+    },
+    onEnter: () => {
+      if (mode === "quiz") {
+        if (hasAnswered) void handleContinueQuiz();
+        else handleConfirmQuiz();
+      } else if (!isTyping) {
+        if (phase === "slides") handleContinueLearning();
+        else handleStartQuiz();
+      }
+    },
+    enabled: !!lesson && !isFinishing,
+  });
 
   if (loadError) {
     return (
@@ -98,7 +118,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
       )}
 
       {finishError && (
-        <p className="text-xs text-red-300 text-center pb-1" role="alert">
+        <p className="text-xs text-red-300 text-center pb-1 lg:pt-2" role="alert">
           {finishError}
         </p>
       )}
@@ -128,11 +148,9 @@ export function ChatMission() {
   const { lessonId = "" } = useParams();
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] flex flex-col items-center px-4 sm:px-6 py-4 sm:py-6">
-      <div className="w-full max-w-sm sm:max-w-md flex flex-col justify-between h-full">
-        {/* key reinicia o estado ao trocar de lição */}
-        <LessonScreen key={lessonId} lessonId={lessonId} />
-      </div>
-    </div>
+    <ImmersiveLayout>
+      {/* key reinicia o estado ao trocar de lição */}
+      <LessonScreen key={lessonId} lessonId={lessonId} />
+    </ImmersiveLayout>
   );
 }
