@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "cn";
@@ -16,6 +17,9 @@ export function AuthInput({
   type = "text",
   ...props
 }: AuthInputProps) {
+  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  const isPassword = type === "password";
+
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -34,14 +38,26 @@ export function AuthInput({
         )}
         <Input
           id={id}
-          type={type}
+          type={isPassword && isPasswordVisible ? "text" : type}
           className={cn(
             "w-full h-11 sm:h-12 bg-transparent border-none text-white placeholder:text-neutral-500 text-sm focus-visible:ring-0 focus-visible:border-transparent rounded-lg",
-            icon ? "pl-10 pr-4" : "px-4",
+            icon ? "pl-10" : "pl-4",
+            isPassword ? "pr-11" : "pr-4",
             className
           )}
           {...props}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setIsPasswordVisible((visible) => !visible)}
+            aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={isPasswordVisible}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-neutral-400 hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          >
+            {isPasswordVisible ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+          </button>
+        )}
       </div>
     </div>
   );
