@@ -1,46 +1,74 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { getTrail } from "../services/trailApi";
 import type { TrailData } from "../types/types";
 
 const LOAD_ERROR = "Não foi possível carregar a trilha.";
 
+interface TrailState {
+  trail: TrailData | null;
+  isFetching: boolean;
+  error: string | null;
+}
+
+const INITIAL_STATE: TrailState = { trail: null, isFetching: false, error: null };
+
+let state = INITIAL_STATE;
+let generation = 0;
+let pending: Promise<void> | null = null;
+const listeners = new Set<() => void>();
+
+function setState(next: Partial<TrailState>) {
+  state = { ...state, ...next };
+  listeners.forEach((listener) => listener());
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : LOAD_ERROR;
 }
 
+function fetchTrail(): Promise<void> {
+  if (pending) return pending;
+  const requestGeneration = generation;
+  setState({ isFetching: true });
+  pending = getTrail()
+    .then((trail) => {
+      if (requestGeneration === generation) setState({ trail, error: null });
+    })
+    .catch((err: unknown) => {
+      if (requestGeneration === generation) setState({ error: errorMessage(err) });
+    })
+    .finally(() => {
+      pending = null;
+      if (requestGeneration === generation) setState({ isFetching: false });
+    });
+  return pending;
+}
+
+export function setTrailData(trail: TrailData) {
+  setState({ trail, error: null });
+}
+
+export function clearTrailData() {
+  generation += 1;
+  pending = null;
+  setState(INITIAL_STATE);
+}
+
 export function useTrail() {
-  const [trail, setTrail] = useState<TrailData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { trail, isFetching, error } = useSyncExternalStore(subscribe, () => state);
 
   useEffect(() => {
-    let active = true;
-    getTrail()
-      .then((data) => {
-        if (active) setTrail(data);
-      })
-      .catch((err: unknown) => {
-        if (active) setError(errorMessage(err));
-      })
-      .finally(() => {
-        if (active) setIsLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+    void fetchTrail();
   }, []);
 
-  const reload = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      setTrail(await getTrail());
-    } catch (err: unknown) {
-      setError(errorMessage(err));
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const reload = useCallback(() => fetchTrail(), []);
 
-  return { trail, isLoading, error, reload };
+  return { trail, isLoading: isFetching || (!trail && !error), error, reload };
 }

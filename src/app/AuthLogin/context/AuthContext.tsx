@@ -9,6 +9,8 @@ import {
   type AuthResponseData,
 } from "../services/authApi";
 import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY, UNAUTHORIZED_EVENT, getStoredToken } from "@/lib/api";
+import { clearChatHistory } from "@/lib/chatHistory";
+import { clearTrailData } from "@/app/Trail/hooks/useTrail";
 
 export type { User, AuthResult } from "./authContextDef";
 
@@ -43,6 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     clearStoredSession();
+    clearChatHistory();
+    clearTrailData();
     setUser(null);
   }, []);
 

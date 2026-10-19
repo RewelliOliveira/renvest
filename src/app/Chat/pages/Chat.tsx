@@ -6,6 +6,7 @@ import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
 import { useAvatar } from "@/lib/avatar";
+import { loadChatHistory, saveChatHistory } from "@/lib/chatHistory";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage, getChatSuggestions } from "../services/chatApi";
@@ -19,7 +20,7 @@ export function Chat() {
   const [avatar] = useAvatar();
   const userName = user?.name ? user.name.split(" ")[0] : "";
 
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+  const [messages, setMessages] = useState<ChatMessage[]>(() => loadChatHistory(user?.id) ?? [
     {
       id: "welcome-1",
       sender: "bot",
@@ -53,6 +54,10 @@ export function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
+
+  useEffect(() => {
+    if (user?.id) saveChatHistory(user.id, messages);
+  }, [messages, user?.id]);
 
   useEffect(() => {
     if (!suggestionsModule) return;
@@ -150,7 +155,7 @@ export function Chat() {
   };
 
   return (
-    <div className="h-dvh max-h-dvh w-full overflow-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex">
+    <div className="h-dvh max-h-dvh w-full overflow-hidden bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex">
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         {/* Top Header */}
         <header className="sticky top-0 z-30 w-full bg-[#000815]/90 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
@@ -312,7 +317,7 @@ export function Chat() {
         </main>
 
         {/* Input Box */}
-        <div className="w-full max-w-md lg:max-w-3xl mx-auto px-4 lg:px-6 pb-20 lg:pb-5 pt-2 shrink-0">
+        <div className="w-full max-w-md lg:max-w-3xl mx-auto px-4 lg:px-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-5 pt-2 shrink-0">
           <form
             onSubmit={handleSubmit}
             className="flex items-end gap-2 p-1.5 rounded-2xl bg-[#0b162a]/90 border border-white/10 shadow-lg"
@@ -323,8 +328,7 @@ export function Chat() {
               onValueChange={setInputValue}
               onSubmit={() => handleSendMessage(inputValue)}
               placeholder="Pergunte ao Rev sobre investimentos..."
-              disabled={isTyping}
-              className="flex-1 min-w-0 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-50"
+              className="flex-1 min-w-0 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none"
             />
             <button
               type="submit"
