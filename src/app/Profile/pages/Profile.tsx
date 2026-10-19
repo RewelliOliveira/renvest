@@ -15,6 +15,7 @@ import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { moduleProgress } from "@/app/Trail/utils/progress";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { AvatarPicker } from "../components/AvatarPicker";
 
 export function Profile() {
@@ -23,6 +24,7 @@ export function Profile() {
   const { trail } = useTrail();
   const [avatar, setAvatar] = useAvatar();
   const [isPickingAvatar, setIsPickingAvatar] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const stat = (value?: number, total?: number) =>
     value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
@@ -164,7 +166,7 @@ export function Profile() {
 
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={() => setIsLoggingOut(true)}
             className="w-full mt-2 py-3 px-4 rounded-xl border border-red/40 bg-red/10 text-red-light font-bold text-sm hover:bg-red/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
@@ -172,6 +174,16 @@ export function Profile() {
           </button>
         </div>
       </main>
+
+      <ConfirmDialog
+        open={isLoggingOut}
+        title="Sair da conta?"
+        description="Você vai precisar entrar de novo para continuar sua trilha neste dispositivo."
+        cancelLabel="Ficar"
+        confirmLabel="Sair da conta"
+        onCancel={() => setIsLoggingOut(false)}
+        onConfirm={handleLogout}
+      />
 
     </div>
   );
