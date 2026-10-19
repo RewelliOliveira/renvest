@@ -1,19 +1,16 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import type { MissionMode } from "../types/types";
 
 interface MissionHeaderProps {
   progressValue: number;
-  mode: MissionMode;
-  counterLabel: string;
   onBack: () => void;
+  onClose?: () => void;
 }
 
 export function MissionHeader({
   progressValue,
-  mode,
-  counterLabel,
   onBack,
+  onClose,
 }: MissionHeaderProps) {
   return (
     <header className="w-full flex items-center gap-3 pt-1 pb-3 shrink-0 lg:max-w-5xl lg:mx-auto lg:px-10 lg:pt-8 lg:pb-6 lg:gap-5">
@@ -28,10 +25,15 @@ export function MissionHeader({
 
       <Progress value={progressValue} className="flex-1" />
 
-      {mode === "quiz" && counterLabel && (
-        <span className="text-xs font-semibold text-white/50 shrink-0">
-          {counterLabel}
-        </span>
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Sair"
+          className="text-white/60 hover:text-white transition-colors p-1 -mr-1 cursor-pointer"
+        >
+          <X className="w-6 h-6" />
+        </button>
       )}
     </header>
   );

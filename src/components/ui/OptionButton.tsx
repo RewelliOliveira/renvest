@@ -40,6 +40,8 @@ export function OptionButton({
           ? "bg-option-selected border border-transparent border-b-4 border-b-option-selected-border text-option-selected-text shadow-[0_4px_18px_rgba(76,144,221,0.25)]"
           : "bg-option-dark border border-white/10 border-b-4 border-b-option-dark-border text-white hover:border-white/20 hover:brightness-105",
         hasAnswered && !isSelected && !showSuccess && "opacity-40 cursor-default",
+        showError && "animate-shake",
+        showSuccess && isSelected && "animate-pop",
         className
       )}
       {...props}

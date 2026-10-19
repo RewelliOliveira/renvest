@@ -5,6 +5,7 @@ import { AlertCircle, BarChart2, CheckCircle2, RotateCcw, Trophy, XCircle } from
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
 import { MascotLoader } from "@/components/ui/MascotLoader";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAvatar } from "@/lib/avatar";
 import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
 import { ImmersiveLayout } from "@/components/layout/ImmersiveLayout";
@@ -13,6 +14,7 @@ import { OptionButton } from "@/components/ui/OptionButton";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import { MissionHeader } from "@/app/Chat/components/MissionHeader";
 import { startExam, submitExam } from "@/app/Trail/services/trailApi";
+import { setTrailData } from "@/app/Trail/hooks/useTrail";
 import type { ExamResult, ExamStart } from "@/app/Trail/types/types";
 
 const primaryButton =
@@ -65,7 +67,13 @@ function ExamResultView({ result, onRetry }: { result: ExamResult; onRetry: () =
               Ver minha conquista
             </button>
           ) : result.passed ? (
-            <button type="button" className={primaryButton} onClick={() => navigate("/trail", { replace: true })}>
+            <button
+              type="button"
+              className={primaryButton}
+              onClick={() =>
+                navigate("/trail", { replace: true, state: { completedNodeKey: `${result.module_id}-exam` } })
+              }
+            >
               Continuar na trilha
             </button>
           ) : (
@@ -132,6 +140,7 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [result, setResult] = useState<ExamResult | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   // Evita criar duas tentativas quando o StrictMode executa o efeito duas vezes
   useEffect(() => {
@@ -166,13 +175,18 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      setResult(await submitExam(exam.attempt_id, answers));
+      const examResult = await submitExam(exam.attempt_id, answers);
+      setTrailData(examResult.trail);
+      setResult(examResult);
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : "Não foi possível enviar as respostas do teste.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const leaveExam = () => navigate("/trail");
+  const handleClose = () => (Object.keys(answers).length > 0 ? setIsLeaving(true) : leaveExam());
 
   useQuizKeyboard({
     optionCount: question?.options.length ?? 0,
@@ -181,7 +195,7 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
       if (option) selectOption(option.id);
     },
     onEnter: () => void handleNext(),
-    enabled: !!question && !result,
+    enabled: !!question && !result && !isLeaving,
   });
 
   if (error) {
@@ -203,7 +217,7 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
   if (result) {
     return (
       <>
-        <MissionHeader progressValue={100} mode="learning" counterLabel="" onBack={() => navigate("/trail")} />
+        <MissionHeader progressValue={100} onBack={() => navigate("/trail")} />
         <ExamResultView result={result} onRetry={onRetry} />
       </>
     );
@@ -213,9 +227,8 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
     <>
       <MissionHeader
         progressValue={((index + 1) / exam.questions.length) * 100}
-        mode="quiz"
-        counterLabel={`${index + 1}/${exam.questions.length}`}
-        onBack={() => (index > 0 ? setIndex((prev) => prev - 1) : navigate("/trail"))}
+        onBack={() => (index > 0 ? setIndex((prev) => prev - 1) : handleClose())}
+        onClose={handleClose}
       />
 
       <main className="flex-1 flex flex-col justify-center w-full min-h-0 overflow-y-auto no-scrollbar py-2 lg:px-10">
@@ -275,6 +288,16 @@ function ExamScreen({ moduleId, onRetry }: { moduleId: string; onRetry: () => vo
           {isLast ? (isSubmitting ? "Corrigindo..." : "Enviar respostas") : "Próxima"}
         </button>
       </ImmersiveFooter>
+
+      <ConfirmDialog
+        open={isLeaving}
+        title="Sair do teste?"
+        description="Suas respostas serão perdidas e, na próxima vez, novas questões serão sorteadas."
+        cancelLabel="Continuar o teste"
+        confirmLabel="Sair do teste"
+        onCancel={() => setIsLeaving(false)}
+        onConfirm={leaveExam}
+      />
     </>
   );
 }

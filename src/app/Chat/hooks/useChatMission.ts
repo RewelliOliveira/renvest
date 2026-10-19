@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MascotHello, MascotPoint, MascotPlan, MascotThinking } from "@/assets/icons";
 import { completeLesson, getLesson } from "@/app/Trail/services/trailApi";
-import type { LessonContent } from "@/app/Trail/types/types";
+import type { LessonContent, TrailData } from "@/app/Trail/types/types";
+import { setTrailData } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage } from "../services/chatApi";
 import type { MissionMode, LearningPhase, ChatHistoryItem, LearningStep, QuizStep } from "../types/types";
 
@@ -54,6 +55,7 @@ export function useChatMission(lessonId: string) {
   const [hasAnswered, setHasAnswered] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
+  const [completedTrail, setCompletedTrail] = useState<TrailData | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -79,7 +81,6 @@ export function useChatMission(lessonId: string) {
     hasAnswered && !!currentQuestion?.options.find((option) => option.id === selectedId)?.isCorrect;
   const isRetry = !!currentQuestion && missedIds.includes(currentQuestion.id);
   const isLastQuestion = quizQueue.length === 1 && isCorrectAnswer;
-  const correctOptionText = currentQuestion?.options.find((option) => option.isCorrect)?.text ?? "";
   const totalProgress = learningSteps.length + quizSteps.length + 1;
 
   const freeChatIntro = lesson
@@ -163,6 +164,8 @@ export function useChatMission(lessonId: string) {
 
   const handleConfirmQuiz = () => {
     if (!selectedId || hasAnswered) return;
+    const isCorrect = !!currentQuestion?.options.find((option) => option.id === selectedId)?.isCorrect;
+    navigator.vibrate?.(isCorrect ? 40 : [80, 60, 80]);
     setHasAnswered(true);
   };
 
@@ -185,14 +188,27 @@ export function useChatMission(lessonId: string) {
     setIsFinishing(true);
     setFinishError(null);
     try {
-      await completeLesson(lessonId);
-      navigate("/trail", { replace: true });
+      const trail = await completeLesson(lessonId);
+      setTrailData(trail);
+      setCompletedTrail(trail);
     } catch (err: unknown) {
       setFinishError(err instanceof Error ? err.message : "Não foi possível registrar a conclusão da lição.");
     } finally {
       setIsFinishing(false);
     }
   };
+
+  const handleFinish = () => {
+    navigate("/trail", { replace: true, state: { completedNodeKey: lessonId } });
+  };
+
+  const completion = completedTrail
+    ? {
+        streak: completedTrail.streak,
+        firstTryCorrect: quizSteps.length - missedIds.length,
+        total: quizSteps.length,
+      }
+    : null;
 
   // Enquanto o Rev busca a resposta de uma dúvida, o mascote fica pensativo
   const MascotComponent = isTyping
@@ -213,7 +229,6 @@ export function useChatMission(lessonId: string) {
     correctCount: answeredCorrectly.length,
     isCorrectAnswer,
     isRetry,
-    correctOptionText,
     selectedId,
     hasAnswered,
     currentQuestion,
@@ -222,6 +237,8 @@ export function useChatMission(lessonId: string) {
     MascotComponent,
     isFinishing,
     finishError,
+    completion,
+    handleFinish,
     handleBack,
     handleContinueLearning,
     handleChatMessage,

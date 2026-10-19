@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "cn";
 import { ImmersiveFooter } from "@/components/layout/ImmersiveFooter";
 import { LearningChat } from "./LearningChat";
@@ -14,7 +13,6 @@ interface MissionFooterProps {
   hasAnswered: boolean;
   isLastQuestion: boolean;
   isCorrectAnswer?: boolean;
-  correctOptionText?: string;
   isFinishing?: boolean;
   onChatMessage: (text: string) => void;
   onStartQuiz: () => void;
@@ -32,7 +30,6 @@ export function MissionFooter({
   hasAnswered,
   isLastQuestion,
   isCorrectAnswer = false,
-  correctOptionText = "",
   isFinishing = false,
   onChatMessage,
   onStartQuiz,
@@ -49,33 +46,6 @@ export function MissionFooter({
         onSend={onChatMessage}
         disabled={isTyping}
       />
-    ) : showFeedback ? (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        role="status"
-        className={cn(
-          "w-full rounded-2xl px-4 py-3 border flex items-start gap-3 lg:bg-transparent lg:border-0 lg:p-0 lg:items-center lg:gap-4",
-          isCorrectAnswer ? "bg-emerald-500/15 border-emerald-500/30" : "bg-red/15 border-red/30"
-        )}
-      >
-        {isCorrectAnswer ? (
-          <CheckCircle2 className="w-6 h-6 lg:w-12 lg:h-12 text-emerald-400 shrink-0" />
-        ) : (
-          <XCircle className="w-6 h-6 lg:w-12 lg:h-12 text-red shrink-0" />
-        )}
-        <div className="flex-1 min-w-0">
-          <p className={cn("text-sm lg:text-xl font-extrabold", isCorrectAnswer ? "text-emerald-300" : "text-red-light")}>
-            {isCorrectAnswer ? "Muito bem!" : "Resposta correta:"}
-          </p>
-          <p className="text-xs lg:text-sm text-white/80 mt-0.5">
-            {isCorrectAnswer ? "Você acertou essa questão." : correctOptionText}
-          </p>
-          {!isCorrectAnswer && (
-            <p className="text-[11px] lg:text-xs text-white/55 mt-1">Essa questão volta no final da lição.</p>
-          )}
-        </div>
-      </motion.div>
     ) : null;
 
   return (

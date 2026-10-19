@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
 import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
 import { ImmersiveLayout } from "@/components/layout/ImmersiveLayout";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useChatMission } from "../hooks/useChatMission";
 import { MissionHeader } from "../components/MissionHeader";
 import { LearningView } from "../components/LearningView";
 import { QuizView } from "../components/QuizView";
 import { MissionFooter } from "../components/MissionFooter";
+import { LessonComplete } from "../components/LessonComplete";
 
 function LessonScreen({ lessonId }: { lessonId: string }) {
   const navigate = useNavigate();
@@ -23,11 +26,8 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     isShowingReply,
     isTyping,
     attemptCount,
-    quizSteps,
-    correctCount,
     isCorrectAnswer,
     isRetry,
-    correctOptionText,
     selectedId,
     hasAnswered,
     currentQuestion,
@@ -36,6 +36,8 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     MascotComponent,
     isFinishing,
     finishError,
+    completion,
+    handleFinish,
     handleBack,
     handleContinueLearning,
     handleChatMessage,
@@ -44,6 +46,11 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     handleConfirmQuiz,
     handleContinueQuiz,
   } = useChatMission(lessonId);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const hasProgress = mode === "quiz" || phase === "free-chat" || slideIndex > 0;
+  const leaveLesson = () => navigate("/trail");
+  const handleClose = () => (hasProgress ? setIsLeaving(true) : leaveLesson());
 
   useQuizKeyboard({
     optionCount: mode === "quiz" && !hasAnswered ? (currentQuestion?.options.length ?? 0) : 0,
@@ -52,7 +59,9 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
       if (option) handleSelectQuizOption(option.id);
     },
     onEnter: () => {
-      if (mode === "quiz") {
+      if (completion) {
+        handleFinish();
+      } else if (mode === "quiz") {
         if (hasAnswered) void handleContinueQuiz();
         else handleConfirmQuiz();
       } else if (!isTyping) {
@@ -60,7 +69,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
         else handleStartQuiz();
       }
     },
-    enabled: !!lesson && !isFinishing,
+    enabled: !!lesson && !isFinishing && !isLeaving,
   });
 
   if (loadError) {
@@ -83,13 +92,25 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     return <MascotLoader title="Preparando sua lição" />;
   }
 
+  if (completion) {
+    return (
+      <LessonComplete
+        lessonTitle={lesson.title}
+        firstTryCorrect={completion.firstTryCorrect}
+        total={completion.total}
+        streak={completion.streak}
+        mascotVariant={avatar}
+        onContinue={handleFinish}
+      />
+    );
+  }
+
   return (
     <>
       <MissionHeader
         progressValue={progressValue}
-        mode={mode}
-        counterLabel={`${correctCount}/${quizSteps.length}`}
         onBack={handleBack}
+        onClose={handleClose}
       />
 
       {mode === "learning" && (
@@ -132,13 +153,22 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
         hasAnswered={hasAnswered}
         isLastQuestion={isLastQuestion}
         isCorrectAnswer={isCorrectAnswer}
-        correctOptionText={correctOptionText}
         isFinishing={isFinishing}
         onChatMessage={handleChatMessage}
         onStartQuiz={handleStartQuiz}
         onContinueLearning={handleContinueLearning}
         onConfirmQuiz={handleConfirmQuiz}
         onContinueQuiz={handleContinueQuiz}
+      />
+
+      <ConfirmDialog
+        open={isLeaving}
+        title="Sair da lição?"
+        description="Se sair agora, você perde o progresso desta lição e vai precisar começar de novo."
+        cancelLabel="Continuar estudando"
+        confirmLabel="Sair da lição"
+        onCancel={() => setIsLeaving(false)}
+        onConfirm={leaveLesson}
       />
     </>
   );
