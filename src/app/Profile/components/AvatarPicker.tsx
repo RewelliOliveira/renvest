@@ -19,7 +19,7 @@ interface AvatarPickerProps {
 export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
   return (
     <div className="rounded-2xl bg-[#071329]/80 border border-white/10 p-4 shadow-lg">
-      <p className="text-xs font-bold text-neutral-300 mb-3">Escolha seu avatar</p>
+      <p className="type-h4 text-neutral-300 mb-3">Escolha seu avatar</p>
       <div className="grid grid-cols-5 gap-2">
         {AVATAR_OPTIONS.map(({ variant, label }) => {
           const isSelected = variant === selected;

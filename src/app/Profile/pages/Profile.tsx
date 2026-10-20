@@ -41,7 +41,7 @@ export function Profile() {
     <div className="min-h-dvh w-full overflow-x-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex flex-col justify-between">
       <header className="sticky top-0 z-30 w-full bg-[#000815]/85 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
         <div className="max-w-md lg:max-w-5xl mx-auto flex items-center justify-center lg:justify-start lg:px-4">
-          <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+          <h1 className="type-h3 text-white">
             Meu Perfil
           </h1>
         </div>
@@ -66,10 +66,10 @@ export function Profile() {
             </button>
 
             <div className="flex-1 min-w-0 lg:w-full">
-              <h2 className="text-lg lg:text-xl font-bold text-white truncate leading-snug">
+              <h2 className="type-h2 text-white truncate">
                 {displayName}
               </h2>
-              <p className="text-xs text-neutral-400 truncate mt-0.5">
+              <p className="type-caption text-neutral-400 truncate mt-0.5">
                 {displayEmail}
               </p>
             </div>
@@ -85,40 +85,40 @@ export function Profile() {
           <div className="grid grid-cols-3 gap-2.5">
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
               <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20 mb-1" />
-              <span className="text-base lg:text-2xl font-extrabold text-white">{stat(trail?.streak.current_days)}</span>
-              <span className="text-[10px] lg:text-xs text-neutral-400 font-medium">Dias de Ofensiva</span>
+              <span className="type-stat text-white">{stat(trail?.streak.current_days)}</span>
+              <span className="type-stat-label text-neutral-400">Dias de Ofensiva</span>
             </div>
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
               <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
-              <span className="text-base lg:text-2xl font-extrabold text-white">
+              <span className="type-stat text-white">
                 {stat(trail?.progress.completed_lessons, trail?.progress.total_lessons)}
               </span>
-              <span className="text-[10px] lg:text-xs text-neutral-400 font-medium">Lições</span>
+              <span className="type-stat-label text-neutral-400">Lições</span>
             </div>
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
               <Layers className="w-5 h-5 text-sky-400 mb-1" />
-              <span className="text-base lg:text-2xl font-extrabold text-white">
+              <span className="type-stat text-white">
                 {stat(trail?.progress.completed_modules, trail?.progress.total_modules)}
               </span>
-              <span className="text-[10px] lg:text-xs text-neutral-400 font-medium">Módulos</span>
+              <span className="type-stat-label text-neutral-400">Módulos</span>
             </div>
           </div>
 
           {trail && (
             <div className="hidden lg:block rounded-2xl bg-[#071329]/80 border border-white/10 p-5 shadow-lg">
-              <h3 className="text-xs font-extrabold uppercase tracking-widest text-white/50 mb-4">
+              <h3 className="type-overline text-white/50 mb-4">
                 Progresso por módulo
               </h3>
               <ul className="flex flex-col gap-4">
                 {trail.modules.map((module) => (
                   <li key={module.id}>
-                    <div className="flex items-center justify-between gap-2 mb-1.5 text-sm">
-                      <span className="font-bold text-white truncate">
+                    <div className="flex items-center justify-between gap-2 mb-1.5 type-label">
+                      <span className="font-heading font-bold text-white truncate">
                         {module.order}. {module.title}
                       </span>
-                      <span className="text-xs text-neutral-400 shrink-0">
+                      <span className="type-caption tabular-nums text-neutral-400 shrink-0">
                         {Math.round(moduleProgress(module) * 100)}%
                       </span>
                     </div>
@@ -142,7 +142,7 @@ export function Profile() {
             >
               <div className="flex items-center gap-3">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-neutral-200">
+                <span className="type-label text-neutral-200">
                   Privacidade e Segurança
                 </span>
               </div>
@@ -156,7 +156,7 @@ export function Profile() {
             >
               <div className="flex items-center gap-3">
                 <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-neutral-200">
+                <span className="type-label text-neutral-200">
                   Sobre o Renvest
                 </span>
               </div>
@@ -167,7 +167,7 @@ export function Profile() {
           <button
             type="button"
             onClick={() => setIsLoggingOut(true)}
-            className="w-full mt-2 py-3 px-4 rounded-xl border border-red/40 bg-red/10 text-red-light font-bold text-sm hover:bg-red/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full mt-2 py-3 px-4 rounded-xl border border-red/40 bg-red/10 text-red-light type-button-sm hover:bg-red/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>Sair da Conta</span>

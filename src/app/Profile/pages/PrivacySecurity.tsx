@@ -4,7 +4,7 @@ import { ProfileSubpage, InfoSection } from "../components/ProfileSubpage";
 export function PrivacySecurity() {
   return (
     <ProfileSubpage title="Privacidade e Segurança">
-      <p className="text-xs text-neutral-400 leading-relaxed px-1">
+      <p className="type-caption text-neutral-400 px-1">
         O Renvest é um projeto acadêmico de educação financeira. Coletamos apenas o necessário para você
         acessar a plataforma e acompanhar seu progresso na trilha.
       </p>

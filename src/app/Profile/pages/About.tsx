@@ -20,7 +20,7 @@ export function About() {
         <div className="absolute -top-8 -right-8 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
         <MascotHello variant={avatar} className="h-24 w-auto mb-3" />
         <LogomarcaIcon className="h-7 w-auto mb-2" />
-        <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+        <p className="type-body-sm text-neutral-300">
           Educação financeira gamificada para investidores iniciantes, com o Rev como seu tutor e respostas
           baseadas em fontes oficiais brasileiras.
         </p>
@@ -40,7 +40,7 @@ export function About() {
         <ol className="space-y-2 pt-1">
           {MODULES.map((module) => (
             <li key={module.order} className="flex gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-lg bg-white/10 text-white text-xs font-extrabold flex items-center justify-center">
+              <span className="shrink-0 w-6 h-6 rounded-lg bg-white/10 text-white font-heading text-xs font-extrabold tabular-nums flex items-center justify-center">
                 {module.order}
               </span>
               <div>
@@ -58,7 +58,7 @@ export function About() {
           {SOURCES.map((source) => (
             <span
               key={source}
-              className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-400/10 border border-emerald-400/30 text-emerald-300"
+              className="px-2 py-0.5 rounded-full type-micro font-bold bg-emerald-400/10 border border-emerald-400/30 text-emerald-300"
             >
               {source}
             </span>
