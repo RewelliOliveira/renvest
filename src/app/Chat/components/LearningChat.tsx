@@ -43,7 +43,7 @@ export function LearningChat({
         onClick={() => setIsOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 text-white/70 hover:text-white transition-colors cursor-pointer"
       >
-        <span className="text-sm font-medium">Ficou com alguma dúvida?</span>
+        <span className="type-h4">Ficou com alguma dúvida?</span>
         {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
@@ -64,7 +64,7 @@ export function LearningChat({
                   type="button"
                   onClick={() => handleChip(chip)}
                   disabled={disabled}
-                  className="whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-40"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-full type-chip bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-40"
                 >
                   {chip}
                 </motion.button>
@@ -78,7 +78,7 @@ export function LearningChat({
                 onSubmit={submit}
                 placeholder="Ou digite sua dúvida..."
                 disabled={disabled}
-                className="flex-1 min-w-0 bg-transparent px-2 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
+                className="flex-1 min-w-0 bg-transparent px-2 py-1.5 type-body text-white placeholder:text-white/40 focus:outline-none disabled:opacity-40"
               />
               <button
                 type="submit"

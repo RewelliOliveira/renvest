@@ -57,11 +57,11 @@ export function QuizView({
 
           <div className="w-full pt-1">
             {isRetry && (
-              <span className="inline-block mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+              <span className="inline-block mb-1.5 type-overline text-amber-400">
                 Erro anterior
               </span>
             )}
-            <h2 className="text-white text-base sm:text-lg lg:text-2xl font-bold leading-snug">
+            <h2 className="text-white type-question">
               {currentQuestion.question}
             </h2>
           </div>

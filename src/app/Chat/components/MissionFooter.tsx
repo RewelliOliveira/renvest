@@ -57,7 +57,7 @@ export function MissionFooter({
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={onStartQuiz}
-          className="w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
+          className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
         >
           Estou pronto para o teste
         </motion.button>
@@ -69,7 +69,7 @@ export function MissionFooter({
           type="button"
           onClick={onContinueLearning}
           disabled={isTyping}
-          className="w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Continuar
         </motion.button>
@@ -82,7 +82,7 @@ export function MissionFooter({
           onClick={hasAnswered ? onContinueQuiz : onConfirmQuiz}
           disabled={!selectedId || isFinishing}
           className={cn(
-            "w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base transition-all shadow-lg focus-visible:outline-none",
+            "w-full py-3.5 sm:py-4 rounded-xl type-button text-white transition-all shadow-lg focus-visible:outline-none",
             hasAnswered && isCorrectAnswer
               ? "bg-emerald-500 border-b-4 border-emerald-700 active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
               : selectedId

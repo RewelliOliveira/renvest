@@ -166,10 +166,10 @@ export function Chat() {
             </div>
 
             <div className="flex-1 min-w-0">
-              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+              <h1 className="type-h4 text-white truncate">
                 Rev • Tutor Renvest
               </h1>
-              <p className="text-[11px] text-emerald-400 font-semibold">Online</p>
+              <p className="type-micro text-emerald-400">Online</p>
             </div>
           </div>
         </header>
@@ -199,7 +199,7 @@ export function Chat() {
 
                   <div
                     className={cn(
-                      "min-w-0 wrap-break-word rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm leading-relaxed shadow-md flex flex-col gap-1.5",
+                      "min-w-0 wrap-break-word rounded-2xl px-3.5 py-2.5 type-body-sm shadow-md flex flex-col gap-1.5",
                       isBot
                         ? "bg-[#0b162a] border border-white/10 text-neutral-100 rounded-bl-xs"
                         : "bg-red text-white font-medium border-b-2 border-red-dark rounded-br-xs"
@@ -209,7 +209,7 @@ export function Chat() {
 
                     {/* Fonte oficial RAG quando disponível */}
                     {isBot && msg.source && (
-                      <div className="mt-1 pt-1.5 border-t border-white/10 flex items-start justify-between gap-2 text-[10px] leading-snug text-sky-300">
+                      <div className="mt-1 pt-1.5 border-t border-white/10 flex items-start justify-between gap-2 type-micro text-sky-300">
                         <div className="flex items-start gap-1 min-w-0">
                           <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
                           <span className="line-clamp-2">
@@ -234,7 +234,7 @@ export function Chat() {
 
                     <span
                       className={cn(
-                        "text-[9px] block text-right font-mono",
+                        "text-[10px] block text-right font-mono tabular-nums",
                         isBot ? "text-white/40" : "text-white/70"
                       )}
                     >
@@ -270,7 +270,7 @@ export function Chat() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 text-xs text-red-200 flex items-center justify-between gap-2"
+                  className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 type-caption text-red-200 flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
                     <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
@@ -280,7 +280,7 @@ export function Chat() {
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-800/60 hover:bg-red-700/80 text-white font-medium text-[11px] transition-colors shrink-0 cursor-pointer"
+                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-800/60 hover:bg-red-700/80 text-white type-micro transition-colors shrink-0 cursor-pointer"
                     >
                       <RefreshCw className="w-3 h-3" />
                       <span>Tentar de novo</span>
@@ -296,7 +296,7 @@ export function Chat() {
           {/* Dynamic Contextual Suggestions */}
           {suggestions.length > 0 && (
             <div className="pt-2 xl:hidden">
-              <span className="text-[11px] font-semibold text-white/50 block mb-1.5">
+              <span className="type-overline text-white/50 block mb-1.5">
                 Sugestões de perguntas:
               </span>
               <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
@@ -306,7 +306,7 @@ export function Chat() {
                     type="button"
                     disabled={isTyping}
                     onClick={() => handleSendMessage(item)}
-                    className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full type-chip bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
                   >
                     {item}
                   </button>
@@ -328,7 +328,7 @@ export function Chat() {
               onValueChange={setInputValue}
               onSubmit={() => handleSendMessage(inputValue)}
               placeholder="Pergunte ao Rev sobre investimentos..."
-              className="flex-1 min-w-0 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none"
+              className="flex-1 min-w-0 bg-transparent px-3 py-2 type-body-sm text-white placeholder:text-white/40 focus:outline-none"
             />
             <button
               type="submit"
@@ -344,7 +344,7 @@ export function Chat() {
               <Send className="w-4 h-4" />
             </button>
           </form>
-          <p className="hidden lg:block mt-2 text-[11px] text-white/35 text-center">
+          <p className="hidden lg:block mt-2 type-micro text-white/35 text-center">
             Enter envia · Shift+Enter quebra linha
           </p>
         </div>

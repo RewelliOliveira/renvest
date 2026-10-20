@@ -76,11 +76,11 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
         <AlertCircle className="w-8 h-8 text-red-400" />
-        <p className="text-sm text-neutral-200">{loadError}</p>
+        <p className="type-body text-neutral-200">{loadError}</p>
         <button
           type="button"
           onClick={() => navigate("/trail")}
-          className="mt-2 px-5 py-2.5 rounded-xl bg-red text-white font-bold text-sm cursor-pointer hover:brightness-105"
+          className="mt-2 px-5 py-2.5 rounded-xl bg-red text-white type-button-sm cursor-pointer hover:brightness-105"
         >
           Voltar para a trilha
         </button>
@@ -139,7 +139,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
       )}
 
       {finishError && (
-        <p className="text-xs text-red-300 text-center pb-1 lg:pt-2" role="alert">
+        <p className="type-caption text-red-300 text-center pb-1 lg:pt-2" role="alert">
           {finishError}
         </p>
       )}

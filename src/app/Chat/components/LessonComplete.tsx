@@ -52,10 +52,10 @@ export function LessonComplete({
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <span className="text-xs lg:text-sm font-extrabold uppercase tracking-widest text-amber-300">
+          <span className="type-overline text-amber-300">
             Lição concluída!
           </span>
-          <h1 className="text-2xl lg:text-4xl font-extrabold text-white mt-2">{lessonTitle}</h1>
+          <h1 className="type-display text-white mt-2">{lessonTitle}</h1>
         </motion.div>
 
         <motion.div
@@ -66,10 +66,10 @@ export function LessonComplete({
         >
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
             <Target className="w-6 h-6 text-sky-400 mb-1" />
-            <span className="text-xl lg:text-3xl font-extrabold text-white">
+            <span className="type-stat text-white">
               {firstTryCorrect}/{total}
             </span>
-            <span className="text-[11px] lg:text-sm text-neutral-400">
+            <span className="type-stat-label text-neutral-400">
               {isPerfect ? "acertos de primeira, perfeito!" : "acertos de primeira"}
             </span>
           </div>
@@ -90,8 +90,8 @@ export function LessonComplete({
                 )}
               />
             </StreakFlame>
-            <span className="text-xl lg:text-3xl font-extrabold text-white">{days}</span>
-            <span className="text-[11px] lg:text-sm text-neutral-400">
+            <span className="type-stat text-white">{days}</span>
+            <span className="type-stat-label text-neutral-400">
               {days === 1 ? "dia de ofensiva" : "dias de ofensiva"}
             </span>
           </div>
@@ -104,7 +104,7 @@ export function LessonComplete({
           type="button"
           onClick={onContinue}
           autoFocus
-          className="w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
+          className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
         >
           Continuar
         </motion.button>
