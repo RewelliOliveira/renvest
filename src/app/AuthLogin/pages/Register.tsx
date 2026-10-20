@@ -27,7 +27,7 @@ export function Register() {
       mobileBrand={
         <div className="flex flex-col items-center mb-4 sm:mb-5">
           <div className="flex items-center justify-center gap-2 mt-2">
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+            <span className="type-h1 text-white">
               Cadastre-se na
             </span>
             <LogomarcaIcon className="h-5 sm:h-6 w-auto object-contain" />
@@ -40,7 +40,7 @@ export function Register() {
         className="flex flex-col w-full gap-2.5 sm:gap-3 pb-2"
       >
         {error && (
-          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light text-xs font-medium">
+          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light type-caption">
             {error}
           </div>
         )}

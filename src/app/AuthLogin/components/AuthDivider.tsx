@@ -14,7 +14,7 @@ export function AuthDivider({ text = "ou", className }: AuthDividerProps) {
       )}
     >
       <div className="w-full border-t border-white/10" />
-      <span className="absolute bg-transparent px-3 text-xs text-neutral-500 font-medium">
+      <span className="absolute bg-transparent px-3 type-caption text-neutral-500">
         {text}
       </span>
     </div>

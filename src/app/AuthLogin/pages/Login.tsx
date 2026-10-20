@@ -24,7 +24,7 @@ export function Login() {
         <div className="flex flex-col items-center mb-5">
           <MascotIcon className="w-36 sm:w-40 h-auto drop-shadow-[0_8px_32px_rgba(240,86,86,0.2)]" />
           <div className="flex items-center justify-center gap-2 mt-2">
-            <span className="text-2xl font-bold tracking-tight text-white">
+            <span className="type-h1 text-white">
               Entre na
             </span>
             <LogomarcaIcon className="h-6 w-auto object-contain" />
@@ -37,7 +37,7 @@ export function Login() {
         className="flex flex-col w-full gap-3.5 pb-2"
       >
         {error && (
-          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light text-xs font-medium">
+          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light type-caption">
             {error}
           </div>
         )}

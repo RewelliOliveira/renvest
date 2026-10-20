@@ -25,7 +25,7 @@ export function AuthInput({
       {label && (
         <Label
           htmlFor={id}
-          className="text-xs sm:text-sm font-normal text-neutral-300"
+          className="type-label text-neutral-300"
         >
           {label}
         </Label>
@@ -40,7 +40,7 @@ export function AuthInput({
           id={id}
           type={isPassword && isPasswordVisible ? "text" : type}
           className={cn(
-            "w-full h-11 sm:h-12 bg-transparent border-none text-white placeholder:text-neutral-500 text-sm focus-visible:ring-0 focus-visible:border-transparent rounded-lg",
+            "w-full h-11 sm:h-12 bg-transparent border-none text-white placeholder:text-neutral-500 type-body focus-visible:ring-0 focus-visible:border-transparent rounded-lg",
             icon ? "pl-10" : "pl-4",
             isPassword ? "pr-11" : "pr-4",
             className
