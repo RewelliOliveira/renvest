@@ -19,7 +19,7 @@ export function PanelCard({ title, className, children }: PanelCardProps) {
   return (
     <section className={cn("rounded-2xl bg-[#071329]/80 border border-white/10 p-5 shadow-lg", className)}>
       {title && (
-        <h2 className="text-xs font-extrabold uppercase tracking-widest text-white/50 mb-4">{title}</h2>
+        <h2 className="type-overline text-white/50 mb-4">{title}</h2>
       )}
       {children}
     </section>

@@ -35,7 +35,7 @@ export function BottomNav() {
                       <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-red" />
                     )}
                   </div>
-                  <span className="text-[11px] sm:text-xs mt-1">{tab.label}</span>
+                  <span className="font-heading text-[11px] sm:text-xs font-bold mt-1">{tab.label}</span>
                 </>
               )}
             </NavLink>

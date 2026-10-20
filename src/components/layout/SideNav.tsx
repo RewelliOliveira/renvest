@@ -26,7 +26,7 @@ export function SideNav() {
               to={tab.path}
               className={({ isActive }) =>
                 cn(
-                  "group flex items-center gap-4 px-4 py-3 rounded-xl border-2 text-sm font-extrabold uppercase tracking-wider transition-colors cursor-pointer",
+                  "group flex items-center gap-4 px-4 py-3 rounded-xl border-2 type-button-sm uppercase transition-colors cursor-pointer",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60",
                   isActive
                     ? "bg-red/10 border-red/50 text-red-light"
@@ -58,8 +58,8 @@ export function SideNav() {
           <MascotHello variant={avatar} className="h-full w-auto object-contain" />
         </span>
         <span className="min-w-0">
-          <span className="block text-sm font-bold text-white truncate">{displayName}</span>
-          <span className="block text-[11px] text-neutral-400">Ver perfil</span>
+          <span className="block type-h4 text-white truncate">{displayName}</span>
+          <span className="block type-micro text-neutral-400">Ver perfil</span>
         </span>
       </NavLink>
     </aside>

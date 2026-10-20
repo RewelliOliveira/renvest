@@ -67,7 +67,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
           />
         </div>
 
-        <p className="mt-8 text-sm font-extrabold uppercase tracking-[0.15em] text-neutral-500">{title}...</p>
+        <p className="mt-8 font-heading text-sm font-extrabold uppercase tracking-widest text-neutral-500">{title}...</p>
 
         <div className="mt-4 min-h-16 flex items-start justify-center">
           <AnimatePresence mode="wait">
@@ -77,7 +77,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="text-sm text-white/85 leading-relaxed"
+              className="type-body text-white/85"
             >
               Dica: {TIPS[tipIndex]}
             </motion.p>

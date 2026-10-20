@@ -40,7 +40,7 @@ export function SpeechBubble({
         <LeftTail />
 
         <div className="flex-1 rounded-2xl bg-[#040a14] border-2 border-neutral-600/90 px-4 py-3 sm:px-5 sm:py-3.5 lg:px-6 lg:py-4 shadow-2xl">
-          <p className="text-white text-sm sm:text-base lg:text-lg leading-snug font-normal text-left">
+          <p className="text-white type-body-lg lg:text-lg text-left">
             {children}
           </p>
         </div>
@@ -66,7 +66,7 @@ export function SpeechBubble({
       >
         <p
           className={cn(
-            "text-white text-sm sm:text-base leading-snug sm:leading-relaxed font-normal text-left",
+            "text-white type-body-lg text-left",
             isAuto && "lg:text-lg"
           )}
         >

@@ -28,8 +28,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     return (
       <div className="flex min-h-dvh items-center justify-center bg-[#07090E] px-6 text-white">
         <div className="flex max-w-sm flex-col items-center gap-4 text-center">
-          <h1 className="text-lg font-bold">Algo deu errado</h1>
-          <p className="text-sm text-neutral-400">
+          <h1 className="type-h2">Algo deu errado</h1>
+          <p className="type-body text-neutral-400">
             Não foi possível carregar esta tela. Tente recarregar a página.
           </p>
           <button
