@@ -160,11 +160,11 @@ export function TrailProgress() {
             {error && !trail && (
               <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
                 <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
-                <p className="text-sm text-red-100">{error}</p>
+                <p className="type-body text-red-100">{error}</p>
                 <button
                   type="button"
                   onClick={reload}
-                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white text-sm font-bold cursor-pointer hover:brightness-105"
+                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white type-button-sm cursor-pointer hover:brightness-105"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Tentar de novo
@@ -199,7 +199,7 @@ export function TrailProgress() {
                 {index > 0 && (
                   <div className="lg:hidden w-full max-w-lg flex items-center gap-4 px-6 pt-6">
                     <span className="flex-1 h-0.5 rounded-full bg-white/15" />
-                    <span className="shrink min-w-0 truncate text-base font-bold text-neutral-400">
+                    <span className="shrink min-w-0 truncate font-heading text-base font-bold text-neutral-400">
                       {module.title}
                     </span>
                     <span className="flex-1 h-0.5 rounded-full bg-white/15" />
@@ -228,8 +228,8 @@ export function TrailProgress() {
             {trail?.completed && (
               <div className="w-[calc(100%-2rem)] max-w-md lg:max-w-2xl mx-4 mt-6 mb-32 lg:mb-12 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
                 <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
-                <h3 className="text-lg font-bold">Trilha concluída!</h3>
-                <p className="text-xs text-neutral-300 mt-1">
+                <h3 className="type-h3">Trilha concluída!</h3>
+                <p className="type-caption text-neutral-300 mt-1">
                   Você completou os {trail.progress.total_modules} módulos do
                   Renvest.
                 </p>

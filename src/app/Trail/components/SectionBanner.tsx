@@ -30,16 +30,16 @@ export function SectionBanner({ module, className }: SectionBannerProps) {
         <div className="flex-1 min-w-0">
           <span
             className={cn(
-              "text-[11px] font-extrabold uppercase tracking-widest",
+              "type-overline",
               isLocked ? "text-neutral-500" : "text-white/75"
             )}
           >
             Módulo {module.order}
           </span>
-          <h2 className={cn("text-lg lg:text-2xl font-extrabold leading-tight", isLocked ? "text-neutral-300" : "text-white")}>
+          <h2 className={cn("type-h2", isLocked ? "text-neutral-300" : "text-white")}>
             {module.title}
           </h2>
-          <p className={cn("text-xs lg:text-sm mt-0.5 lg:mt-1 truncate", isLocked ? "text-neutral-500" : "text-white/80")}>
+          <p className={cn("type-body-sm mt-0.5 lg:mt-1 truncate", isLocked ? "text-neutral-500" : "text-white/80")}>
             {module.subtitle}
           </p>
         </div>

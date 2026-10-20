@@ -25,10 +25,10 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
             />
           </StreakFlame>
           <div className="min-w-0">
-            <p className={cn("text-2xl font-extrabold", lit ? "text-amber-200" : "text-white")}>
+            <p className={cn("font-heading text-2xl font-extrabold tabular-nums", lit ? "text-amber-200" : "text-white")}>
               {days} {days === 1 ? "dia" : "dias"}
             </p>
-            <p className="text-xs text-neutral-400 leading-snug mt-0.5">
+            <p className="type-caption text-neutral-400 mt-0.5">
               {lit ? "Você já estudou hoje. Continue assim!" : "Conclua uma lição hoje para manter a ofensiva."}
             </p>
           </div>
@@ -36,8 +36,8 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
       </PanelCard>
 
       <PanelCard title="Seu progresso">
-        <p className="text-sm text-neutral-300 mb-4">
-          <span className="text-lg font-extrabold text-white">{trail.progress.completed_lessons}</span>
+        <p className="type-body text-neutral-300 mb-4">
+          <span className="font-heading text-lg font-extrabold tabular-nums text-white">{trail.progress.completed_lessons}</span>
           <span className="text-neutral-400">/{trail.progress.total_lessons}</span> lições concluídas
         </p>
         <ul className="flex flex-col gap-4">
@@ -46,7 +46,7 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
             return (
               <li key={module.id}>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className={cn("text-xs font-bold truncate", isLocked ? "text-neutral-500" : "text-white")}>
+                  <span className={cn("type-caption font-bold truncate", isLocked ? "text-neutral-500" : "text-white")}>
                     {module.order}. {module.title}
                   </span>
                   {isLocked && <Lock className="w-3.5 h-3.5 text-neutral-500 shrink-0" />}
@@ -67,15 +67,15 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
         <div className="flex items-center gap-3">
           <MascotHello variant={avatar} className="h-16 w-auto shrink-0 object-contain" />
           <div className="min-w-0">
-            <h2 className="text-sm font-bold text-white">Ficou com dúvida?</h2>
-            <p className="text-xs text-neutral-400 leading-snug mt-0.5">
+            <h2 className="type-h4 text-white">Ficou com dúvida?</h2>
+            <p className="type-caption text-neutral-400 mt-0.5">
               O Rev responde com base em fontes oficiais.
             </p>
           </div>
         </div>
         <Link
           to="/chat"
-          className="mt-4 block w-full py-2.5 rounded-xl text-center text-sm font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 transition-all"
+          className="mt-4 block w-full py-2.5 rounded-xl text-center type-button-sm text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 transition-all"
         >
           Perguntar ao Rev
         </Link>

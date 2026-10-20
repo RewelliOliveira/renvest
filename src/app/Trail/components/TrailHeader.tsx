@@ -18,7 +18,7 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
         <LogomarcaIcon className="lg:hidden h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
 
         {trail && (
-          <div className="flex items-center gap-5 text-base font-extrabold">
+          <div className="flex items-center gap-5 font-heading text-base font-extrabold tabular-nums">
             <span
               className={cn("flex items-center gap-1.5", lit ? "text-amber-400" : "text-neutral-500")}
               title={

@@ -50,7 +50,7 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: [0, -5, 0] }}
           transition={{ opacity: { duration: 0.3 }, y: { repeat: Infinity, duration: 1.6, ease: "easeInOut" } }}
-          className="absolute bottom-full mb-5 lg:mb-6 px-3 py-1.5 rounded-xl bg-white text-xs lg:text-sm font-extrabold uppercase tracking-wide whitespace-nowrap shadow-lg pointer-events-none"
+          className="absolute bottom-full mb-5 lg:mb-6 px-3 py-1.5 rounded-xl bg-white font-heading text-xs lg:text-sm font-extrabold uppercase tracking-wide whitespace-nowrap shadow-lg pointer-events-none"
           style={{ color }}
         >
           {isExam ? "Fazer teste" : "Começar"}
@@ -98,7 +98,7 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
       </button>
 
       {!isSelected && !isCurrent && (
-        <span className="hidden lg:block absolute bottom-full mb-3 px-3 py-1.5 rounded-lg bg-neutral-900/95 border border-white/10 text-xs font-bold text-white whitespace-nowrap shadow-lg pointer-events-none opacity-0 translate-y-1 transition-all group-hover:opacity-100 group-hover:translate-y-0">
+        <span className="hidden lg:block absolute bottom-full mb-3 px-3 py-1.5 rounded-lg bg-neutral-900/95 border border-white/10 font-heading text-xs font-bold text-white whitespace-nowrap shadow-lg pointer-events-none opacity-0 translate-y-1 transition-all group-hover:opacity-100 group-hover:translate-y-0">
           {title}
         </span>
       )}

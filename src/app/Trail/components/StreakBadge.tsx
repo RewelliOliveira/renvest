@@ -40,10 +40,10 @@ export function StreakBadge({ streak, className }: StreakBadgeProps) {
         )}
       />
       <div className="flex flex-col leading-tight min-w-0">
-        <span className={cn("text-sm font-extrabold whitespace-nowrap", lit ? "text-amber-200" : "text-white/85")}>
+        <span className={cn("font-heading text-sm font-extrabold tabular-nums whitespace-nowrap", lit ? "text-amber-200" : "text-white/85")}>
           {streakHeadline(streak)}
         </span>
-        <span className={cn("text-[10px] font-semibold", lit ? "text-amber-200/80" : "text-white/55")}>
+        <span className={cn("type-micro", lit ? "text-amber-200/80" : "text-white/55")}>
           {streakCaption(streak)}
         </span>
       </div>

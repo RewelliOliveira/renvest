@@ -39,11 +39,11 @@ export function Completion() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <span className="text-xs lg:text-sm font-extrabold uppercase tracking-widest text-amber-300">Trilha concluída</span>
-          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-extrabold mt-2 lg:mt-3">
+          <span className="type-overline text-amber-300">Trilha concluída</span>
+          <h1 className="type-display mt-2 lg:mt-3">
             Parabéns{firstName ? `, ${firstName}` : ""}!
           </h1>
-          <p className="text-sm lg:text-base text-neutral-300 mt-2 lg:mt-4 leading-relaxed lg:max-w-2xl lg:mx-auto">
+          <p className="type-body-lg text-neutral-300 mt-2 lg:mt-4 lg:max-w-2xl lg:mx-auto">
             Você concluiu os módulos do Renvest: dos fundamentos de finanças à bolsa de valores e à regulação da CVM.
             Agora você sabe onde encontrar as informações oficiais para investir com mais autonomia.
           </p>
@@ -57,13 +57,13 @@ export function Completion() {
         >
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
             <Layers className="w-5 h-5 text-sky-400 mb-1" />
-            <span className="text-lg lg:text-3xl font-extrabold">{trail.progress.completed_modules}</span>
-            <span className="text-[11px] lg:text-sm text-neutral-400">módulos concluídos</span>
+            <span className="type-stat">{trail.progress.completed_modules}</span>
+            <span className="type-stat-label text-neutral-400">módulos concluídos</span>
           </div>
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
             <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
-            <span className="text-lg lg:text-3xl font-extrabold">{trail.progress.completed_lessons}</span>
-            <span className="text-[11px] lg:text-sm text-neutral-400">lições concluídas</span>
+            <span className="type-stat">{trail.progress.completed_lessons}</span>
+            <span className="type-stat-label text-neutral-400">lições concluídas</span>
           </div>
         </motion.div>
 
@@ -81,7 +81,7 @@ export function Completion() {
           <button
             type="button"
             onClick={() => navigate("/trail")}
-            className="w-full lg:w-auto lg:px-8 py-3 lg:py-3.5 rounded-xl font-bold text-white/85 text-sm border border-white/15 bg-white/5 hover:bg-white/10 cursor-pointer"
+            className="w-full lg:w-auto lg:px-8 py-3 lg:py-3.5 rounded-xl type-button-sm text-white/85 border border-white/15 bg-white/5 hover:bg-white/10 cursor-pointer"
           >
             Voltar para a trilha
           </button>
