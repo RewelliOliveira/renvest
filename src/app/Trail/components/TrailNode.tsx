@@ -60,6 +60,7 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
 
       <button
         type="button"
+        data-no-bounce
         onClick={(event) => {
           event.stopPropagation();
           onSelect(node);
