@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
 import { useGoogleSignIn } from "./useGoogleAuth";
+import { validateName } from "@/lib/nameValidation";
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -24,6 +25,12 @@ export function useRegisterForm() {
 
     if (!username.trim() || !email.trim() || !password) {
       setError("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const nameError = validateName(username);
+    if (nameError) {
+      setError(nameError);
       return;
     }
 
