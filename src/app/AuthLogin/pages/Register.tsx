@@ -1,5 +1,6 @@
 import { EnvelopeSimpleIcon, UserIcon } from "@phosphor-icons/react";
 import { LogomarcaIcon } from "@/assets/icons";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useRegisterForm } from "../hooks/useRegisterForm";
@@ -91,7 +92,7 @@ export function Register() {
         </div>
 
         <AuthButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+          Cadastrar
         </AuthButton>
 
         {isGoogleAuthEnabled && (
@@ -107,6 +108,8 @@ export function Register() {
           </>
         )}
       </form>
+
+      {isSubmitting && <MascotLoader title="Criando sua conta" />}
     </AuthLayout>
   );
 }

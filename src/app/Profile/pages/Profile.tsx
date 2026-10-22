@@ -108,9 +108,9 @@ export function Profile() {
             <button
               type="button"
               onClick={() => setIsLoggingOut(true)}
-              className="mt-4 w-full py-2.5 rounded-xl type-button-sm text-red-light hover:bg-red/10 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              className="press-3d mt-4 w-full py-3 rounded-xl type-button text-white bg-red border-b-4 border-red-dark shadow-lg hover:brightness-105 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60"
             >
-              <SignOutIcon className="w-4 h-4" />
+              <SignOutIcon weight="bold" className="w-5 h-5" />
               Sair da conta
             </button>
           </ProfileSection>

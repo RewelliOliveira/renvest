@@ -1,5 +1,6 @@
 import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
 import { MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useLoginForm } from "../hooks/useLoginForm";
@@ -65,7 +66,7 @@ export function Login() {
         />
 
         <AuthButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Entrando..." : "Entrar"}
+          Entrar
         </AuthButton>
 
         {isGoogleAuthEnabled && (
@@ -81,6 +82,8 @@ export function Login() {
           </>
         )}
       </form>
+
+      {isSubmitting && <MascotLoader title="Entrando" />}
     </AuthLayout>
   );
 }
