@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { MusicNotesIcon } from "@phosphor-icons/react";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 
@@ -17,7 +16,6 @@ const TIPS = [
 
 const TIP_INTERVAL_MS = 4000;
 const LOADER_DELAY_S = 0.3;
-const DANCE = { repeat: Infinity, duration: 1.2, ease: "easeInOut" } as const;
 
 interface MascotLoaderProps {
   title?: string;
@@ -47,32 +45,12 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
       className="fixed inset-0 lg:left-(--side-nav-width,0px) z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
     >
       <div className="w-full max-w-sm flex flex-col items-center text-center">
-        <div className="relative h-36 w-40 flex flex-col items-center justify-end">
-          <motion.div
-            animate={{ y: [0, -8, 0], opacity: [0, 1, 0], rotate: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
-            className="absolute top-0 right-1 text-sky-400/80"
-          >
-            <MusicNotesIcon className="w-6 h-6" />
-          </motion.div>
-
-          <motion.div
-            animate={{ rotate: [-7, 7, -7], y: [0, -5, 0, -5, 0] }}
-            transition={DANCE}
-            style={{ transformOrigin: "50% 100%" }}
-            className="h-28 flex items-end justify-center"
-          >
-            <MascotHello
-              variant={avatar}
-              className="h-full w-auto object-contain"
-            />
-          </motion.div>
-
-          <motion.span
-            animate={{ scaleX: [1, 0.85, 1, 0.85, 1] }}
-            transition={DANCE}
-            className="mt-1 h-1.5 w-24 rounded-full bg-white/10"
+        <div className="rev-loading relative h-36 w-40 flex flex-col items-center justify-end">
+          <MascotHello
+            variant={avatar}
+            className="h-28 w-auto object-contain"
           />
+          <span className="mt-1 h-1.5 w-24 rounded-full bg-white/10" />
         </div>
 
         <p className="mt-8 font-heading text-sm font-extrabold uppercase tracking-widest text-neutral-500">

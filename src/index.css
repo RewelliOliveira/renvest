@@ -338,6 +338,18 @@
   animation: revBrows 4s ease-in-out infinite;
 }
 
+.rev-loading .rev-hand {
+  animation: revLoadingWave 1.6s ease-in-out infinite alternate;
+}
+
+.rev-loading .rev-lines {
+  animation: revLoadingLines 1.6s ease-in-out infinite alternate;
+}
+
+.rev-loading .rev-eye {
+  animation: revLoadingBlink 3.2s ease-in-out infinite;
+}
+
 @keyframes revWave {
   0%,
   46%,
@@ -397,13 +409,44 @@
   }
 }
 
+@keyframes revLoadingWave {
+  from {
+    transform: rotate(-16deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes revLoadingLines {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+
+@keyframes revLoadingBlink {
+  0%,
+  80%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+  84% {
+    transform: scaleY(0.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-mascot,
   .animate-bubble,
   .animate-shake,
   .animate-pop,
   .animate-bounce,
-  .rev-wave * {
+  .rev-wave *,
+  .rev-loading * {
     animation: none;
   }
 }
