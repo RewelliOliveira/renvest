@@ -15,6 +15,10 @@ import type { ChatMessage, ChatHistoryItem, ChatSource } from "../types/types";
 
 const MAX_INPUT_LENGTH = 500;
 
+function messageSources(msg: ChatMessage): ChatSource[] {
+  return msg.sources ?? (msg.source ? [msg.source] : []);
+}
+
 export function Chat() {
   const { user } = useAuth();
   const [avatar] = useAvatar();
@@ -117,7 +121,7 @@ export function Chat() {
         sender: "bot",
         text: response.reply,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        source: response.source,
+        sources: response.sources ?? (response.source ? [response.source] : []),
       };
 
       setMessages((prev) => [...prev, botMsg]);
@@ -136,9 +140,10 @@ export function Chat() {
   };
 
   const sources = messages.reduce<ChatSource[]>((acc, msg) => {
-    const source = msg.source;
-    if (source && !acc.some((item) => item.document === source.document && item.section === source.section)) {
-      acc.push(source);
+    for (const source of messageSources(msg)) {
+      if (!acc.some((item) => item.document === source.document && item.section === source.section)) {
+        acc.push(source);
+      }
     }
     return acc;
   }, []);
@@ -207,29 +212,32 @@ export function Chat() {
                   >
                     <p className="whitespace-pre-line">{msg.text}</p>
 
-                    {/* Fonte oficial RAG quando disponível */}
-                    {isBot && msg.source && (
-                      <div className="mt-1 pt-1.5 border-t border-white/10 flex items-start justify-between gap-2 type-micro text-sky-300">
-                        <div className="flex items-start gap-1 min-w-0">
-                          <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
-                          <span className="line-clamp-2">
-                            {msg.source.institution ? `${msg.source.institution} • ` : ""}
-                            {msg.source.document} ({msg.source.section})
-                          </span>
-                        </div>
-                        {msg.source.url && (
-                          <a
-                            href={msg.source.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline flex items-center gap-0.5 shrink-0 text-white/70 hover:text-white"
-                            title="Consultar documento oficial"
-                          >
-                            <span>Ver</span>
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </a>
-                        )}
-                      </div>
+                    {isBot && messageSources(msg).length > 0 && (
+                      <ul className="mt-1 pt-1.5 border-t border-white/10 flex flex-col gap-1 type-micro text-sky-300">
+                        {messageSources(msg).map((source) => (
+                          <li key={`${source.document}-${source.section}`} className="flex items-start justify-between gap-2">
+                            <div className="flex items-start gap-1 min-w-0">
+                              <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
+                              <span className="line-clamp-2">
+                                {source.institution ? `${source.institution} • ` : ""}
+                                {source.document} ({source.section})
+                              </span>
+                            </div>
+                            {source.url && (
+                              <a
+                                href={source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:underline flex items-center gap-0.5 shrink-0 text-white/70 hover:text-white"
+                                title="Consultar documento oficial"
+                              >
+                                <span>Ver</span>
+                                <ExternalLink className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
                     )}
 
                     <span
