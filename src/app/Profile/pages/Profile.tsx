@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { SignOutIcon, FireIcon, BookOpenTextIcon, StackIcon, ShieldCheckIcon, QuestionIcon, CaretRightIcon, PencilSimpleIcon } from "@phosphor-icons/react";
+import {
+  SignOutIcon,
+  FireIcon,
+  BookOpenTextIcon,
+  StackIcon,
+  FlagBannerIcon,
+  TrophyIcon,
+  ShieldCheckIcon,
+  QuestionIcon,
+  CaretRightIcon,
+  PaletteIcon,
+} from "@phosphor-icons/react";
+import { cn } from "cn";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
-import { moduleProgress } from "@/app/Trail/utils/progress";
+import { StreakFlame } from "@/app/Trail/components/StreakFlame";
+import { ModuleProgressList } from "@/app/Trail/components/ModuleProgressList";
+import type { TrailData } from "@/app/Trail/types/types";
 import { MascotHello } from "@/assets/icons";
+import { MASCOT_PALETTES } from "@/assets/mascotPalettes";
 import { useAvatar } from "@/lib/avatar";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { AvatarPicker } from "../components/AvatarPicker";
+
+const TILE_CLASS =
+  "rounded-2xl bg-option-dark border border-white/10 border-b-4 border-b-option-dark-border";
 
 export function Profile() {
   const { user, logout } = useAuth();
@@ -16,9 +34,7 @@ export function Profile() {
   const [avatar, setAvatar] = useAvatar();
   const [isPickingAvatar, setIsPickingAvatar] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const stat = (value?: number, total?: number) =>
-    value === undefined ? "–" : total === undefined ? String(value) : `${value}/${total}`;
+  const palette = MASCOT_PALETTES[avatar];
 
   const handleLogout = () => {
     logout();
@@ -29,142 +45,84 @@ export function Profile() {
   const displayEmail = user?.email || "investidor@renvest.com.br";
 
   return (
-    <div className="min-h-dvh w-full overflow-x-hidden select-none bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex flex-col justify-between">
-      <header className="sticky top-0 z-30 w-full bg-[#000815]/85 backdrop-blur-md border-b border-white/10 px-4 py-3 sm:px-6">
-        <div className="max-w-md lg:max-w-5xl mx-auto flex items-center justify-center lg:justify-start lg:px-4">
-          <h1 className="type-h3 text-white">
-            Meu Perfil
-          </h1>
-        </div>
-      </header>
-
-      <main className="flex-1 w-full max-w-md lg:max-w-5xl mx-auto px-4 lg:px-8 py-5 lg:py-10 pb-28 lg:pb-10 flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-6 lg:items-start">
-        <div className="flex flex-col gap-4 lg:sticky lg:top-24">
-          <div className="rounded-2xl bg-[#071329]/90 border border-white/10 p-5 lg:py-8 flex items-center lg:flex-col lg:text-center gap-4 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
-
-            <button
-              type="button"
-              onClick={() => setIsPickingAvatar((v) => !v)}
-              aria-label="Trocar avatar"
-              aria-expanded={isPickingAvatar}
-              className="relative w-16 h-16 sm:w-18 sm:h-18 lg:w-28 lg:h-28 rounded-2xl bg-linear-to-br from-red/30 to-sky-500/20 border border-white/15 p-1.5 flex items-center justify-center shadow-inner shrink-0 cursor-pointer hover:border-white/30 transition-colors"
-            >
-              <MascotHello variant={avatar} className="h-full w-auto object-contain" />
-              <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-[#071329] border border-white/20 flex items-center justify-center">
-                <PencilSimpleIcon className="w-3 h-3 text-white/80" />
-              </span>
-            </button>
-
-            <div className="flex-1 min-w-0 lg:w-full">
-              <h2 className="type-h2 text-white truncate">
-                {displayName}
-              </h2>
-              <p className="type-caption text-neutral-400 truncate mt-0.5">
-                {displayEmail}
-              </p>
-            </div>
-          </div>
-
-          <div className={isPickingAvatar ? undefined : "hidden lg:block"}>
-            <AvatarPicker selected={avatar} onSelect={setAvatar} />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-
-          <div className="grid grid-cols-3 gap-2.5">
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <FireIcon weight="fill" className="w-5 h-5 text-amber-400 mb-1" />
-              <span className="type-stat text-white">{stat(trail?.streak.current_days)}</span>
-              <span className="type-stat-label text-neutral-400">Dias de Ofensiva</span>
-            </div>
-
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <BookOpenTextIcon className="w-5 h-5 text-emerald-400 mb-1" />
-              <span className="type-stat text-white">
-                {stat(trail?.progress.completed_lessons, trail?.progress.total_lessons)}
-              </span>
-              <span className="type-stat-label text-neutral-400">Lições</span>
-            </div>
-
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <StackIcon className="w-5 h-5 text-sky-400 mb-1" />
-              <span className="type-stat text-white">
-                {stat(trail?.progress.completed_modules, trail?.progress.total_modules)}
-              </span>
-              <span className="type-stat-label text-neutral-400">Módulos</span>
-            </div>
-          </div>
-
-          {trail && (
-            <div className="hidden lg:block rounded-2xl bg-[#071329]/80 border border-white/10 p-5 shadow-lg">
-              <h3 className="type-overline text-white/50 mb-4">
-                Progresso por módulo
-              </h3>
-              <ul className="flex flex-col gap-4">
-                {trail.modules.map((module) => (
-                  <li key={module.id}>
-                    <div className="flex items-center justify-between gap-2 mb-1.5 type-label">
-                      <span className="font-heading font-bold text-white truncate">
-                        {module.order}. {module.title}
-                      </span>
-                      <span className="type-caption tabular-nums text-neutral-400 shrink-0">
-                        {Math.round(moduleProgress(module) * 100)}%
-                      </span>
-                    </div>
-                    <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{ width: `${moduleProgress(module) * 100}%`, backgroundColor: module.color }}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="rounded-2xl bg-[#071329]/80 border border-white/10 overflow-hidden shadow-lg divide-y divide-white/5">
-            <button
-              type="button"
-              onClick={() => navigate("/profile/privacidade")}
-              className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
-            >
-              <div className="flex items-center gap-3">
-                <ShieldCheckIcon className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="type-label text-neutral-200">
-                  Privacidade e Segurança
-                </span>
-              </div>
-              <CaretRightIcon className="w-4 h-4 text-white/40" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/profile/sobre")}
-              className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
-            >
-              <div className="flex items-center gap-3">
-                <QuestionIcon className="w-4 h-4 text-amber-400 shrink-0" />
-                <span className="type-label text-neutral-200">
-                  Sobre o Renvest
-                </span>
-              </div>
-              <CaretRightIcon className="w-4 h-4 text-white/40" />
-            </button>
-          </div>
-
+    <div className="min-h-dvh w-full overflow-x-hidden select-none bg-[#000815] text-white">
+      <main className="w-full max-w-md lg:max-w-5xl mx-auto px-4 lg:px-8 pt-4 lg:pt-10 pb-28 lg:pb-10 flex flex-col gap-7 lg:gap-8">
+        <section
+          className="relative rounded-3xl px-5 lg:px-10 pt-5 lg:pt-8 flex items-end gap-4 lg:gap-8 overflow-hidden transition-colors duration-300"
+          style={{ backgroundColor: palette.deep, boxShadow: `0 5px 0 ${palette.dark}` }}
+        >
           <button
             type="button"
-            onClick={() => setIsLoggingOut(true)}
-            className="w-full mt-2 py-3 px-4 rounded-xl border border-red/40 bg-red/10 text-red-light type-button-sm hover:bg-red/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            onClick={() => setIsPickingAvatar(true)}
+            aria-label="Mudar a cor do Rev"
+            className="shrink-0 h-28 sm:h-32 lg:h-44 -mb-1 cursor-pointer"
           >
-            <SignOutIcon className="w-4 h-4" />
-            <span>Sair da Conta</span>
+            <div key={avatar} className="animate-mascot rev-wave h-full">
+              <MascotHello variant={avatar} className="h-full w-auto object-contain" />
+            </div>
           </button>
+
+          <div className="flex-1 min-w-0 pb-5 lg:pb-8">
+            <span className="type-overline text-white/75">Meu perfil</span>
+            <h1 className="type-h1 text-white truncate mt-1">{displayName}</h1>
+            <p className="type-caption text-white/75 truncate mt-0.5">{displayEmail}</p>
+            <button
+              type="button"
+              onClick={() => setIsPickingAvatar(true)}
+              className="press-3d mt-3 lg:mt-4 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border-b-4 border-black/20 type-button-sm hover:brightness-95 transition-[filter] cursor-pointer"
+              style={{ color: palette.dark }}
+            >
+              <PaletteIcon weight="fill" className="w-4 h-4" />
+              Mudar cor
+            </button>
+          </div>
+        </section>
+
+        <div className="flex flex-col gap-7 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-8 lg:items-start">
+          <div className="flex flex-col gap-7">
+            <ProfileSection title="Estatísticas">
+              <StatsGrid trail={trail} />
+            </ProfileSection>
+
+            {trail && (
+              <ProfileSection title="Progresso por módulo">
+                <ModuleProgressList modules={trail.modules} />
+              </ProfileSection>
+            )}
+          </div>
+
+          <ProfileSection title="Conta">
+            <div className={cn(TILE_CLASS, "overflow-hidden divide-y divide-white/5")}>
+              <MenuRow
+                icon={<ShieldCheckIcon weight="duotone" className="w-5 h-5 text-emerald-400" />}
+                label="Privacidade e Segurança"
+                onClick={() => navigate("/profile/privacidade")}
+              />
+              <MenuRow
+                icon={<QuestionIcon weight="duotone" className="w-5 h-5 text-amber-300" />}
+                label="Sobre o Renvest"
+                onClick={() => navigate("/profile/sobre")}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsLoggingOut(true)}
+              className="mt-4 w-full py-2.5 rounded-xl type-button-sm text-red-light hover:bg-red/10 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <SignOutIcon className="w-4 h-4" />
+              Sair da conta
+            </button>
+          </ProfileSection>
         </div>
       </main>
+
+      <AvatarPicker
+        open={isPickingAvatar}
+        selected={avatar}
+        onSave={setAvatar}
+        onClose={() => setIsPickingAvatar(false)}
+      />
 
       <ConfirmDialog
         open={isLoggingOut}
@@ -175,7 +133,111 @@ export function Profile() {
         onCancel={() => setIsLoggingOut(false)}
         onConfirm={handleLogout}
       />
-
     </div>
+  );
+}
+
+function ProfileSection({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section>
+      <h2 className="type-overline text-white/50 mb-3">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
+function StatsGrid({ trail }: { trail?: TrailData | null }) {
+  const days = trail?.streak.current_days;
+  const lit = trail?.streak.active_today ?? false;
+  const currentModule = trail?.modules.find((module) => module.id === trail.current_module_id);
+
+  const streakLabel =
+    days === undefined || days === 0
+      ? "comece sua ofensiva hoje"
+      : lit
+        ? days === 1 ? "dia de ofensiva" : "dias de ofensiva"
+        : "estude hoje para manter";
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <StatTile
+        icon={
+          <StreakFlame lit={lit}>
+            <FireIcon
+              weight={lit ? "fill" : "duotone"}
+              className={cn(
+                "w-7 h-7",
+                lit ? "text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]" : "text-neutral-500"
+              )}
+            />
+          </StreakFlame>
+        }
+        value={days === undefined ? "–" : String(days)}
+        label={streakLabel}
+        valueClassName={lit ? "text-amber-200" : undefined}
+      />
+      <StatTile
+        icon={<BookOpenTextIcon weight="duotone" className="w-7 h-7 text-emerald-400" />}
+        value={trail ? `${trail.progress.completed_lessons}/${trail.progress.total_lessons}` : "–"}
+        label="lições concluídas"
+      />
+      <StatTile
+        icon={<StackIcon weight="duotone" className="w-7 h-7 text-sky-400" />}
+        value={trail ? `${trail.progress.completed_modules}/${trail.progress.total_modules}` : "–"}
+        label="módulos concluídos"
+      />
+      {trail?.completed ? (
+        <StatTile
+          icon={<TrophyIcon weight="duotone" className="w-7 h-7 text-amber-300" />}
+          value="Completa"
+          label="trilha concluída"
+        />
+      ) : (
+        <StatTile
+          icon={
+            <FlagBannerIcon
+              weight="duotone"
+              className="w-7 h-7 text-red-light"
+              style={currentModule ? { color: currentModule.color } : undefined}
+            />
+          }
+          value={currentModule ? `Módulo ${currentModule.order}` : "–"}
+          label={currentModule?.title ?? "módulo atual"}
+        />
+      )}
+    </div>
+  );
+}
+
+interface StatTileProps {
+  icon: ReactNode;
+  value: string;
+  label: string;
+  valueClassName?: string;
+}
+
+function StatTile({ icon, value, label, valueClassName }: StatTileProps) {
+  return (
+    <div className={cn(TILE_CLASS, "p-3.5 lg:p-5 flex items-center gap-3 lg:gap-4 min-w-0")}>
+      <span className="shrink-0 inline-flex">{icon}</span>
+      <div className="min-w-0">
+        <p className={cn("type-stat text-white truncate", valueClassName)}>{value}</p>
+        <p className="type-stat-label text-neutral-400 truncate mt-1">{label}</p>
+      </div>
+    </div>
+  );
+}
+
+function MenuRow({ icon, label, onClick }: { icon: ReactNode; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full px-4 py-3.5 flex items-center gap-3 hover:bg-white/5 transition-colors cursor-pointer text-left"
+    >
+      <span className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center shrink-0">{icon}</span>
+      <span className="flex-1 font-heading font-bold type-body text-white">{label}</span>
+      <CaretRightIcon className="w-4 h-4 text-white/40" />
+    </button>
   );
 }
