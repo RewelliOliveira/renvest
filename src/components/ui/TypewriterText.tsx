@@ -12,25 +12,32 @@ function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function TypewriterRun({ text }: { text: string }) {
-  const chars = Array.from(text);
-  const [count, setCount] = useState(() => (prefersReducedMotion() ? chars.length : 0));
+// Quantos caracteres de um texto de tamanho `total` já devem estar visíveis
+export function useTypewriterCount(total: number, animate = true) {
+  const [count, setCount] = useState(() => (!animate || prefersReducedMotion() ? total : 0));
 
   useEffect(() => {
-    if (count >= chars.length) return;
+    if (count >= total) return;
 
     // Textos longos aceleram para não passar do tempo máximo
-    const msPerChar = Math.min(MS_PER_CHAR, MAX_DURATION_MS / chars.length);
+    const msPerChar = Math.min(MS_PER_CHAR, MAX_DURATION_MS / total);
     const start = performance.now();
     let frame = requestAnimationFrame(function tick(now) {
-      const next = Math.min(chars.length, Math.floor((now - start) / msPerChar) + 1);
+      const next = Math.min(total, Math.floor((now - start) / msPerChar) + 1);
       setCount(next);
-      if (next < chars.length) frame = requestAnimationFrame(tick);
+      if (next < total) frame = requestAnimationFrame(tick);
     });
 
     return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chars.length]);
+  }, [total]);
+
+  return count;
+}
+
+function TypewriterRun({ text }: { text: string }) {
+  const chars = Array.from(text);
+  const count = useTypewriterCount(chars.length);
 
   return (
     <>
