@@ -291,7 +291,7 @@ function ExamScreen({
           className="w-full flex flex-col gap-4 my-auto lg:max-w-3xl lg:mx-auto lg:gap-6"
         >
           <div className="w-full flex items-center gap-3">
-            <div className="w-20 h-20 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center">
+            <div className="rev-wave w-20 h-20 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center">
               {index % 2 === 0 ? (
                 <MascotPlan className="h-full w-auto object-contain" />
               ) : (

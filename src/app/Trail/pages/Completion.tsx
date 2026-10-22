@@ -33,9 +33,9 @@ export function Completion() {
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
           className="h-48 lg:h-72 flex items-center justify-center"
         >
-          <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }} className="h-full">
+          <div className="rev-wave h-full">
             <MascotHello variant={avatar} className="h-full w-auto object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.35)]" />
-          </motion.div>
+          </div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>

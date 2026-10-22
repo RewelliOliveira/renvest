@@ -98,7 +98,9 @@ export function Home() {
               <div className="mt-4 sm:mt-6 lg:mt-0 flex items-center justify-center h-48 sm:h-56 lg:h-80 w-full lg:w-auto lg:shrink-0">
                 <motion.div
                   animate={
-                    currentStep === 1
+                    MascotComponent === MascotHello
+                      ? { y: 0, rotate: 0, scale: 1 }
+                      : currentStep === 1
                       ? { y: [0, -6, 0] }
                       : currentStep === 2
                       ? { y: [0, -7, 0], rotate: [0, -1.2, 1, 0] }
@@ -109,7 +111,7 @@ export function Home() {
                     duration: currentStep === 1 ? 2.4 : currentStep === 2 ? 2.8 : 3.2,
                     ease: "easeInOut",
                   }}
-                  className="h-full flex items-center justify-center"
+                  className="rev-wave h-full flex items-center justify-center"
                 >
                   <MascotComponent className="h-full w-auto max-w-55 lg:max-w-80 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
                 </motion.div>
