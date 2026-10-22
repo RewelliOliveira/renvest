@@ -1,4 +1,5 @@
-import { ChartBarIcon, CheckCircleIcon, XCircleIcon } from "@phosphor-icons/react";
+import { ChartBarIcon, XCircleIcon } from "@phosphor-icons/react";
+import { AnimatedCheck } from "@/components/ui/AnimatedCheck";
 import { OptionButton } from "@/components/ui/OptionButton";
 import type { QuizOption } from "../types/types";
 
@@ -32,7 +33,7 @@ export function QuizOptionsList({
             onClick={() => onSelect(option.id)}
             icon={
               showSuccess ? (
-                <CheckCircleIcon className="w-5 h-5 text-emerald-400" />
+                <AnimatedCheck className="w-5 h-5" />
               ) : showError ? (
                 <XCircleIcon className="w-5 h-5 text-red" />
               ) : (
