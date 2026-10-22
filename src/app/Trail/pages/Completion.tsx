@@ -73,7 +73,7 @@ export function Completion() {
           <button
             type="button"
             onClick={() => navigate("/chat")}
-            className="w-full lg:w-auto lg:px-8 py-3.5 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full lg:w-auto lg:px-8 py-3.5 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark press-3d hover:brightness-105 cursor-pointer flex items-center justify-center gap-2"
           >
             <ChatsCircleIcon className="w-4 h-4" />
             Continuar conversando com o Rev

@@ -75,7 +75,7 @@ export function NodePopover({ node, offsetX }: NodePopoverProps) {
             "mt-3 w-full py-3 rounded-xl type-button-sm uppercase transition-all flex items-center justify-center gap-2",
             isLocked
               ? "bg-neutral-700 text-neutral-500 cursor-not-allowed"
-              : "bg-white border-b-4 border-black/20 active:border-b-0 active:translate-y-0.5 cursor-pointer hover:brightness-95"
+              : "bg-white border-b-4 border-black/20 press-3d cursor-pointer hover:brightness-95"
           )}
           style={isLocked ? undefined : { color: node.module.color }}
         >

@@ -239,7 +239,7 @@ export function TrailProgress() {
                 <button
                   type="button"
                   onClick={() => navigate("/conclusao")}
-                  className="mt-4 w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer"
+                  className="mt-4 w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark press-3d hover:brightness-105 cursor-pointer"
                 >
                   Ver minha conquista
                 </button>

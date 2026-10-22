@@ -66,7 +66,7 @@ export function ConfirmDialog({
                 type="button"
                 autoFocus
                 onClick={onCancel}
-                className="w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                className="w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark press-3d hover:brightness-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 {cancelLabel}
               </button>

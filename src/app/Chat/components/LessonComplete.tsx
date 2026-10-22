@@ -105,7 +105,7 @@ export function LessonComplete({
           type="button"
           onClick={onContinue}
           autoFocus
-          className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
+          className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark press-3d transition-all shadow-lg hover:brightness-105 focus-visible:outline-none cursor-pointer"
         >
           Continuar
         </motion.button>

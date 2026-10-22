@@ -232,6 +232,14 @@
   @apply text-[11px] font-medium leading-snug lg:text-sm;
 }
 
+@utility press-3d {
+  &:active:not(:disabled) {
+    translate: 0 4px;
+    border-bottom-color: transparent;
+    background-clip: padding-box;
+  }
+}
+
 @keyframes mascotTransition {
   0% {
     opacity: 0;

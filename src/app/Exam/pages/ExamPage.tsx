@@ -18,7 +18,7 @@ import { setTrailData } from "@/app/Trail/hooks/useTrail";
 import type { ExamResult, ExamStart } from "@/app/Trail/types/types";
 
 const primaryButton =
-  "w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+  "w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark press-3d transition-all shadow-lg hover:brightness-105 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 const secondaryButton =
   "w-full py-3 rounded-xl type-button-sm text-white/85 border border-white/15 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer flex items-center justify-center gap-2";
 

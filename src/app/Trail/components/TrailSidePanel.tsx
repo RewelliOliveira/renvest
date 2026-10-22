@@ -76,7 +76,7 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
         </div>
         <Link
           to="/chat"
-          className="mt-4 block w-full py-2.5 rounded-xl text-center type-button-sm text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 transition-all"
+          className="mt-4 block w-full py-2.5 rounded-xl text-center type-button-sm text-white bg-red border-b-4 border-red-dark press-3d hover:brightness-105 transition-all"
         >
           Perguntar ao Rev
         </Link>
