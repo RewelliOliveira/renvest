@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
+import { TypewriterText } from "@/components/ui/TypewriterText";
 import { useAvatar } from "@/lib/avatar";
 import { loadChatHistory, saveChatHistory } from "@/lib/chatHistory";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
@@ -38,6 +39,9 @@ export function Chat() {
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
+
+  // Mensagens restauradas do histórico não repetem o efeito de digitação
+  const [initialMessageIds] = useState(() => new Set(messages.map((m) => m.id)));
 
   const { trail } = useTrail();
   const chatModule = trail ? trail.current_module_id : undefined;
@@ -210,7 +214,9 @@ export function Chat() {
                         : "bg-red text-white font-medium border-b-2 border-red-dark rounded-br-xs"
                     )}
                   >
-                    <p className="whitespace-pre-line">{msg.text}</p>
+                    <p className="whitespace-pre-line">
+                      <TypewriterText text={msg.text} animate={isBot && !initialMessageIds.has(msg.id)} />
+                    </p>
 
                     {isBot && messageSources(msg).length > 0 && (
                       <ul className="mt-1 pt-1.5 border-t border-white/10 flex flex-col gap-1 type-micro text-sky-300">
