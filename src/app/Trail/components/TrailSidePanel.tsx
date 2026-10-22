@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { FireIcon, LockSimpleIcon } from "@phosphor-icons/react";
+import { FireIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 import { SidePanel, PanelCard } from "@/components/layout/SidePanel";
-import { moduleProgress } from "../utils/progress";
+import { ModuleProgressList } from "./ModuleProgressList";
 import { StreakFlame } from "./StreakFlame";
 import type { TrailData } from "../types/types";
 
@@ -41,27 +41,7 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
           <span className="font-heading text-lg font-extrabold tabular-nums text-white">{trail.progress.completed_lessons}</span>
           <span className="text-neutral-400">/{trail.progress.total_lessons}</span> lições concluídas
         </p>
-        <ul className="flex flex-col gap-4">
-          {trail.modules.map((module) => {
-            const isLocked = module.status === "locked";
-            return (
-              <li key={module.id}>
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className={cn("type-caption font-bold truncate", isLocked ? "text-neutral-500" : "text-white")}>
-                    {module.order}. {module.title}
-                  </span>
-                  {isLocked && <LockSimpleIcon className="w-3.5 h-3.5 text-neutral-500 shrink-0" />}
-                </div>
-                <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-[width] duration-500"
-                    style={{ width: `${moduleProgress(module) * 100}%`, backgroundColor: module.color }}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <ModuleProgressList modules={trail.modules} />
       </PanelCard>
 
       <PanelCard>
