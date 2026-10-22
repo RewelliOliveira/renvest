@@ -1,4 +1,4 @@
-import { ExternalLink, MessageCircleQuestion, ShieldCheck } from "lucide-react";
+import { ArrowSquareOutIcon, ChatCircleDotsIcon, ShieldCheckIcon } from "@phosphor-icons/react";
 import { SidePanel, PanelCard } from "@/components/layout/SidePanel";
 import type { ChatSource } from "../types/types";
 
@@ -23,7 +23,7 @@ export function ChatSidePanel({ suggestions, sources, disabled, onSelectSuggesti
                   onClick={() => onSelectSuggestion(item)}
                   className="w-full flex items-start gap-2.5 rounded-xl px-3 py-2.5 text-left type-body text-white/85 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  <MessageCircleQuestion className="w-4 h-4 mt-0.5 shrink-0 text-sky-400" />
+                  <ChatCircleDotsIcon className="w-4 h-4 mt-0.5 shrink-0 text-sky-400" />
                   <span className="leading-snug">{item}</span>
                 </button>
               </li>
@@ -39,7 +39,7 @@ export function ChatSidePanel({ suggestions, sources, disabled, onSelectSuggesti
           <ul className="flex flex-col gap-3">
             {sources.map((source) => (
               <li key={`${source.document}-${source.section}`} className="flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-sky-400" />
+                <ShieldCheckIcon className="w-4 h-4 mt-0.5 shrink-0 text-sky-400" />
                 <div className="min-w-0 type-caption">
                   <p className="font-semibold text-white">{source.document}</p>
                   <p className="text-neutral-400">
@@ -54,7 +54,7 @@ export function ChatSidePanel({ suggestions, sources, disabled, onSelectSuggesti
                       className="mt-1 inline-flex items-center gap-1 text-sky-300 hover:text-sky-200 hover:underline"
                     >
                       Abrir documento
-                      <ExternalLink className="w-3 h-3" />
+                      <ArrowSquareOutIcon className="w-3 h-3" />
                     </a>
                   )}
                 </div>

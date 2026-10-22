@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { FormEvent } from "react";
-import { Send, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from "lucide-react";
+import { PaperPlaneRightIcon, RobotIcon, ArrowSquareOutIcon, ShieldCheckIcon, WarningCircleIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
@@ -202,7 +202,7 @@ export function Chat() {
                 >
                   {isBot ? (
                     <div className="w-7 h-7 rounded-full bg-red/20 border border-red/40 flex items-center justify-center shrink-0 mb-1">
-                      <Bot className="w-4 h-4 text-red-light" />
+                      <RobotIcon className="w-4 h-4 text-red-light" />
                     </div>
                   ) : null}
 
@@ -223,7 +223,7 @@ export function Chat() {
                         {messageSources(msg).map((source) => (
                           <li key={`${source.document}-${source.section}`} className="flex items-start justify-between gap-2">
                             <div className="flex items-start gap-1 min-w-0">
-                              <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
+                              <ShieldCheckIcon className="w-3 h-3 mt-px text-sky-400 shrink-0" />
                               <span className="line-clamp-2">
                                 {source.institution ? `${source.institution} • ` : ""}
                                 {source.document} ({source.section})
@@ -238,7 +238,7 @@ export function Chat() {
                                 title="Consultar documento oficial"
                               >
                                 <span>Ver</span>
-                                <ExternalLink className="w-2.5 h-2.5" />
+                                <ArrowSquareOutIcon className="w-2.5 h-2.5" />
                               </a>
                             )}
                           </li>
@@ -267,7 +267,7 @@ export function Chat() {
                 className="flex items-center gap-2 self-start"
               >
                 <div className="w-7 h-7 rounded-full bg-red/20 border border-red/40 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-red-light" />
+                  <RobotIcon className="w-4 h-4 text-red-light" />
                 </div>
                 <div className="rounded-2xl bg-[#0b162a] border border-white/10 px-4 py-2.5 flex items-center gap-1 shadow-md">
                   <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -287,7 +287,7 @@ export function Chat() {
                   className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 type-caption text-red-200 flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                    <WarningCircleIcon className="w-4 h-4 text-red-400 shrink-0" />
                     <span className="truncate">{errorMessage}</span>
                   </div>
                   {lastFailedMessage && (
@@ -296,7 +296,7 @@ export function Chat() {
                       onClick={handleRetry}
                       className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-800/60 hover:bg-red-700/80 text-white type-micro transition-colors shrink-0 cursor-pointer"
                     >
-                      <RefreshCw className="w-3 h-3" />
+                      <ArrowClockwiseIcon className="w-3 h-3" />
                       <span>Tentar de novo</span>
                     </button>
                   )}
@@ -355,7 +355,7 @@ export function Chat() {
                   : "bg-white/5 text-white/30 cursor-not-allowed"
               )}
             >
-              <Send className="w-4 h-4" />
+              <PaperPlaneRightIcon className="w-4 h-4" />
             </button>
           </form>
           <p className="hidden lg:block mt-2 type-micro text-white/35 text-center">

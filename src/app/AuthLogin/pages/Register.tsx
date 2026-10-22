@@ -1,4 +1,5 @@
-import { UserIcon, EmailIcon, LogomarcaIcon } from "@/assets/icons";
+import { EnvelopeSimpleIcon, UserIcon } from "@phosphor-icons/react";
+import { LogomarcaIcon } from "@/assets/icons";
 import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useRegisterForm } from "../hooks/useRegisterForm";
@@ -53,7 +54,7 @@ export function Register() {
           autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          icon={<UserIcon className="w-4.5 h-4.5" />}
+          icon={<UserIcon className="w-4.5 h-4.5 text-[#787878]" />}
         />
 
         <AuthInput
@@ -64,7 +65,7 @@ export function Register() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          icon={<EmailIcon className="w-4.5 h-4.5" />}
+          icon={<EnvelopeSimpleIcon className="w-4.5 h-4.5 text-[#787878]" />}
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">

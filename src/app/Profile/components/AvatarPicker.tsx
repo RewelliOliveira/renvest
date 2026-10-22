@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import type { MascotVariant } from "@/assets/mascotPalettes";
@@ -39,7 +39,7 @@ export function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
               <MascotHello variant={variant} className="h-full w-auto object-contain" />
               {isSelected && (
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red flex items-center justify-center">
-                  <Check className="w-3 h-3 stroke-3 text-white" />
+                  <CheckIcon className="w-3 h-3 text-white" />
                 </span>
               )}
             </button>

@@ -1,15 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  LogOut,
-  Flame,
-  BookOpenCheck,
-  Layers,
-  ShieldCheck,
-  HelpCircle,
-  ChevronRight,
-  Pencil,
-} from "lucide-react";
+import { SignOutIcon, FireIcon, BookOpenTextIcon, StackIcon, ShieldCheckIcon, QuestionIcon, CaretRightIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { moduleProgress } from "@/app/Trail/utils/progress";
@@ -61,7 +52,7 @@ export function Profile() {
             >
               <MascotHello variant={avatar} className="h-full w-auto object-contain" />
               <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-[#071329] border border-white/20 flex items-center justify-center">
-                <Pencil className="w-3 h-3 text-white/80" />
+                <PencilSimpleIcon className="w-3 h-3 text-white/80" />
               </span>
             </button>
 
@@ -84,13 +75,13 @@ export function Profile() {
 
           <div className="grid grid-cols-3 gap-2.5">
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20 mb-1" />
+              <FireIcon weight="fill" className="w-5 h-5 text-amber-400 mb-1" />
               <span className="type-stat text-white">{stat(trail?.streak.current_days)}</span>
               <span className="type-stat-label text-neutral-400">Dias de Ofensiva</span>
             </div>
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
+              <BookOpenTextIcon className="w-5 h-5 text-emerald-400 mb-1" />
               <span className="type-stat text-white">
                 {stat(trail?.progress.completed_lessons, trail?.progress.total_lessons)}
               </span>
@@ -98,7 +89,7 @@ export function Profile() {
             </div>
 
             <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center text-center">
-              <Layers className="w-5 h-5 text-sky-400 mb-1" />
+              <StackIcon className="w-5 h-5 text-sky-400 mb-1" />
               <span className="type-stat text-white">
                 {stat(trail?.progress.completed_modules, trail?.progress.total_modules)}
               </span>
@@ -141,12 +132,12 @@ export function Profile() {
               className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
             >
               <div className="flex items-center gap-3">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <ShieldCheckIcon className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span className="type-label text-neutral-200">
                   Privacidade e Segurança
                 </span>
               </div>
-              <ChevronRight className="w-4 h-4 text-white/40" />
+              <CaretRightIcon className="w-4 h-4 text-white/40" />
             </button>
 
             <button
@@ -155,12 +146,12 @@ export function Profile() {
               className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer text-left"
             >
               <div className="flex items-center gap-3">
-                <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                <QuestionIcon className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="type-label text-neutral-200">
                   Sobre o Renvest
                 </span>
               </div>
-              <ChevronRight className="w-4 h-4 text-white/40" />
+              <CaretRightIcon className="w-4 h-4 text-white/40" />
             </button>
           </div>
 
@@ -169,7 +160,7 @@ export function Profile() {
             onClick={() => setIsLoggingOut(true)}
             className="w-full mt-2 py-3 px-4 rounded-xl border border-red/40 bg-red/10 text-red-light type-button-sm hover:bg-red/20 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <LogOut className="w-4 h-4" />
+            <SignOutIcon className="w-4 h-4" />
             <span>Sair da Conta</span>
           </button>
         </div>

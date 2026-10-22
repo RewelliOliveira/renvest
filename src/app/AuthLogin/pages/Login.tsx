@@ -1,4 +1,5 @@
-import { EmailIcon, MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
+import { MascotIcon, LogomarcaIcon } from "@/assets/icons";
 import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useLoginForm } from "../hooks/useLoginForm";
@@ -50,7 +51,7 @@ export function Login() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          icon={<EmailIcon className="w-4.5 h-4.5" />}
+          icon={<EnvelopeSimpleIcon className="w-4.5 h-4.5 text-[#787878]" />}
         />
 
         <AuthInput

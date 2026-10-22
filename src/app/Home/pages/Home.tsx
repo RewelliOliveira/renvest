@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { CaretLeftIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
@@ -73,7 +73,7 @@ export function Home() {
               currentStep === 1 ? "opacity-0 pointer-events-none" : "opacity-100"
             )}
           >
-            <ChevronLeft className="w-6 h-6" />
+            <CaretLeftIcon className="w-6 h-6" />
           </button>
           <Progress
             value={(currentStep / steps.length) * 100}

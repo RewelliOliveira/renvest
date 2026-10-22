@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Music2 } from "lucide-react";
+import { MusicNotesIcon } from "@phosphor-icons/react";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 
@@ -48,7 +48,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
             transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
             className="absolute top-0 right-1 text-sky-400/80"
           >
-            <Music2 className="w-6 h-6" />
+            <MusicNotesIcon className="w-6 h-6" />
           </motion.div>
 
           <motion.div

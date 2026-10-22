@@ -1,4 +1,4 @@
-import { Target, Map, Library, GraduationCap, AlertTriangle } from "lucide-react";
+import { TargetIcon, MapTrifoldIcon, BooksIcon, GraduationCapIcon, WarningIcon } from "@phosphor-icons/react";
 import { LogomarcaIcon, MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 import { ProfileSubpage, InfoSection } from "../components/ProfileSubpage";
@@ -26,7 +26,7 @@ export function About() {
         </p>
       </div>
 
-      <InfoSection icon={Target} iconClassName="text-red-light" title="Nossa missão">
+      <InfoSection icon={TargetIcon} iconClassName="text-red-light" title="Nossa missão">
         <p>
           Reduzir a distância entre o investidor iniciante e as informações do mercado de capitais. Em vez de
           respostas genéricas, o Renvest usa <strong>RAG (Retrieval-Augmented Generation)</strong>: cada
@@ -35,7 +35,7 @@ export function About() {
         </p>
       </InfoSection>
 
-      <InfoSection icon={Map} iconClassName="text-sky-400" title="A trilha">
+      <InfoSection icon={MapTrifoldIcon} iconClassName="text-sky-400" title="A trilha">
         <p>Três módulos progressivos, cada um com lições curtas e um teste final para desbloquear o próximo:</p>
         <ol className="space-y-2 pt-1">
           {MODULES.map((module) => (
@@ -52,7 +52,7 @@ export function About() {
         </ol>
       </InfoSection>
 
-      <InfoSection icon={Library} iconClassName="text-emerald-400" title="Fontes oficiais">
+      <InfoSection icon={BooksIcon} iconClassName="text-emerald-400" title="Fontes oficiais">
         <p>A base de conhecimento reúne cadernos educacionais, resoluções e regulamentos publicados por:</p>
         <div className="flex flex-wrap gap-1.5 pt-1">
           {SOURCES.map((source) => (
@@ -66,7 +66,7 @@ export function About() {
         </div>
       </InfoSection>
 
-      <InfoSection icon={GraduationCap} iconClassName="text-amber-400" title="Projeto acadêmico">
+      <InfoSection icon={GraduationCapIcon} iconClassName="text-amber-400" title="Projeto acadêmico">
         <p>
           Trabalho de Conclusão de Curso em Engenharia de Software da Universidade Federal do Ceará (UFC –
           Campus Quixadá).
@@ -78,7 +78,7 @@ export function About() {
         </p>
       </InfoSection>
 
-      <InfoSection icon={AlertTriangle} iconClassName="text-amber-300" title="Aviso importante">
+      <InfoSection icon={WarningIcon} iconClassName="text-amber-300" title="Aviso importante">
         <p>
           O conteúdo do Renvest tem finalidade exclusivamente educacional e não constitui recomendação de
           investimento. Antes de investir, avalie seu perfil e consulte as fontes oficiais.

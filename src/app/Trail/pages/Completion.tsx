@@ -1,6 +1,6 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { BookOpenCheck, Layers, MessageSquare } from "lucide-react";
+import { BookOpenTextIcon, StackIcon, ChatsCircleIcon } from "@phosphor-icons/react";
 import { StarBurst } from "@/components/ui/starsUI";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { MascotHello } from "@/assets/icons";
@@ -56,12 +56,12 @@ export function Completion() {
           className="w-full lg:max-w-xl grid grid-cols-2 gap-2.5 lg:gap-4"
         >
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
-            <Layers className="w-5 h-5 text-sky-400 mb-1" />
+            <StackIcon className="w-5 h-5 text-sky-400 mb-1" />
             <span className="type-stat">{trail.progress.completed_modules}</span>
             <span className="type-stat-label text-neutral-400">módulos concluídos</span>
           </div>
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
-            <BookOpenCheck className="w-5 h-5 text-emerald-400 mb-1" />
+            <BookOpenTextIcon className="w-5 h-5 text-emerald-400 mb-1" />
             <span className="type-stat">{trail.progress.completed_lessons}</span>
             <span className="type-stat-label text-neutral-400">lições concluídas</span>
           </div>
@@ -75,7 +75,7 @@ export function Completion() {
             onClick={() => navigate("/chat")}
             className="w-full lg:w-auto lg:px-8 py-3.5 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 cursor-pointer flex items-center justify-center gap-2"
           >
-            <MessageSquare className="w-4 h-4" />
+            <ChatsCircleIcon className="w-4 h-4" />
             Continuar conversando com o Rev
           </button>
           <button

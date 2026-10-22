@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Flame, Lock } from "lucide-react";
+import { FireIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
@@ -17,10 +17,11 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
       <PanelCard title="Ofensiva">
         <div className="flex items-center gap-4">
           <StreakFlame lit={lit}>
-            <Flame
+            <FireIcon
+              weight={lit ? "fill" : undefined}
               className={cn(
                 "w-12 h-12 shrink-0",
-                lit ? "text-amber-400 fill-amber-400/40 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]" : "text-neutral-500"
+                lit ? "text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]" : "text-neutral-500"
               )}
             />
           </StreakFlame>
@@ -49,7 +50,7 @@ export function TrailSidePanel({ trail }: { trail: TrailData }) {
                   <span className={cn("type-caption font-bold truncate", isLocked ? "text-neutral-500" : "text-white")}>
                     {module.order}. {module.title}
                   </span>
-                  {isLocked && <Lock className="w-3.5 h-3.5 text-neutral-500 shrink-0" />}
+                  {isLocked && <LockSimpleIcon className="w-3.5 h-3.5 text-neutral-500 shrink-0" />}
                 </div>
                 <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
                   <div

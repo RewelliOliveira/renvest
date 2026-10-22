@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Check, Lock, Trophy, Star } from "lucide-react";
+import { CheckIcon, LockSimpleIcon, TrophyIcon, StarIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { NodePopover } from "./NodePopover";
 import type { TrailNodeItem } from "../types/types";
@@ -86,13 +86,13 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
           className="flex"
         >
           {isExam ? (
-            <Trophy className={cn("w-8 h-8 lg:w-10 lg:h-10", isLocked ? "text-neutral-500" : "text-white fill-white/30")} />
+            <TrophyIcon weight={isLocked ? undefined : "fill"} className={cn("w-8 h-8 lg:w-10 lg:h-10", isLocked ? "text-neutral-500" : "text-white")} />
           ) : isCompleted ? (
-            <Check className="w-8 h-8 lg:w-10 lg:h-10 stroke-4" />
+            <CheckIcon className="w-8 h-8 lg:w-10 lg:h-10" />
           ) : isLocked ? (
-            <Lock className="w-7 h-7 lg:w-9 lg:h-9" />
+            <LockSimpleIcon className="w-7 h-7 lg:w-9 lg:h-9" />
           ) : (
-            <Star className="w-8 h-8 lg:w-10 lg:h-10 fill-white" />
+            <StarIcon weight="fill" className="w-8 h-8 lg:w-10 lg:h-10" />
           )}
         </motion.span>
       </button>

@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Lock } from "lucide-react";
+import { LockSimpleIcon } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "cn";
 import type { TrailNodeItem } from "../types/types";
@@ -79,7 +79,7 @@ export function NodePopover({ node, offsetX }: NodePopoverProps) {
           )}
           style={isLocked ? undefined : { color: node.module.color }}
         >
-          {isLocked && <Lock className="w-4 h-4" />}
+          {isLocked && <LockSimpleIcon className="w-4 h-4" />}
           {isLocked ? "Bloqueado" : actionLabel}
         </button>
       </div>

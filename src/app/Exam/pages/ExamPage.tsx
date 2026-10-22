@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import {
-  AlertCircle,
-  BarChart2,
-  CheckCircle2,
-  RotateCcw,
-  Trophy,
-  XCircle,
-} from "lucide-react";
+import { WarningCircleIcon, ChartBarIcon, CheckCircleIcon, ArrowCounterClockwiseIcon, TrophyIcon, XCircleIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
 import { MascotLoader } from "@/components/ui/MascotLoader";
@@ -57,9 +50,9 @@ function ExamResultView({
           )}
         >
           {result.passed ? (
-            <Trophy className="w-10 h-10 text-yellow-300 fill-yellow-400/30 mx-auto mb-2" />
+            <TrophyIcon weight="fill" className="w-10 h-10 text-yellow-300 mx-auto mb-2" />
           ) : (
-            <RotateCcw className="w-10 h-10 text-red-light mx-auto mb-2" />
+            <ArrowCounterClockwiseIcon className="w-10 h-10 text-red-light mx-auto mb-2" />
           )}
           <p className="type-display tabular-nums text-white">
             {result.correct_count}/{result.total}
@@ -126,9 +119,9 @@ function ExamResultView({
           >
             <div className="flex items-start gap-2">
               {item.is_correct ? (
-                <CheckCircle2 className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" />
+                <CheckCircleIcon className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" />
               ) : (
-                <XCircle className="w-4 h-4 mt-0.5 text-red shrink-0" />
+                <XCircleIcon className="w-4 h-4 mt-0.5 text-red shrink-0" />
               )}
               <p className="type-h4 text-white">
                 {index + 1}. {item.question}
@@ -254,7 +247,7 @@ function ExamScreen({
   if (error) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
-        <AlertCircle className="w-8 h-8 text-red-400" />
+        <WarningCircleIcon className="w-8 h-8 text-red-400" />
         <p className="type-body text-neutral-200">{error}</p>
         <button
           type="button"
@@ -329,7 +322,7 @@ function ExamScreen({
                 shortcut={optionIndex + 1}
                 onClick={() => selectOption(option.id)}
                 icon={
-                  <BarChart2
+                  <ChartBarIcon
                     className={
                       selected === option.id
                         ? "w-5 h-5 text-option-selected-text"

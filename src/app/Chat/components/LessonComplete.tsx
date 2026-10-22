@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Flame, Target } from "lucide-react";
+import { FireIcon, TargetIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
 import type { MascotVariant } from "@/assets/mascotPalettes";
@@ -65,7 +65,7 @@ export function LessonComplete({
           className="w-full lg:max-w-lg grid grid-cols-2 gap-2.5 lg:gap-4"
         >
           <div className="rounded-xl bg-white/5 border border-white/10 p-3 lg:p-5 flex flex-col items-center">
-            <Target className="w-6 h-6 text-sky-400 mb-1" />
+            <TargetIcon className="w-6 h-6 text-sky-400 mb-1" />
             <span className="type-stat text-white">
               {firstTryCorrect}/{total}
             </span>
@@ -81,11 +81,12 @@ export function LessonComplete({
             )}
           >
             <StreakFlame lit={streak.active_today}>
-              <Flame
+              <FireIcon
+                weight={streak.active_today ? "fill" : undefined}
                 className={cn(
                   "w-6 h-6 mb-1",
                   streak.active_today
-                    ? "text-amber-400 fill-amber-400/40 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                    ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
                     : "text-neutral-400"
                 )}
               />

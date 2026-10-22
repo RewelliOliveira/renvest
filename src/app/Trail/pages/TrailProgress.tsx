@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { AlertCircle, PartyPopper, RefreshCw } from "lucide-react";
+import { WarningCircleIcon, ConfettiIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { StarBurst } from "@/components/ui/starsUI";
 import { MascotLoader } from "@/components/ui/MascotLoader";
@@ -159,14 +159,14 @@ export function TrailProgress() {
 
             {error && !trail && (
               <div className="mt-16 mx-4 w-[calc(100%-2rem)] max-w-sm rounded-2xl bg-red-950/50 border border-red-500/30 p-4 text-center">
-                <AlertCircle className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                <WarningCircleIcon className="w-6 h-6 text-red-400 mx-auto mb-2" />
                 <p className="type-body text-red-100">{error}</p>
                 <button
                   type="button"
                   onClick={reload}
                   className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red text-white type-button-sm cursor-pointer hover:brightness-105"
                 >
-                  <RefreshCw className="w-4 h-4" />
+                  <ArrowClockwiseIcon className="w-4 h-4" />
                   Tentar de novo
                 </button>
               </div>
@@ -227,7 +227,7 @@ export function TrailProgress() {
 
             {trail?.completed && (
               <div className="w-[calc(100%-2rem)] max-w-md lg:max-w-2xl mx-4 mt-6 mb-32 lg:mb-12 rounded-2xl bg-linear-to-br from-amber-500/15 to-red/15 border border-amber-400/30 p-5 text-center shadow-xl">
-                <PartyPopper className="w-8 h-8 text-amber-300 mx-auto mb-2" />
+                <ConfettiIcon className="w-8 h-8 text-amber-300 mx-auto mb-2" />
                 <h3 className="type-h3">Trilha concluída!</h3>
                 <p className="type-caption text-neutral-300 mt-1">
                   Você completou os {trail.progress.total_modules} módulos do

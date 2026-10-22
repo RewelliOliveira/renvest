@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { ChevronUp, ChevronDown, Send } from "lucide-react";
+import { CaretUpIcon, CaretDownIcon, PaperPlaneRightIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { AutoGrowTextarea } from "@/components/ui/AutoGrowTextarea";
@@ -44,7 +44,7 @@ export function LearningChat({
         className="w-full flex items-center justify-between px-4 py-3 text-white/70 hover:text-white transition-colors cursor-pointer"
       >
         <span className="type-h4">Ficou com alguma dúvida?</span>
-        {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        {isOpen ? <CaretUpIcon className="w-4 h-4" /> : <CaretDownIcon className="w-4 h-4" />}
       </button>
 
       <AnimatePresence>
@@ -90,7 +90,7 @@ export function LearningChat({
                     : "text-white/30 cursor-not-allowed"
                 )}
               >
-                <Send className="w-4 h-4" />
+                <PaperPlaneRightIcon className="w-4 h-4" />
               </button>
             </form>
           </motion.div>

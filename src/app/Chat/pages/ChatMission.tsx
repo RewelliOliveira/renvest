@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AlertCircle } from "lucide-react";
+import { WarningCircleIcon } from "@phosphor-icons/react";
 import { MascotLoader } from "@/components/ui/MascotLoader";
 import { useAvatar } from "@/lib/avatar";
 import { useQuizKeyboard } from "@/lib/useQuizKeyboard";
@@ -75,7 +75,7 @@ function LessonScreen({ lessonId }: { lessonId: string }) {
   if (loadError) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
-        <AlertCircle className="w-8 h-8 text-red-400" />
+        <WarningCircleIcon className="w-8 h-8 text-red-400" />
         <p className="type-body text-neutral-200">{loadError}</p>
         <button
           type="button"

@@ -1,4 +1,4 @@
-import { CheckCircle2, Lock } from "lucide-react";
+import { CheckCircleIcon, LockSimpleIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import type { TrailModule } from "../types/types";
 
@@ -51,7 +51,7 @@ export function SectionBanner({ module, className }: SectionBannerProps) {
               isLocked ? "bg-white/5 text-neutral-500" : "bg-black/15 text-white"
             )}
           >
-            {isLocked ? <Lock className="w-5 h-5" /> : <CheckCircle2 className="w-6 h-6" />}
+            {isLocked ? <LockSimpleIcon className="w-5 h-5" /> : <CheckCircleIcon className="w-6 h-6" />}
           </div>
         )}
       </div>
