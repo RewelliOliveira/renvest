@@ -25,10 +25,15 @@ interface MascotLoaderProps {
 
 export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
   const [avatar] = useAvatar();
-  const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * TIPS.length));
+  const [tipIndex, setTipIndex] = useState(() =>
+    Math.floor(Math.random() * TIPS.length),
+  );
 
   useEffect(() => {
-    const timer = setInterval(() => setTipIndex((prev) => (prev + 1) % TIPS.length), TIP_INTERVAL_MS);
+    const timer = setInterval(
+      () => setTipIndex((prev) => (prev + 1) % TIPS.length),
+      TIP_INTERVAL_MS,
+    );
     return () => clearInterval(timer);
   }, []);
 
@@ -39,7 +44,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, delay: LOADER_DELAY_S }}
-      className="fixed inset-0 lg:left-[var(--side-nav-width,0px)] z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
+      className="fixed inset-0 lg:left-(--side-nav-width,0px) z-50 select-none bg-[#0b1220] text-white flex flex-col items-center justify-center px-8"
     >
       <div className="w-full max-w-sm flex flex-col items-center text-center">
         <div className="relative h-36 w-40 flex flex-col items-center justify-end">
@@ -57,7 +62,10 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
             style={{ transformOrigin: "50% 100%" }}
             className="h-28 flex items-end justify-center"
           >
-            <MascotHello variant={avatar} className="h-full w-auto object-contain" />
+            <MascotHello
+              variant={avatar}
+              className="h-full w-auto object-contain"
+            />
           </motion.div>
 
           <motion.span
@@ -67,7 +75,9 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
           />
         </div>
 
-        <p className="mt-8 font-heading text-sm font-extrabold uppercase tracking-widest text-neutral-500">{title}...</p>
+        <p className="mt-8 font-heading text-sm font-extrabold uppercase tracking-widest text-neutral-500">
+          {title}...
+        </p>
 
         <div className="mt-4 min-h-16 flex items-start justify-center">
           <AnimatePresence mode="wait">
