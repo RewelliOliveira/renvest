@@ -439,6 +439,112 @@
   }
 }
 
+.rev-thinking .rev-arm-l {
+  transform-box: view-box;
+  transform-origin: 60px 110px;
+  animation: revScratchLeft 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-arm-r {
+  transform-box: view-box;
+  transform-origin: 147px 107px;
+  animation: revScratchRight 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-q {
+  animation: revQuestion 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-q2 {
+  animation-delay: -1s;
+}
+
+.rev-thinking .rev-q3 {
+  animation-delay: -2s;
+}
+
+.rev-thinking .rev-look {
+  animation: revLook 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-eye {
+  animation: revThinkingBlink 3s ease-in-out infinite;
+}
+
+@keyframes revScratchLeft {
+  0%,
+  40%,
+  100% {
+    transform: rotate(0deg);
+  }
+  8%,
+  24% {
+    transform: rotate(3deg);
+  }
+  16%,
+  32% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes revScratchRight {
+  0%,
+  50%,
+  90%,
+  100% {
+    transform: rotate(0deg);
+  }
+  58%,
+  74% {
+    transform: rotate(-3deg);
+  }
+  66%,
+  82% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes revQuestion {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 0.55;
+  }
+}
+
+@keyframes revLook {
+  0%,
+  10%,
+  90%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  40% {
+    transform: translateX(-3px);
+  }
+  55%,
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes revThinkingBlink {
+  0%,
+  44%,
+  52%,
+  100% {
+    transform: scaleY(1);
+  }
+  48% {
+    transform: scaleY(0.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-mascot,
   .animate-bubble,
@@ -446,7 +552,8 @@
   .animate-pop,
   .animate-bounce,
   .rev-wave *,
-  .rev-loading * {
+  .rev-loading *,
+  .rev-thinking * {
     animation: none;
   }
 }
