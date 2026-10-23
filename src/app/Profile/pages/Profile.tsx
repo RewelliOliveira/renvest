@@ -19,7 +19,7 @@ import { StreakFlame } from "@/app/Trail/components/StreakFlame";
 import { ModuleProgressList } from "@/app/Trail/components/ModuleProgressList";
 import type { TrailData } from "@/app/Trail/types/types";
 import { MascotHello } from "@/assets/icons";
-import { MASCOT_PALETTES } from "@/assets/mascotPalettes";
+import { MASCOT_PALETTES, mascotStageStyle } from "@/assets/mascotPalettes";
 import { useAvatar } from "@/lib/avatar";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { AvatarPicker } from "../components/AvatarPicker";
@@ -49,7 +49,7 @@ export function Profile() {
       <main className="w-full max-w-md lg:max-w-5xl mx-auto px-4 lg:px-8 pt-4 lg:pt-10 pb-28 lg:pb-10 flex flex-col gap-7 lg:gap-8">
         <section
           className="relative rounded-3xl px-5 lg:px-10 pt-5 lg:pt-8 flex items-end gap-4 lg:gap-8 overflow-hidden transition-colors duration-300"
-          style={{ backgroundColor: palette.deep, boxShadow: `0 5px 0 ${palette.dark}` }}
+          style={mascotStageStyle(palette)}
         >
           <button
             type="button"
