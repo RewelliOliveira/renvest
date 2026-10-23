@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
-import { MASCOT_PALETTES, type MascotVariant } from "@/assets/mascotPalettes";
+import { MASCOT_PALETTES, mascotStageStyle, type MascotVariant } from "@/assets/mascotPalettes";
 
 const AVATAR_OPTIONS: Array<{ variant: MascotVariant; label: string }> = [
   { variant: "red", label: "Rubi" },
@@ -90,7 +90,7 @@ function AvatarSheet({ selected, onSave, onClose }: Omit<AvatarPickerProps, "ope
 
       <div
         className="relative rounded-2xl h-44 flex items-end justify-center overflow-hidden transition-colors duration-300"
-        style={{ backgroundColor: palette.deep, boxShadow: `0 4px 0 ${palette.dark}` }}
+        style={mascotStageStyle(palette, "50% 100%")}
       >
         <span className="absolute top-3 left-4 type-overline text-white/80">Rev {avatarLabel(draft)}</span>
         <motion.div

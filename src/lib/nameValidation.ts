@@ -7,6 +7,14 @@ const VOWELS = /[aeiouyøæœ]/;
 const CONSONANT_RUN = new RegExp(`[^aeiouyøæœ'-]{${MAX_CONSONANT_RUN + 1},}`);
 const REPEATED_CHAR = /(.)\1\1/;
 const REPEATED_CHUNK = /(.{2,})\1\1/;
+const DOUBLED_CHUNK = /(.{3,})\1/;
+const KEYBOARD_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+const KEYBOARD_SEQUENCE_LENGTH = 5;
+const KEYBOARD_SEQUENCES = KEYBOARD_ROWS.flatMap((row) =>
+  Array.from({ length: row.length - KEYBOARD_SEQUENCE_LENGTH + 1 }, (_, i) =>
+    row.slice(i, i + KEYBOARD_SEQUENCE_LENGTH),
+  ),
+);
 
 function stripAccents(value: string) {
   return value.normalize("NFD").replace(/\p{M}/gu, "");
@@ -17,11 +25,12 @@ function looksLikeGibberish(word: string) {
     (word.length > 2 && !VOWELS.test(word)) ||
     CONSONANT_RUN.test(word) ||
     REPEATED_CHAR.test(word) ||
-    REPEATED_CHUNK.test(word)
+    REPEATED_CHUNK.test(word) ||
+    DOUBLED_CHUNK.test(word) ||
+    KEYBOARD_SEQUENCES.some((sequence) => word.includes(sequence))
   );
 }
 
-/** Retorna a mensagem de erro do nome, ou null se ele parecer um nome real. */
 export function validateName(rawName: string): string | null {
   const name = rawName.trim().replace(/\s+/g, " ");
 

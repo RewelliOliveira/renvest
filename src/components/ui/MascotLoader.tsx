@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
@@ -19,9 +20,13 @@ const LOADER_DELAY_S = 0.3;
 
 interface MascotLoaderProps {
   title?: string;
+  portal?: boolean;
 }
 
-export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
+export function MascotLoader({
+  title = "Carregando",
+  portal = false,
+}: MascotLoaderProps) {
   const [avatar] = useAvatar();
   const [tipIndex, setTipIndex] = useState(() =>
     Math.floor(Math.random() * TIPS.length),
@@ -35,7 +40,7 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
     return () => clearInterval(timer);
   }, []);
 
-  return (
+  const loader = (
     <motion.div
       role="status"
       aria-live="polite"
@@ -74,4 +79,6 @@ export function MascotLoader({ title = "Carregando" }: MascotLoaderProps) {
       </div>
     </motion.div>
   );
+
+  return portal ? createPortal(loader, document.body) : loader;
 }

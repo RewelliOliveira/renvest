@@ -83,7 +83,7 @@ export function Login() {
         )}
       </form>
 
-      {isSubmitting && <MascotLoader title="Entrando" />}
+      {isSubmitting && <MascotLoader title="Entrando" portal />}
     </AuthLayout>
   );
 }
