@@ -1,4 +1,5 @@
-import { BarChart2, CheckCircle2, XCircle } from "lucide-react";
+import { ChartBarIcon, XCircleIcon } from "@phosphor-icons/react";
+import { AnimatedCheck } from "@/components/ui/AnimatedCheck";
 import { OptionButton } from "@/components/ui/OptionButton";
 import type { QuizOption } from "../types/types";
 
@@ -32,11 +33,11 @@ export function QuizOptionsList({
             onClick={() => onSelect(option.id)}
             icon={
               showSuccess ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <AnimatedCheck className="w-5 h-5" />
               ) : showError ? (
-                <XCircle className="w-5 h-5 text-red" />
+                <XCircleIcon className="w-5 h-5 text-red" />
               ) : (
-                <BarChart2
+                <ChartBarIcon
                   className={
                     isSelected
                       ? "w-5 h-5 text-option-selected-text"

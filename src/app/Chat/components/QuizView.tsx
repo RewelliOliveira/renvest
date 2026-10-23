@@ -40,7 +40,7 @@ export function QuizView({
             <motion.div
               initial={{ opacity: 0, scale: 0.88 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center"
+              className="rev-wave w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center"
             >
               <MascotComponent variant={mascotVariant} className="h-full w-auto object-contain drop-shadow-[0_8px_20px_rgba(240,86,86,0.25)]" />
             </motion.div>
@@ -57,11 +57,11 @@ export function QuizView({
 
           <div className="w-full pt-1">
             {isRetry && (
-              <span className="inline-block mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+              <span className="inline-block mb-1.5 type-overline text-amber-400">
                 Erro anterior
               </span>
             )}
-            <h2 className="text-white text-base sm:text-lg lg:text-2xl font-bold leading-snug">
+            <h2 className="text-white type-question">
               {currentQuestion.question}
             </h2>
           </div>

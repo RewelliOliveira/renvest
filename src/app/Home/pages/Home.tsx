@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
+import { CaretLeftIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello, MascotPoint, MascotPlan } from "@/assets/icons";
@@ -73,7 +73,7 @@ export function Home() {
               currentStep === 1 ? "opacity-0 pointer-events-none" : "opacity-100"
             )}
           >
-            <ChevronLeft className="w-6 h-6" />
+            <CaretLeftIcon className="w-6 h-6" />
           </button>
           <Progress
             value={(currentStep / steps.length) * 100}
@@ -98,7 +98,9 @@ export function Home() {
               <div className="mt-4 sm:mt-6 lg:mt-0 flex items-center justify-center h-48 sm:h-56 lg:h-80 w-full lg:w-auto lg:shrink-0">
                 <motion.div
                   animate={
-                    currentStep === 1
+                    MascotComponent === MascotHello
+                      ? { y: 0, rotate: 0, scale: 1 }
+                      : currentStep === 1
                       ? { y: [0, -6, 0] }
                       : currentStep === 2
                       ? { y: [0, -7, 0], rotate: [0, -1.2, 1, 0] }
@@ -109,7 +111,7 @@ export function Home() {
                     duration: currentStep === 1 ? 2.4 : currentStep === 2 ? 2.8 : 3.2,
                     ease: "easeInOut",
                   }}
-                  className="h-full flex items-center justify-center"
+                  className="rev-wave h-full flex items-center justify-center"
                 >
                   <MascotComponent className="h-full w-auto max-w-55 lg:max-w-80 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
                 </motion.div>
@@ -123,7 +125,7 @@ export function Home() {
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={handleNext}
-            className="w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60 cursor-pointer"
+            className="w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark press-3d transition-all shadow-lg hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60 cursor-pointer"
           >
             Continuar
           </motion.button>

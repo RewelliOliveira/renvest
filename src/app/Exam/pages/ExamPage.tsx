@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import {
-  AlertCircle,
-  BarChart2,
-  CheckCircle2,
-  RotateCcw,
-  Trophy,
-  XCircle,
-} from "lucide-react";
+import { WarningCircleIcon, ChartBarIcon, CheckCircleIcon, ArrowCounterClockwiseIcon, TrophyIcon, XCircleIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { MascotHello, MascotPlan } from "@/assets/icons";
 import { MascotLoader } from "@/components/ui/MascotLoader";
@@ -25,9 +18,9 @@ import { setTrailData } from "@/app/Trail/hooks/useTrail";
 import type { ExamResult, ExamStart } from "@/app/Trail/types/types";
 
 const primaryButton =
-  "w-full py-3.5 sm:py-4 rounded-xl font-bold text-white text-base bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 transition-all shadow-lg hover:brightness-105 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+  "w-full py-3.5 sm:py-4 rounded-xl type-button text-white bg-red border-b-4 border-red-dark press-3d transition-all shadow-lg hover:brightness-105 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 const secondaryButton =
-  "w-full py-3 rounded-xl font-bold text-white/85 text-sm border border-white/15 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer flex items-center justify-center gap-2";
+  "w-full py-3 rounded-xl type-button-sm text-white/85 border border-white/15 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer flex items-center justify-center gap-2";
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -57,17 +50,17 @@ function ExamResultView({
           )}
         >
           {result.passed ? (
-            <Trophy className="w-10 h-10 text-yellow-300 fill-yellow-400/30 mx-auto mb-2" />
+            <TrophyIcon weight="fill" className="w-10 h-10 text-yellow-300 mx-auto mb-2" />
           ) : (
-            <RotateCcw className="w-10 h-10 text-red-light mx-auto mb-2" />
+            <ArrowCounterClockwiseIcon className="w-10 h-10 text-red-light mx-auto mb-2" />
           )}
-          <p className="text-3xl font-extrabold text-white">
+          <p className="type-display tabular-nums text-white">
             {result.correct_count}/{result.total}
           </p>
-          <h2 className="text-base font-bold text-white mt-1">
+          <h2 className="type-h3 text-white mt-1">
             {result.passed ? "Você foi aprovado!" : "Quase lá!"}
           </h2>
-          <p className="text-xs text-neutral-300 mt-1">
+          <p className="type-caption text-neutral-300 mt-1">
             {result.passed
               ? finishedTrail
                 ? "Você concluiu o último módulo da trilha."
@@ -116,7 +109,7 @@ function ExamResultView({
       </div>
 
       <div className="order-2 lg:order-0 flex flex-col gap-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-white/50">
+        <h3 className="type-overline text-white/50">
           Revisão das questões
         </h3>
         {result.results.map((item, index) => (
@@ -126,11 +119,11 @@ function ExamResultView({
           >
             <div className="flex items-start gap-2">
               {item.is_correct ? (
-                <CheckCircle2 className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" />
+                <CheckCircleIcon className="w-4 h-4 mt-0.5 text-emerald-400 shrink-0" />
               ) : (
-                <XCircle className="w-4 h-4 mt-0.5 text-red shrink-0" />
+                <XCircleIcon className="w-4 h-4 mt-0.5 text-red shrink-0" />
               )}
-              <p className="text-sm font-semibold text-white leading-snug">
+              <p className="type-h4 text-white">
                 {index + 1}. {item.question}
               </p>
             </div>
@@ -142,7 +135,7 @@ function ExamResultView({
                   <li
                     key={option.id}
                     className={cn(
-                      "text-xs leading-snug",
+                      "type-caption",
                       isCorrect
                         ? "text-emerald-300 font-semibold"
                         : isChosen
@@ -156,7 +149,7 @@ function ExamResultView({
                 );
               })}
             </ul>
-            <p className="text-xs text-neutral-300 leading-relaxed pl-6">
+            <p className="type-body-sm text-neutral-300 pl-6">
               {item.explanation}
             </p>
           </div>
@@ -254,8 +247,8 @@ function ExamScreen({
   if (error) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 px-4">
-        <AlertCircle className="w-8 h-8 text-red-400" />
-        <p className="text-sm text-neutral-200">{error}</p>
+        <WarningCircleIcon className="w-8 h-8 text-red-400" />
+        <p className="type-body text-neutral-200">{error}</p>
         <button
           type="button"
           className={cn(primaryButton, "max-w-xs")}
@@ -298,7 +291,7 @@ function ExamScreen({
           className="w-full flex flex-col gap-4 my-auto lg:max-w-3xl lg:mx-auto lg:gap-6"
         >
           <div className="w-full flex items-center gap-3">
-            <div className="w-20 h-20 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center">
+            <div className="rev-wave w-20 h-20 lg:w-32 lg:h-32 shrink-0 flex items-center justify-center">
               {index % 2 === 0 ? (
                 <MascotPlan className="h-full w-auto object-contain" />
               ) : (
@@ -317,7 +310,7 @@ function ExamScreen({
             </div>
           </div>
 
-          <h2 className="text-white text-base sm:text-lg lg:text-2xl font-bold leading-snug">
+          <h2 className="text-white type-question">
             {question.question}
           </h2>
 
@@ -329,7 +322,7 @@ function ExamScreen({
                 shortcut={optionIndex + 1}
                 onClick={() => selectOption(option.id)}
                 icon={
-                  <BarChart2
+                  <ChartBarIcon
                     className={
                       selected === option.id
                         ? "w-5 h-5 text-option-selected-text"
@@ -349,7 +342,7 @@ function ExamScreen({
         aside={
           submitError && (
             <p
-              className="text-xs text-red-300 text-center lg:text-left"
+              className="type-caption text-red-300 text-center lg:text-left"
               role="alert"
             >
               {submitError}

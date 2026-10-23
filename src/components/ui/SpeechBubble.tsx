@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "cn";
+import { TypewriterText } from "./TypewriterText";
 
 export interface SpeechBubbleProps {
   children: ReactNode;
@@ -34,14 +35,16 @@ export function SpeechBubble({
   className,
   direction = "bottom",
 }: SpeechBubbleProps) {
+  const content = typeof children === "string" ? <TypewriterText text={children} /> : children;
+
   if (direction === "left") {
     return (
       <div className={cn("relative flex items-center w-full", className)}>
         <LeftTail />
 
         <div className="flex-1 rounded-2xl bg-[#040a14] border-2 border-neutral-600/90 px-4 py-3 sm:px-5 sm:py-3.5 lg:px-6 lg:py-4 shadow-2xl">
-          <p className="text-white text-sm sm:text-base lg:text-lg leading-snug font-normal text-left">
-            {children}
+          <p className="text-white type-body-lg lg:text-lg text-left">
+            {content}
           </p>
         </div>
       </div>
@@ -66,11 +69,11 @@ export function SpeechBubble({
       >
         <p
           className={cn(
-            "text-white text-sm sm:text-base leading-snug sm:leading-relaxed font-normal text-left",
+            "text-white type-body-lg text-left",
             isAuto && "lg:text-lg"
           )}
         >
-          {children}
+          {content}
         </p>
       </div>
 

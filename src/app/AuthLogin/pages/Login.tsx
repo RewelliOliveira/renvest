@@ -1,4 +1,6 @@
-import { EmailIcon, MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { EnvelopeSimpleIcon } from "@phosphor-icons/react";
+import { MascotIcon, LogomarcaIcon } from "@/assets/icons";
+import { MascotLoader } from "@/components/ui/MascotLoader";
 import { isGoogleAuthEnabled } from "@/lib/googleAuth";
 import { AuthInput, AuthButton, AuthDivider, AuthLayout } from "../components";
 import { useLoginForm } from "../hooks/useLoginForm";
@@ -24,7 +26,7 @@ export function Login() {
         <div className="flex flex-col items-center mb-5">
           <MascotIcon className="w-36 sm:w-40 h-auto drop-shadow-[0_8px_32px_rgba(240,86,86,0.2)]" />
           <div className="flex items-center justify-center gap-2 mt-2">
-            <span className="text-2xl font-bold tracking-tight text-white">
+            <span className="type-h1 text-white">
               Entre na
             </span>
             <LogomarcaIcon className="h-6 w-auto object-contain" />
@@ -37,7 +39,7 @@ export function Login() {
         className="flex flex-col w-full gap-3.5 pb-2"
       >
         {error && (
-          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light text-xs font-medium">
+          <div role="alert" className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-light type-caption">
             {error}
           </div>
         )}
@@ -50,7 +52,7 @@ export function Login() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          icon={<EmailIcon className="w-4.5 h-4.5" />}
+          icon={<EnvelopeSimpleIcon className="w-4.5 h-4.5 text-[#787878]" />}
         />
 
         <AuthInput
@@ -64,7 +66,7 @@ export function Login() {
         />
 
         <AuthButton type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Entrando..." : "Entrar"}
+          Entrar
         </AuthButton>
 
         {isGoogleAuthEnabled && (
@@ -80,6 +82,8 @@ export function Login() {
           </>
         )}
       </form>
+
+      {isSubmitting && <MascotLoader title="Entrando" />}
     </AuthLayout>
   );
 }

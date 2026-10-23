@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, type LucideIcon } from "lucide-react";
+import { CaretLeftIcon, type Icon } from "@phosphor-icons/react";
 
 interface ProfileSubpageProps {
   title: string;
@@ -20,9 +20,9 @@ export function ProfileSubpage({ title, children }: ProfileSubpageProps) {
             aria-label="Voltar ao perfil"
             className="absolute left-0 p-1 -ml-1 rounded-lg text-white/70 hover:text-white hover:bg-white/5 cursor-pointer"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <CaretLeftIcon className="w-6 h-6" />
           </button>
-          <h1 className="text-base sm:text-lg font-bold tracking-tight">{title}</h1>
+          <h1 className="type-h3">{title}</h1>
         </div>
       </header>
 
@@ -34,7 +34,7 @@ export function ProfileSubpage({ title, children }: ProfileSubpageProps) {
 }
 
 interface InfoSectionProps {
-  icon: LucideIcon;
+  icon: Icon;
   iconClassName: string;
   title: string;
   children: ReactNode;
@@ -45,9 +45,9 @@ export function InfoSection({ icon: Icon, iconClassName, title, children }: Info
     <section className="rounded-2xl bg-[#071329]/80 border border-white/10 p-4 shadow-lg">
       <div className="flex items-center gap-2.5 mb-2">
         <Icon className={`w-5 h-5 shrink-0 ${iconClassName}`} />
-        <h2 className="text-sm font-bold text-white">{title}</h2>
+        <h2 className="type-h4 text-white">{title}</h2>
       </div>
-      <div className="text-xs sm:text-sm text-neutral-300 leading-relaxed space-y-2">{children}</div>
+      <div className="type-body-sm text-neutral-300 space-y-2">{children}</div>
     </section>
   );
 }

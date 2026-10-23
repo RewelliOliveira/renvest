@@ -1,4 +1,4 @@
-import { Flame } from "lucide-react";
+import { FireIcon } from "@phosphor-icons/react";
 import { LogomarcaIcon } from "@/assets/icons";
 import { cn } from "cn";
 import { StreakFlame } from "./StreakFlame";
@@ -18,7 +18,7 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
         <LogomarcaIcon className="lg:hidden h-6 sm:h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(240,86,86,0.3)]" />
 
         {trail && (
-          <div className="flex items-center gap-5 text-base font-extrabold">
+          <div className="flex items-center gap-5 font-heading text-base font-extrabold tabular-nums">
             <span
               className={cn("flex items-center gap-1.5", lit ? "text-amber-400" : "text-neutral-500")}
               title={
@@ -29,10 +29,11 @@ export function TrailHeader({ trail }: TrailHeaderProps) {
               aria-label={`Ofensiva: ${days} ${days === 1 ? "dia" : "dias"}`}
             >
               <StreakFlame lit={lit}>
-                <Flame
+                <FireIcon
+                  weight={lit ? "fill" : undefined}
                   className={cn(
                     "w-6 h-6",
-                    lit && "fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+                    lit && "drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
                   )}
                 />
               </StreakFlame>

@@ -28,7 +28,7 @@ export function AuthLayout({
         <header className="lg:hidden shrink-0 flex justify-end items-center px-6 pt-4 pb-1 z-20">
           <Link
             to={targetRoute}
-            className="relative px-1 py-0.5 text-sm font-bold text-white/90 hover:text-white transition-all cursor-pointer"
+            className="relative px-1 py-0.5 type-button-sm text-white/90 hover:text-white transition-all cursor-pointer"
           >
             {navLabel}
             <span className="absolute -bottom-0.5 left-0 w-full h-0.5 rounded-full bg-linear-to-r from-transparent via-red-light/80 to-transparent shadow-[0_1px_8px_rgba(254,120,113,0.65)]" />
@@ -42,7 +42,7 @@ export function AuthLayout({
                 <MascotIcon className="w-44 xl:w-52 h-auto drop-shadow-[0_12px_40px_rgba(240,86,86,0.25)]" />
                 <LogomarcaIcon className="h-8 xl:h-9 w-auto object-contain" />
               </div>
-              <div className="text-xs text-neutral-500 text-center">
+              <div className="type-caption text-neutral-500 text-center">
                 Projeto de Graduação (TCC) • Democratizando a educação financeira no Brasil
               </div>
             </section>
@@ -50,12 +50,12 @@ export function AuthLayout({
             <section className="col-span-1 lg:col-span-6 w-full flex flex-col justify-center">
               <div className="w-full bg-transparent lg:bg-white/3 lg:border lg:border-white/10 lg:backdrop-blur-md lg:rounded-2xl lg:p-8 lg:shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                 <div className="hidden lg:flex items-center justify-between pb-5 mb-5 border-b border-white/10">
-                  <h2 className="text-xl font-bold text-white tracking-tight">
+                  <h2 className="type-h2 text-white">
                     {title}
                   </h2>
                   <Link
                     to={targetRoute}
-                    className="group relative px-1 py-0.5 text-xs sm:text-sm font-semibold text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                    className="group relative px-1 py-0.5 font-heading text-xs sm:text-sm font-bold text-neutral-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {mode === "login" ? "Cadastre-se" : "Entrar"}
                     <span className="absolute -bottom-0.5 left-0 w-full h-0.5 rounded-full bg-linear-to-r from-transparent via-red-light/80 to-transparent shadow-[0_1px_8px_rgba(254,120,113,0.65)] opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { motion } from "motion/react";
 import { cn } from "cn";
 import { LogomarcaIcon, MascotHello } from "@/assets/icons";
 import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
@@ -26,23 +27,29 @@ export function SideNav() {
               to={tab.path}
               className={({ isActive }) =>
                 cn(
-                  "group flex items-center gap-4 px-4 py-3 rounded-xl border-2 text-sm font-extrabold uppercase tracking-wider transition-colors cursor-pointer",
+                  "group relative flex items-center gap-4 px-4 py-3 rounded-xl border-2 border-transparent type-button-sm uppercase transition-colors cursor-pointer",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60",
-                  isActive
-                    ? "bg-red/10 border-red/50 text-red-light"
-                    : "border-transparent text-white/60 hover:bg-white/5 hover:text-white"
+                  isActive ? "text-red-light" : "text-white/60 hover:bg-white/5 hover:text-white"
                 )
               }
             >
               {({ isActive }) => (
                 <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="side-nav-active"
+                      className="absolute -inset-0.5 rounded-xl border-2 border-red/50 bg-red/10"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    />
+                  )}
                   <Icon
+                    weight={isActive ? "fill" : "bold"}
                     className={cn(
-                      "w-6 h-6 shrink-0 transition-transform group-hover:scale-110",
+                      "relative w-6 h-6 shrink-0 transition-transform group-hover:scale-110",
                       isActive && "text-red drop-shadow-[0_2px_8px_rgba(240,86,86,0.6)]"
                     )}
                   />
-                  {tab.label}
+                  <span className="relative">{tab.label}</span>
                 </>
               )}
             </NavLink>
@@ -58,8 +65,8 @@ export function SideNav() {
           <MascotHello variant={avatar} className="h-full w-auto object-contain" />
         </span>
         <span className="min-w-0">
-          <span className="block text-sm font-bold text-white truncate">{displayName}</span>
-          <span className="block text-[11px] text-neutral-400">Ver perfil</span>
+          <span className="block type-h4 text-white truncate">{displayName}</span>
+          <span className="block type-micro text-neutral-400">Ver perfil</span>
         </span>
       </NavLink>
     </aside>

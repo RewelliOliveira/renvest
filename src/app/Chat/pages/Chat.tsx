@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { FormEvent } from "react";
-import { Send, Bot, ExternalLink, ShieldCheck, AlertCircle, RefreshCw } from "lucide-react";
+import { PaperPlaneRightIcon, WarningCircleIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "cn";
 import { MascotHello } from "@/assets/icons";
@@ -11,29 +11,45 @@ import { useAuth } from "@/app/AuthLogin/hooks/useAuth";
 import { useTrail } from "@/app/Trail/hooks/useTrail";
 import { sendChatMessage, getChatSuggestions } from "../services/chatApi";
 import { ChatSidePanel } from "../components/ChatSidePanel";
+import { ChatMessageRow } from "../components/ChatMessageRow";
+import { ChatThinking } from "../components/ChatThinking";
+import { ChatWelcome } from "../components/ChatWelcome";
+import { messageSources } from "../utils/messageSources";
 import type { ChatMessage, ChatHistoryItem, ChatSource } from "../types/types";
 
 const MAX_INPUT_LENGTH = 500;
+const TIME_GAP_MINUTES = 15;
+
+function currentTime() {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function minutesOf(time: string): number | null {
+  const match = time.match(/(\d{1,2}):(\d{2})/);
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+
+// Um separador de horário aparece no início e após intervalos longos
+function startsTimeBlock(messages: ChatMessage[], index: number) {
+  if (index === 0) return true;
+  const prev = minutesOf(messages[index - 1].time);
+  const curr = minutesOf(messages[index].time);
+  if (prev === null || curr === null) return false;
+  return curr - prev >= TIME_GAP_MINUTES || curr < prev;
+}
 
 export function Chat() {
   const { user } = useAuth();
   const [avatar] = useAvatar();
   const userName = user?.name ? user.name.split(" ")[0] : "";
 
-  const [messages, setMessages] = useState<ChatMessage[]>(() => loadChatHistory(user?.id) ?? [
-    {
-      id: "welcome-1",
-      sender: "bot",
-      text: `Olá${userName ? `, ${userName}` : ""}! Eu sou o Rev, seu tutor de inteligência financeira da Renvest.`,
-      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    },
-    {
-      id: "welcome-2",
-      sender: "bot",
-      text: "Estou aqui para tirar dúvidas sobre investimentos, FGC, reserva de emergência e finanças pessoais. O que deseja aprender agora?",
-      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    },
-  ]);
+  // Boas-vindas antigas salvas no histórico dão lugar à tela inicial
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    () => loadChatHistory(user?.id)?.filter((m) => !m.id.startsWith("welcome-")) ?? []
+  );
+
+  // Mensagens restauradas do histórico não repetem o efeito de digitação
+  const [initialMessageIds] = useState(() => new Set(messages.map((m) => m.id)));
 
   const { trail } = useTrail();
   const chatModule = trail ? trail.current_module_id : undefined;
@@ -87,12 +103,11 @@ export function Chat() {
     setErrorMessage(null);
     setLastFailedMessage(null);
 
-    const currentTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     const userMsg: ChatMessage = {
       id: String(Date.now()),
       sender: "user",
       text,
-      time: currentTime,
+      time: currentTime(),
     };
 
     // Monta o histórico das últimas mensagens para enviar ao backend RAG
@@ -116,8 +131,8 @@ export function Chat() {
         id: String(Date.now() + 1),
         sender: "bot",
         text: response.reply,
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        source: response.source,
+        time: currentTime(),
+        sources: response.sources ?? (response.source ? [response.source] : []),
       };
 
       setMessages((prev) => [...prev, botMsg]);
@@ -136,9 +151,10 @@ export function Chat() {
   };
 
   const sources = messages.reduce<ChatSource[]>((acc, msg) => {
-    const source = msg.source;
-    if (source && !acc.some((item) => item.document === source.document && item.section === source.section)) {
-      acc.push(source);
+    for (const source of messageSources(msg)) {
+      if (!acc.some((item) => item.document === source.document && item.section === source.section)) {
+        acc.push(source);
+      }
     }
     return acc;
   }, []);
@@ -154,6 +170,8 @@ export function Chat() {
     }
   };
 
+  const isEmpty = messages.length === 0;
+
   return (
     <div className="h-dvh max-h-dvh w-full overflow-hidden bg-linear-to-b from-[#000815] via-[#00050d] to-[#000000] text-white flex">
       <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -166,102 +184,52 @@ export function Chat() {
             </div>
 
             <div className="flex-1 min-w-0">
-              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+              <h1 className="type-h4 text-white truncate">
                 Rev • Tutor Renvest
               </h1>
-              <p className="text-[11px] text-emerald-400 font-semibold">Online</p>
+              <p className="type-micro text-emerald-400">{isTyping ? "Pensando…" : "Online"}</p>
             </div>
           </div>
         </header>
 
         {/* Messages Stream */}
         <main className="flex-1 w-full max-w-md lg:max-w-3xl mx-auto px-4 lg:px-6 py-3 overflow-y-auto no-scrollbar flex flex-col gap-3 min-h-0">
-          <div className="flex flex-col gap-3 my-auto pt-2">
-            {messages.map((msg) => {
-              const isBot = msg.sender === "bot";
+          <div className="flex flex-col gap-2 my-auto pt-2">
+            {isEmpty && (
+              <ChatWelcome
+                avatar={avatar}
+                userName={userName}
+                disabled={isTyping}
+                onSelectTopic={handleSendMessage}
+              />
+            )}
+
+            {messages.map((msg, index) => {
+              const next = messages[index + 1];
+              const isLastInGroup = !next || next.sender !== msg.sender || startsTimeBlock(messages, index + 1);
 
               return (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className={cn(
-                    "flex items-end gap-2 max-w-[88%] lg:max-w-[75%]",
-                    isBot ? "self-start" : "self-end flex-row-reverse"
-                  )}
-                >
-                  {isBot ? (
-                    <div className="w-7 h-7 rounded-full bg-red/20 border border-red/40 flex items-center justify-center shrink-0 mb-1">
-                      <Bot className="w-4 h-4 text-red-light" />
+                <div key={msg.id} className="contents">
+                  {startsTimeBlock(messages, index) && (
+                    <div className="flex items-center gap-3 py-1.5 type-micro font-semibold uppercase tracking-wider text-white/35">
+                      <span className="h-px flex-1 bg-white/10" />
+                      <span className="tabular-nums">Hoje · {msg.time}</span>
+                      <span className="h-px flex-1 bg-white/10" />
                     </div>
-                  ) : null}
-
-                  <div
-                    className={cn(
-                      "min-w-0 wrap-break-word rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm leading-relaxed shadow-md flex flex-col gap-1.5",
-                      isBot
-                        ? "bg-[#0b162a] border border-white/10 text-neutral-100 rounded-bl-xs"
-                        : "bg-red text-white font-medium border-b-2 border-red-dark rounded-br-xs"
-                    )}
-                  >
-                    <p className="whitespace-pre-line">{msg.text}</p>
-
-                    {/* Fonte oficial RAG quando disponível */}
-                    {isBot && msg.source && (
-                      <div className="mt-1 pt-1.5 border-t border-white/10 flex items-start justify-between gap-2 text-[10px] leading-snug text-sky-300">
-                        <div className="flex items-start gap-1 min-w-0">
-                          <ShieldCheck className="w-3 h-3 mt-px text-sky-400 shrink-0" />
-                          <span className="line-clamp-2">
-                            {msg.source.institution ? `${msg.source.institution} • ` : ""}
-                            {msg.source.document} ({msg.source.section})
-                          </span>
-                        </div>
-                        {msg.source.url && (
-                          <a
-                            href={msg.source.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline flex items-center gap-0.5 shrink-0 text-white/70 hover:text-white"
-                            title="Consultar documento oficial"
-                          >
-                            <span>Ver</span>
-                            <ExternalLink className="w-2.5 h-2.5" />
-                          </a>
-                        )}
-                      </div>
-                    )}
-
-                    <span
-                      className={cn(
-                        "text-[9px] block text-right font-mono",
-                        isBot ? "text-white/40" : "text-white/70"
-                      )}
-                    >
-                      {msg.time}
-                    </span>
-                  </div>
-                </motion.div>
+                  )}
+                  <ChatMessageRow
+                    message={msg}
+                    avatar={avatar}
+                    isLastInGroup={isLastInGroup}
+                    animate={!initialMessageIds.has(msg.id)}
+                  />
+                </div>
               );
             })}
 
-            {/* Typing Indicator */}
-            {isTyping && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 self-start"
-              >
-                <div className="w-7 h-7 rounded-full bg-red/20 border border-red/40 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-red-light" />
-                </div>
-                <div className="rounded-2xl bg-[#0b162a] border border-white/10 px-4 py-2.5 flex items-center gap-1 shadow-md">
-                  <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                  <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                  <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" />
-                </div>
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {isTyping && <ChatThinking avatar={avatar} />}
+            </AnimatePresence>
 
             {/* Error Banner with retry */}
             <AnimatePresence>
@@ -270,19 +238,19 @@ export function Chat() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 text-xs text-red-200 flex items-center justify-between gap-2"
+                  className="rounded-xl bg-red-950/60 border border-red-500/40 p-2.5 type-caption text-red-200 flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                    <WarningCircleIcon className="w-4 h-4 text-red-400 shrink-0" />
                     <span className="truncate">{errorMessage}</span>
                   </div>
                   {lastFailedMessage && (
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-800/60 hover:bg-red-700/80 text-white font-medium text-[11px] transition-colors shrink-0 cursor-pointer"
+                      className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-800/60 hover:bg-red-700/80 text-white type-micro transition-colors shrink-0 cursor-pointer"
                     >
-                      <RefreshCw className="w-3 h-3" />
+                      <ArrowClockwiseIcon className="w-3 h-3" />
                       <span>Tentar de novo</span>
                     </button>
                   )}
@@ -294,11 +262,8 @@ export function Chat() {
           </div>
 
           {/* Dynamic Contextual Suggestions */}
-          {suggestions.length > 0 && (
+          {!isEmpty && suggestions.length > 0 && (
             <div className="pt-2 xl:hidden">
-              <span className="text-[11px] font-semibold text-white/50 block mb-1.5">
-                Sugestões de perguntas:
-              </span>
               <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
                 {suggestions.map((item) => (
                   <button
@@ -306,7 +271,7 @@ export function Chat() {
                     type="button"
                     disabled={isTyping}
                     onClick={() => handleSendMessage(item)}
-                    className="whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+                    className="whitespace-nowrap px-3 py-1.5 rounded-full type-chip bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {item}
                   </button>
@@ -320,7 +285,7 @@ export function Chat() {
         <div className="w-full max-w-md lg:max-w-3xl mx-auto px-4 lg:px-6 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-5 pt-2 shrink-0">
           <form
             onSubmit={handleSubmit}
-            className="flex items-end gap-2 p-1.5 rounded-2xl bg-[#0b162a]/90 border border-white/10 shadow-lg"
+            className="flex items-end gap-2 p-1.5 rounded-2xl bg-[#040a14] border-2 border-neutral-600/90 shadow-lg focus-within:border-neutral-500 transition-colors"
           >
             <AutoGrowTextarea
               value={inputValue}
@@ -328,23 +293,23 @@ export function Chat() {
               onValueChange={setInputValue}
               onSubmit={() => handleSendMessage(inputValue)}
               placeholder="Pergunte ao Rev sobre investimentos..."
-              className="flex-1 min-w-0 bg-transparent px-3 py-2 text-xs sm:text-sm text-white placeholder:text-white/40 focus:outline-none"
+              className="flex-1 min-w-0 bg-transparent px-3 py-2 type-body-sm text-white placeholder:text-white/40 focus:outline-none"
             />
             <button
               type="submit"
               disabled={!inputValue.trim() || isTyping}
               aria-label="Enviar mensagem"
               className={cn(
-                "w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer shrink-0",
+                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors cursor-pointer shrink-0",
                 inputValue.trim() && !isTyping
-                  ? "bg-red text-white hover:brightness-110 shadow-md active:scale-95"
+                  ? "bg-red text-white border-b-[3px] border-red-dark hover:brightness-110 shadow-md"
                   : "bg-white/5 text-white/30 cursor-not-allowed"
               )}
             >
-              <Send className="w-4 h-4" />
+              <PaperPlaneRightIcon weight="fill" className="w-4 h-4" />
             </button>
           </form>
-          <p className="hidden lg:block mt-2 text-[11px] text-white/35 text-center">
+          <p className="hidden lg:block mt-2 type-micro text-white/35 text-center">
             Enter envia · Shift+Enter quebra linha
           </p>
         </div>

@@ -1,13 +1,13 @@
-import { Compass, MessageSquare, User, type LucideIcon } from "lucide-react";
+import { CompassIcon, ChatsCircleIcon, UserCircleIcon, type Icon } from "@phosphor-icons/react";
 
 export interface NavTab {
   label: string;
-  icon: LucideIcon;
+  icon: Icon;
   path: string;
 }
 
 export const NAV_TABS: NavTab[] = [
-  { label: "Trilha", icon: Compass, path: "/trail" },
-  { label: "Chat", icon: MessageSquare, path: "/chat" },
-  { label: "Perfil", icon: User, path: "/profile" },
+  { label: "Trilha", icon: CompassIcon, path: "/trail" },
+  { label: "Chat", icon: ChatsCircleIcon, path: "/chat" },
+  { label: "Perfil", icon: UserCircleIcon, path: "/profile" },
 ];

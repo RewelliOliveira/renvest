@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
+import { MascotPlan, MascotPoint } from "@/assets/icons";
 import { SpeechBubble } from "@/components/ui/SpeechBubble";
 import type { MascotVariant } from "@/assets/mascotPalettes";
 import type { LearningPhase, MascotComponentType } from "../types/types";
@@ -45,9 +46,9 @@ export function LearningView({
 
           <div className="mt-4 sm:mt-6 lg:mt-0 flex items-center justify-center h-44 sm:h-52 lg:h-80 w-full lg:w-auto lg:shrink-0">
             <motion.div
-              animate={{ y: [0, -6, 0] }}
+              animate={MascotComponent === MascotPoint || MascotComponent === MascotPlan ? { y: [0, -6, 0] } : { y: 0 }}
               transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
-              className="h-full flex items-center justify-center"
+              className="rev-wave h-full flex items-center justify-center"
             >
               <MascotComponent variant={mascotVariant} className="h-full w-auto max-w-48 sm:max-w-55 lg:max-w-80 object-contain drop-shadow-[0_12px_32px_rgba(240,86,86,0.22)]" />
             </motion.div>

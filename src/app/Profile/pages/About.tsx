@@ -1,4 +1,4 @@
-import { Target, Map, Library, GraduationCap, AlertTriangle } from "lucide-react";
+import { TargetIcon, MapTrifoldIcon, BooksIcon, GraduationCapIcon, WarningIcon } from "@phosphor-icons/react";
 import { LogomarcaIcon, MascotHello } from "@/assets/icons";
 import { useAvatar } from "@/lib/avatar";
 import { ProfileSubpage, InfoSection } from "../components/ProfileSubpage";
@@ -20,13 +20,13 @@ export function About() {
         <div className="absolute -top-8 -right-8 w-32 h-32 bg-red/10 rounded-full blur-2xl pointer-events-none" />
         <MascotHello variant={avatar} className="h-24 w-auto mb-3" />
         <LogomarcaIcon className="h-7 w-auto mb-2" />
-        <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+        <p className="type-body-sm text-neutral-300">
           Educação financeira gamificada para investidores iniciantes, com o Rev como seu tutor e respostas
           baseadas em fontes oficiais brasileiras.
         </p>
       </div>
 
-      <InfoSection icon={Target} iconClassName="text-red-light" title="Nossa missão">
+      <InfoSection icon={TargetIcon} iconClassName="text-red-light" title="Nossa missão">
         <p>
           Reduzir a distância entre o investidor iniciante e as informações do mercado de capitais. Em vez de
           respostas genéricas, o Renvest usa <strong>RAG (Retrieval-Augmented Generation)</strong>: cada
@@ -35,12 +35,12 @@ export function About() {
         </p>
       </InfoSection>
 
-      <InfoSection icon={Map} iconClassName="text-sky-400" title="A trilha">
+      <InfoSection icon={MapTrifoldIcon} iconClassName="text-sky-400" title="A trilha">
         <p>Três módulos progressivos, cada um com lições curtas e um teste final para desbloquear o próximo:</p>
         <ol className="space-y-2 pt-1">
           {MODULES.map((module) => (
             <li key={module.order} className="flex gap-3">
-              <span className="shrink-0 w-6 h-6 rounded-lg bg-white/10 text-white text-xs font-extrabold flex items-center justify-center">
+              <span className="shrink-0 w-6 h-6 rounded-lg bg-white/10 text-white font-heading text-xs font-extrabold tabular-nums flex items-center justify-center">
                 {module.order}
               </span>
               <div>
@@ -52,13 +52,13 @@ export function About() {
         </ol>
       </InfoSection>
 
-      <InfoSection icon={Library} iconClassName="text-emerald-400" title="Fontes oficiais">
+      <InfoSection icon={BooksIcon} iconClassName="text-emerald-400" title="Fontes oficiais">
         <p>A base de conhecimento reúne cadernos educacionais, resoluções e regulamentos publicados por:</p>
         <div className="flex flex-wrap gap-1.5 pt-1">
           {SOURCES.map((source) => (
             <span
               key={source}
-              className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-400/10 border border-emerald-400/30 text-emerald-300"
+              className="px-2 py-0.5 rounded-full type-micro font-bold bg-emerald-400/10 border border-emerald-400/30 text-emerald-300"
             >
               {source}
             </span>
@@ -66,7 +66,7 @@ export function About() {
         </div>
       </InfoSection>
 
-      <InfoSection icon={GraduationCap} iconClassName="text-amber-400" title="Projeto acadêmico">
+      <InfoSection icon={GraduationCapIcon} iconClassName="text-amber-400" title="Projeto acadêmico">
         <p>
           Trabalho de Conclusão de Curso em Engenharia de Software da Universidade Federal do Ceará (UFC –
           Campus Quixadá).
@@ -78,7 +78,7 @@ export function About() {
         </p>
       </InfoSection>
 
-      <InfoSection icon={AlertTriangle} iconClassName="text-amber-300" title="Aviso importante">
+      <InfoSection icon={WarningIcon} iconClassName="text-amber-300" title="Aviso importante">
         <p>
           O conteúdo do Renvest tem finalidade exclusivamente educacional e não constitui recomendação de
           investimento. Antes de investir, avalie seu perfil e consulte as fontes oficiais.

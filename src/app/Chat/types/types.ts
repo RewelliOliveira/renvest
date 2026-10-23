@@ -40,6 +40,7 @@ export interface ChatMessage {
   text: string;
   time: string;
   source?: ChatSource;
+  sources?: ChatSource[];
 }
 
 export interface ChatHistoryItem {
@@ -50,6 +51,7 @@ export interface ChatHistoryItem {
 export interface ChatApiResponse {
   reply: string;
   source?: ChatSource;
+  sources?: ChatSource[];
   suggestions: string[];
 }
 

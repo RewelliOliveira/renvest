@@ -1,4 +1,4 @@
-import { ChevronLeft, X } from "lucide-react";
+import { CaretLeftIcon, XIcon } from "@phosphor-icons/react";
 import { Progress } from "@/components/ui/progress";
 
 interface MissionHeaderProps {
@@ -20,7 +20,7 @@ export function MissionHeader({
         aria-label="Voltar"
         className="text-white/80 hover:text-white transition-opacity p-1 -ml-1 cursor-pointer"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <CaretLeftIcon className="w-6 h-6" />
       </button>
 
       <Progress value={progressValue} className="flex-1" />
@@ -32,7 +32,7 @@ export function MissionHeader({
           aria-label="Sair"
           className="text-white/60 hover:text-white transition-colors p-1 -mr-1 cursor-pointer"
         >
-          <X className="w-6 h-6" />
+          <XIcon className="w-6 h-6" />
         </button>
       )}
     </header>

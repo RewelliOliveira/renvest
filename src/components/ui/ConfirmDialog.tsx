@@ -55,10 +55,10 @@ export function ConfirmDialog({
             onClick={(event) => event.stopPropagation()}
             className="w-full max-w-sm rounded-2xl bg-[#0b1322] border border-white/10 p-5 lg:p-6 shadow-2xl text-white select-none"
           >
-            <h2 id={titleId} className="text-lg font-extrabold">
+            <h2 id={titleId} className="type-h3">
               {title}
             </h2>
-            <p id={descriptionId} className="text-sm text-neutral-300 mt-1.5 leading-relaxed">
+            <p id={descriptionId} className="type-body text-neutral-300 mt-1.5">
               {description}
             </p>
             <div className="mt-5 flex flex-col gap-2.5">
@@ -66,14 +66,14 @@ export function ConfirmDialog({
                 type="button"
                 autoFocus
                 onClick={onCancel}
-                className="w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark active:border-b-0 active:translate-y-0.5 hover:brightness-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                className="w-full py-3 rounded-xl font-bold text-white bg-red border-b-4 border-red-dark press-3d hover:brightness-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 {cancelLabel}
               </button>
               <button
                 type="button"
                 onClick={onConfirm}
-                className="w-full py-3 rounded-xl font-bold text-red-light text-sm border border-red/40 bg-red/10 hover:bg-red/20 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60"
+                className="w-full py-3 rounded-xl type-button-sm text-red-light border border-red/40 bg-red/10 hover:bg-red/20 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red/60"
               >
                 {confirmLabel}
               </button>

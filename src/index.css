@@ -2,11 +2,12 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/nunito";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-heading: "Nunito Variable", "Geist Variable", sans-serif;
   --font-sans: "Geist Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -147,9 +148,95 @@
     background-color: #000815;
   }
   html {
-    @apply font-sans;
+    @apply font-sans antialiased;
     background-color: #000815;
     color-scheme: dark;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-balance;
+  }
+}
+
+@utility type-display {
+  @apply font-heading text-3xl font-extrabold leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl;
+}
+
+@utility type-h1 {
+  @apply font-heading text-2xl font-extrabold leading-tight tracking-tight lg:text-3xl;
+}
+
+@utility type-h2 {
+  @apply font-heading text-lg font-extrabold leading-tight tracking-tight lg:text-2xl;
+}
+
+@utility type-h3 {
+  @apply font-heading text-base font-bold leading-snug sm:text-lg;
+}
+
+@utility type-h4 {
+  @apply font-heading text-sm font-bold leading-snug sm:text-base;
+}
+
+@utility type-question {
+  @apply font-heading text-lg font-bold leading-snug sm:text-xl lg:text-2xl;
+}
+
+@utility type-body-lg {
+  @apply text-sm leading-snug font-normal sm:text-base sm:leading-relaxed;
+}
+
+@utility type-body {
+  @apply text-sm leading-relaxed;
+}
+
+@utility type-body-sm {
+  @apply text-xs leading-relaxed sm:text-sm;
+}
+
+@utility type-label {
+  @apply text-xs font-medium leading-snug sm:text-sm;
+}
+
+@utility type-caption {
+  @apply text-xs leading-snug;
+}
+
+@utility type-micro {
+  @apply text-[11px] font-medium leading-tight;
+}
+
+@utility type-overline {
+  @apply font-heading text-[11px] font-extrabold uppercase leading-none tracking-widest sm:text-xs;
+}
+
+@utility type-chip {
+  @apply text-xs font-medium leading-none;
+}
+
+@utility type-button {
+  @apply font-heading text-base font-extrabold tracking-wide;
+}
+
+@utility type-button-sm {
+  @apply font-heading text-sm font-extrabold tracking-wide;
+}
+
+@utility type-stat {
+  @apply font-heading text-lg font-extrabold leading-none tabular-nums lg:text-3xl;
+}
+
+@utility type-stat-label {
+  @apply text-[11px] font-medium leading-snug lg:text-sm;
+}
+
+@utility press-3d {
+  &:active:not(:disabled) {
+    translate: 0 4px;
+    border-bottom-color: transparent;
+    background-clip: padding-box;
   }
 }
 
@@ -225,12 +312,363 @@
   animation: optionPop 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+.rev-hand {
+  transform-box: view-box;
+  transform-origin: 32px 92.5px;
+}
+
+.rev-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.rev-wave .rev-hand {
+  animation: revWave 4s ease-in-out infinite;
+}
+
+.rev-wave .rev-lines {
+  animation: revWaveLines 4s ease-in-out infinite;
+}
+
+.rev-wave .rev-eye {
+  animation: revBlink 4s ease-in-out infinite;
+}
+
+.rev-wave .rev-brows {
+  animation: revBrows 4s ease-in-out infinite;
+}
+
+.rev-loading .rev-hand {
+  animation: revLoadingWave 1.6s ease-in-out infinite alternate;
+}
+
+.rev-loading .rev-lines {
+  animation: revLoadingLines 1.6s ease-in-out infinite alternate;
+}
+
+.rev-loading .rev-eye {
+  animation: revLoadingBlink 3.2s ease-in-out infinite;
+}
+
+@keyframes revWave {
+  0%,
+  46%,
+  100% {
+    transform: rotate(0deg);
+  }
+  8% {
+    transform: rotate(-18deg);
+  }
+  16% {
+    transform: rotate(7deg);
+  }
+  24% {
+    transform: rotate(-16deg);
+  }
+  32% {
+    transform: rotate(6deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes revWaveLines {
+  0%,
+  48%,
+  100% {
+    opacity: 0;
+  }
+  6%,
+  38% {
+    opacity: 1;
+  }
+}
+
+@keyframes revBlink {
+  0%,
+  64%,
+  72%,
+  100% {
+    transform: scaleY(1);
+  }
+  68% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes revBrows {
+  0%,
+  46%,
+  100% {
+    transform: translateY(0);
+  }
+  8%,
+  38% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes revLoadingWave {
+  from {
+    transform: rotate(-16deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes revLoadingLines {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+
+@keyframes revLoadingBlink {
+  0%,
+  80%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+  84% {
+    transform: scaleY(0.1);
+  }
+}
+
+.rev-thinking .rev-arm-l {
+  transform-box: view-box;
+  transform-origin: 60px 110px;
+  animation: revScratchLeft 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-arm-r {
+  transform-box: view-box;
+  transform-origin: 147px 107px;
+  animation: revScratchRight 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-q {
+  animation: revQuestion 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-q2 {
+  animation-delay: -1s;
+}
+
+.rev-thinking .rev-q3 {
+  animation-delay: -2s;
+}
+
+.rev-thinking .rev-look {
+  animation: revLook 3s ease-in-out infinite;
+}
+
+.rev-thinking .rev-eye {
+  animation: revThinkingBlink 3s ease-in-out infinite;
+}
+
+@keyframes revScratchLeft {
+  0%,
+  40%,
+  100% {
+    transform: rotate(0deg);
+  }
+  8%,
+  24% {
+    transform: rotate(3deg);
+  }
+  16%,
+  32% {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes revScratchRight {
+  0%,
+  50%,
+  90%,
+  100% {
+    transform: rotate(0deg);
+  }
+  58%,
+  74% {
+    transform: rotate(-3deg);
+  }
+  66%,
+  82% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes revQuestion {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 0.55;
+  }
+}
+
+@keyframes revLook {
+  0%,
+  10%,
+  90%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  40% {
+    transform: translateX(-3px);
+  }
+  55%,
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes revThinkingBlink {
+  0%,
+  44%,
+  52%,
+  100% {
+    transform: scaleY(1);
+  }
+  48% {
+    transform: scaleY(0.1);
+  }
+}
+
+.rev-flying .rev-ship {
+  transform-box: view-box;
+  transform-origin: 250px 240px;
+  animation: revHover 3s ease-in-out infinite;
+}
+
+.rev-flying .rev-flame {
+  transform-box: fill-box;
+  transform-origin: 100% 0%;
+  animation: revFlicker 0.6s ease-in-out infinite alternate;
+}
+
+.rev-flying .rev-flame2 {
+  animation-delay: -0.2s;
+}
+
+.rev-flying .rev-flame3 {
+  animation-delay: -0.4s;
+}
+
+.rev-flying .rev-flame4 {
+  animation-delay: -0.3s;
+}
+
+.rev-flying .rev-trail {
+  animation: revTrail 1.5s ease-in-out infinite alternate;
+}
+
+.rev-flying .rev-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: revTwinkle 1.8s ease-in-out infinite;
+}
+
+.rev-flying .rev-star2 {
+  animation-delay: -0.6s;
+}
+
+.rev-flying .rev-star3 {
+  animation-delay: -1.2s;
+}
+
+.rev-flying .rev-orb {
+  animation: revOrb 3s ease-in-out infinite;
+}
+
+.rev-flying .rev-eye {
+  animation: revFlyingBlink 3s ease-in-out infinite;
+}
+
+@keyframes revHover {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-2deg);
+  }
+}
+
+@keyframes revFlicker {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.82);
+    opacity: 0.75;
+  }
+}
+
+@keyframes revTrail {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+@keyframes revTwinkle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.7);
+    opacity: 0.6;
+  }
+}
+
+@keyframes revOrb {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-6px, 6px);
+  }
+}
+
+@keyframes revFlyingBlink {
+  0%,
+  60%,
+  68%,
+  100% {
+    transform: scaleY(1);
+  }
+  64% {
+    transform: scaleY(0.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-mascot,
   .animate-bubble,
   .animate-shake,
   .animate-pop,
-  .animate-bounce {
+  .animate-bounce,
+  .rev-wave *,
+  .rev-loading *,
+  .rev-thinking *,
+  .rev-flying * {
     animation: none;
   }
 }

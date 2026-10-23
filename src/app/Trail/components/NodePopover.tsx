@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Lock } from "lucide-react";
+import { LockSimpleIcon } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "cn";
 import type { TrailNodeItem } from "../types/types";
@@ -59,12 +59,12 @@ export function NodePopover({ node, offsetX }: NodePopoverProps) {
         )}
         style={{ backgroundColor: color }}
       >
-        <h3 className={cn("text-base font-extrabold leading-snug", isLocked ? "text-neutral-300" : "text-white")}>{title}</h3>
+        <h3 className={cn("type-h3", isLocked ? "text-neutral-300" : "text-white")}>{title}</h3>
         {subtitle && (
-          <p className={cn("text-xs font-semibold mt-0.5", isLocked ? "text-neutral-500" : "text-white/80")}>{subtitle}</p>
+          <p className={cn("type-caption font-semibold mt-0.5", isLocked ? "text-neutral-500" : "text-white/80")}>{subtitle}</p>
         )}
         {description && (
-          <p className={cn("text-xs leading-relaxed mt-2", isLocked ? "text-neutral-400" : "text-white/90")}>{description}</p>
+          <p className={cn("type-caption mt-2", isLocked ? "text-neutral-400" : "text-white/90")}>{description}</p>
         )}
 
         <button
@@ -72,14 +72,14 @@ export function NodePopover({ node, offsetX }: NodePopoverProps) {
           disabled={isLocked}
           onClick={() => navigate(isExam ? `/exam/${node.module.id}` : `/lesson/${node.lesson.id}`)}
           className={cn(
-            "mt-3 w-full py-3 rounded-xl text-sm font-extrabold uppercase tracking-wide transition-all flex items-center justify-center gap-2",
+            "mt-3 w-full py-3 rounded-xl type-button-sm uppercase transition-all flex items-center justify-center gap-2",
             isLocked
               ? "bg-neutral-700 text-neutral-500 cursor-not-allowed"
-              : "bg-white border-b-4 border-black/20 active:border-b-0 active:translate-y-0.5 cursor-pointer hover:brightness-95"
+              : "bg-white border-b-4 border-black/20 press-3d cursor-pointer hover:brightness-95"
           )}
           style={isLocked ? undefined : { color: node.module.color }}
         >
-          {isLocked && <Lock className="w-4 h-4" />}
+          {isLocked && <LockSimpleIcon className="w-4 h-4" />}
           {isLocked ? "Bloqueado" : actionLabel}
         </button>
       </div>

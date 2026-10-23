@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { motion } from "motion/react";
 import { cn } from "cn";
 import { NAV_TABS } from "./navTabs";
 
@@ -15,27 +16,28 @@ export function BottomNav() {
               to={tab.path}
               className={({ isActive }) =>
                 cn(
-                  "flex flex-col items-center justify-center py-1 px-4 rounded-xl transition-all cursor-pointer",
-                  isActive
-                    ? "text-red font-bold scale-105"
-                    : "text-white/40 hover:text-white/80 font-medium"
+                  "relative flex flex-col items-center justify-center py-1 px-4 rounded-xl transition-colors cursor-pointer font-bold",
+                  isActive ? "text-red" : "text-white/40 hover:text-white/80"
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  <div className="relative">
-                    <Icon
-                      className={cn(
-                        "w-5 h-5 sm:w-6 sm:h-6 transition-colors",
-                        isActive && "text-red drop-shadow-[0_2px_8px_rgba(240,86,86,0.6)]"
-                      )}
+                  {isActive && (
+                    <motion.span
+                      layoutId="bottom-nav-active"
+                      className="absolute inset-0 rounded-xl border-2 border-red/50 bg-red/10"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
-                    {isActive && (
-                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-red" />
+                  )}
+                  <Icon
+                    weight={isActive ? "fill" : "bold"}
+                    className={cn(
+                      "relative w-5 h-5 sm:w-6 sm:h-6 transition-colors",
+                      isActive && "drop-shadow-[0_2px_8px_rgba(240,86,86,0.6)]"
                     )}
-                  </div>
-                  <span className="text-[11px] sm:text-xs mt-1">{tab.label}</span>
+                  />
+                  <span className="relative font-heading text-[11px] sm:text-xs mt-1">{tab.label}</span>
                 </>
               )}
             </NavLink>

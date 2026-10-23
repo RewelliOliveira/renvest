@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Flame } from "lucide-react";
+import { FireIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import type { Streak } from "../types/types";
 
@@ -33,17 +33,18 @@ export function StreakBadge({ streak, className }: StreakBadgeProps) {
       )}
       title="Ofensiva: dias seguidos com lições ou testes concluídos"
     >
-      <Flame
+      <FireIcon
+        weight={lit ? "fill" : undefined}
         className={cn(
           "w-6 h-6 shrink-0",
-          lit ? "text-amber-400 fill-amber-400/40 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]" : "text-neutral-400"
+          lit ? "text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]" : "text-neutral-400"
         )}
       />
       <div className="flex flex-col leading-tight min-w-0">
-        <span className={cn("text-sm font-extrabold whitespace-nowrap", lit ? "text-amber-200" : "text-white/85")}>
+        <span className={cn("font-heading text-sm font-extrabold tabular-nums whitespace-nowrap", lit ? "text-amber-200" : "text-white/85")}>
           {streakHeadline(streak)}
         </span>
-        <span className={cn("text-[10px] font-semibold", lit ? "text-amber-200/80" : "text-white/55")}>
+        <span className={cn("type-micro", lit ? "text-amber-200/80" : "text-white/55")}>
           {streakCaption(streak)}
         </span>
       </div>

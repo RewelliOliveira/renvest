@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "cn";
@@ -25,7 +25,7 @@ export function AuthInput({
       {label && (
         <Label
           htmlFor={id}
-          className="text-xs sm:text-sm font-normal text-neutral-300"
+          className="type-label text-neutral-300"
         >
           {label}
         </Label>
@@ -40,7 +40,7 @@ export function AuthInput({
           id={id}
           type={isPassword && isPasswordVisible ? "text" : type}
           className={cn(
-            "w-full h-11 sm:h-12 bg-transparent border-none text-white placeholder:text-neutral-500 text-sm focus-visible:ring-0 focus-visible:border-transparent rounded-lg",
+            "w-full h-11 sm:h-12 bg-transparent border-none text-white placeholder:text-neutral-500 type-body focus-visible:ring-0 focus-visible:border-transparent rounded-lg",
             icon ? "pl-10" : "pl-4",
             isPassword ? "pr-11" : "pr-4",
             className
@@ -55,7 +55,7 @@ export function AuthInput({
             aria-pressed={isPasswordVisible}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-neutral-400 hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           >
-            {isPasswordVisible ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+            {isPasswordVisible ? <EyeSlashIcon className="w-4.5 h-4.5" /> : <EyeIcon className="w-4.5 h-4.5" />}
           </button>
         )}
       </div>
