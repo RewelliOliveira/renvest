@@ -109,7 +109,7 @@ export function Register() {
         )}
       </form>
 
-      {isSubmitting && <MascotLoader title="Criando sua conta" />}
+      {isSubmitting && <MascotLoader title="Criando sua conta" portal />}
     </AuthLayout>
   );
 }
