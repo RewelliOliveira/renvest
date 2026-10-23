@@ -8,6 +8,7 @@ import { MascotLoader } from "@/components/ui/MascotLoader";
 import { TrailHeader } from "../components/TrailHeader";
 import { SectionBanner } from "../components/SectionBanner";
 import { TrailNode } from "../components/TrailNode";
+import { OrbitPath } from "../components/OrbitPath";
 import { StreakBadge } from "../components/StreakBadge";
 import { TrailSidePanel } from "../components/TrailSidePanel";
 import { useTrail } from "../hooks/useTrail";
@@ -36,7 +37,7 @@ function buildNodes(module: TrailModule, moduleIndex: number): TrailNodeItem[] {
       module,
       exam: module.exam,
       status: module.exam.status,
-      positionX: offsetAt(lessons.length),
+      positionX: 0,
     },
   ];
 }
@@ -208,10 +209,11 @@ export function TrailProgress() {
 
                 <div
                   className={cn(
-                    "w-full max-w-lg lg:max-w-2xl flex-1 flex flex-col items-center justify-center gap-6 lg:gap-9 px-4 pt-16 lg:pt-14 lg:pb-20",
+                    "relative w-full max-w-lg lg:max-w-2xl flex-1 flex flex-col items-center justify-center gap-8 lg:gap-10 px-4 pt-16 lg:pt-14 lg:pb-20",
                     index === modules.length - 1 && !trail?.completed ? "pb-28" : "pb-12",
                   )}
                 >
+                  <OrbitPath nodes={nodes} />
                   {nodes.map((node) => (
                     <TrailNode
                       key={node.key}

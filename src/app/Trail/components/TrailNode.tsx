@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
-import { CheckIcon, LockSimpleIcon, TrophyIcon, StarIcon } from "@phosphor-icons/react";
+import { CheckIcon, LockSimpleIcon, FlagIcon, StarIcon } from "@phosphor-icons/react";
 import { cn } from "cn";
 import { NodePopover } from "./NodePopover";
+import { Asteroid, Planet } from "./CelestialBody";
 import type { TrailNodeItem } from "../types/types";
 
 interface TrailNodeProps {
@@ -18,6 +19,18 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
   const isExam = node.kind === "exam";
   const title = isExam ? "Teste final" : node.lesson.title;
   const color = node.module.color;
+  const variant = isExam ? 0 : node.lesson.order;
+  const iconClass = isExam ? "w-10 h-10 lg:w-12 lg:h-12" : "w-8 h-8 lg:w-10 lg:h-10";
+
+  const icon = isCompleted ? (
+    <CheckIcon weight="bold" className={iconClass} />
+  ) : isLocked ? (
+    <LockSimpleIcon className={iconClass} />
+  ) : isExam ? (
+    <FlagIcon weight="fill" className={iconClass} />
+  ) : (
+    <StarIcon weight="fill" className={iconClass} />
+  );
 
   return (
     <div
@@ -26,25 +39,6 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
       className={cn("group relative flex flex-col items-center select-none scroll-mt-40", isSelected ? "z-20" : "z-10")}
       style={{ transform: `translateX(calc(${node.positionX}px * var(--trail-spread, 1)))` }}
     >
-      {isCurrent && (
-        <motion.span
-          animate={{ scale: [1, 1.12, 1], opacity: [0.9, 0.35, 0.9] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="absolute -top-2 lg:-top-3 w-22 h-22 sm:w-24 sm:h-24 lg:w-30 lg:h-30 rounded-full border-4 pointer-events-none"
-          style={{ borderColor: `${color}88` }}
-        />
-      )}
-
-      {justCompleted && (
-        <motion.span
-          initial={{ scale: 0.8, opacity: 0.9 }}
-          animate={{ scale: 2.2, opacity: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut", delay: 0.35 }}
-          className="absolute top-0 w-18 h-16 sm:w-20 sm:h-18 lg:w-24 lg:h-22 rounded-[50%] border-4 pointer-events-none"
-          style={{ borderColor: color }}
-        />
-      )}
-
       {isCurrent && !isSelected && (
         <motion.span
           initial={{ opacity: 0, y: 6 }}
@@ -53,50 +47,67 @@ export function TrailNode({ node, isSelected, justCompleted = false, onSelect }:
           className="absolute bottom-full mb-5 lg:mb-6 px-3 py-1.5 rounded-xl bg-white font-heading text-xs lg:text-sm font-extrabold uppercase tracking-wide whitespace-nowrap shadow-lg pointer-events-none"
           style={{ color }}
         >
-          {isExam ? "Fazer teste" : "Começar"}
+          {isExam ? "Pousar" : "Começar"}
           <span className="absolute left-1/2 -bottom-1 w-2.5 h-2.5 -translate-x-1/2 rotate-45 bg-white" />
         </motion.span>
       )}
 
-      <button
-        type="button"
-        data-no-bounce
-        onClick={(event) => {
-          event.stopPropagation();
-          onSelect(node);
-        }}
-        aria-label={`${title} (${isCompleted ? "concluída" : isCurrent ? "disponível" : "bloqueada"})`}
-        aria-expanded={isSelected}
+      <motion.div
+        animate={isLocked ? undefined : { y: [0, -5, 0] }}
+        transition={{ repeat: Infinity, duration: 3 + (variant % 3) * 0.7, ease: "easeInOut" }}
         className={cn(
-          "relative w-18 h-16 sm:w-20 sm:h-18 lg:w-24 lg:h-22 rounded-[50%] flex items-center justify-center cursor-pointer transition-all",
-          "active:translate-y-1.5 lg:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40",
-          isLocked
-            ? "bg-neutral-700 text-neutral-500 shadow-[0_6px_0_#262626] active:shadow-none"
-            : "text-white active:shadow-none hover:brightness-110"
+          "relative",
+          isExam ? "w-28 h-28 lg:w-36 lg:h-36" : "w-18 h-18 sm:w-20 sm:h-20 lg:w-24 lg:h-24"
         )}
-        style={
-          isLocked
-            ? undefined
-            : { backgroundColor: color, boxShadow: `0 6px 0 color-mix(in srgb, ${color} 60%, black)` }
-        }
       >
-        <motion.span
-          initial={justCompleted ? { scale: 0, rotate: -45 } : false}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 320, damping: 12, delay: 0.25 }}
-          className="flex"
-        >
-          {isExam ? (
-            <TrophyIcon weight={isLocked ? undefined : "fill"} className={cn("w-8 h-8 lg:w-10 lg:h-10", isLocked ? "text-neutral-500" : "text-white")} />
-          ) : isCompleted ? (
-            <CheckIcon className="w-8 h-8 lg:w-10 lg:h-10" />
-          ) : isLocked ? (
-            <LockSimpleIcon className="w-7 h-7 lg:w-9 lg:h-9" />
-          ) : (
-            <StarIcon weight="fill" className="w-8 h-8 lg:w-10 lg:h-10" />
+        {isCurrent && (
+          <motion.span
+            animate={{ scale: [1, 1.12, 1], opacity: [0.9, 0.35, 0.9] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="absolute -inset-3 lg:-inset-4 rounded-full border-4 pointer-events-none"
+            style={{ borderColor: `${color}88` }}
+          />
+        )}
+
+        {justCompleted && (
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0.9 }}
+            animate={{ scale: 2.2, opacity: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 0.35 }}
+            className="absolute inset-0 rounded-full border-4 pointer-events-none"
+            style={{ borderColor: color }}
+          />
+        )}
+
+        <button
+          type="button"
+          data-no-bounce
+          onClick={(event) => {
+            event.stopPropagation();
+            onSelect(node);
+          }}
+          aria-label={`${title} (${isCompleted ? "concluída" : isCurrent ? "disponível" : "bloqueada"})`}
+          aria-expanded={isSelected}
+          className={cn(
+            "relative w-full h-full flex items-center justify-center text-white cursor-pointer transition-all",
+            "active:scale-95 lg:hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40 rounded-full",
+            !isLocked && "hover:brightness-110"
           )}
-        </motion.span>
-      </button>
+        >
+          <motion.span
+            initial={justCompleted ? { scale: 0, rotate: -45 } : false}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 12, delay: 0.25 }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            {isExam ? (
+              <Planet color={color} isLocked={isLocked} variant={node.module.order}>{icon}</Planet>
+            ) : (
+              <Asteroid color={color} isLocked={isLocked} variant={variant}>{icon}</Asteroid>
+            )}
+          </motion.span>
+        </button>
+      </motion.div>
 
       {!isSelected && !isCurrent && (
         <span className="hidden lg:block absolute bottom-full mb-3 px-3 py-1.5 rounded-lg bg-neutral-900/95 border border-white/10 font-heading text-xs font-bold text-white whitespace-nowrap shadow-lg pointer-events-none opacity-0 translate-y-1 transition-all group-hover:opacity-100 group-hover:translate-y-0">
