@@ -471,6 +471,68 @@
   animation: revThinkingBlink 3s ease-in-out infinite;
 }
 
+.rev-celebrate .rev-arm-l {
+  transform-box: view-box;
+  transform-origin: 60px 108px;
+  animation: revCheerLeft 1.2s ease-in-out infinite;
+}
+
+.rev-celebrate .rev-arm-r {
+  transform-box: view-box;
+  transform-origin: 147px 105px;
+  animation: revCheerRight 1.2s ease-in-out infinite;
+}
+
+.rev-celebrate .rev-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: revSparkle 1.6s ease-in-out infinite;
+}
+
+.rev-celebrate .rev-sparkle2 {
+  animation-delay: -0.4s;
+}
+
+.rev-celebrate .rev-sparkle3 {
+  animation-delay: -0.8s;
+}
+
+.rev-celebrate .rev-sparkle4 {
+  animation-delay: -1.2s;
+}
+
+@keyframes revCheerLeft {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes revCheerRight {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes revSparkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.4) rotate(45deg);
+    opacity: 0.4;
+  }
+}
+
 @keyframes revScratchLeft {
   0%,
   40%,
@@ -668,6 +730,7 @@
   .rev-wave *,
   .rev-loading *,
   .rev-thinking *,
+  .rev-celebrate *,
   .rev-flying * {
     animation: none;
   }
